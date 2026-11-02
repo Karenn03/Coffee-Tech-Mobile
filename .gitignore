@@ -1,0 +1,24 @@
+# Archivos del IDE (Android Studio / IntelliJ)
+*.iml
+.idea/
+.kotlin/
+.navigation/
+captures/
+.externalNativeBuild
+.cxx/
+
+# Archivos de salida de Gradle y compilación (Locales)
+.gradle/
+build/
+/build
+/*/build
+
+# Configuración local de la máquina y firmas
+local.properties
+.DS_Store
+Thumbs.db
+
+# Archivos de firma de la app (Por seguridad)
+*.jks
+*.keystore
+*.pkcs12
