@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="coffee_primary">#4E342E</color>
-    <color name="coffee_primary_variant">#3E2723</color>
-    <color name="coffee_secondary">#D7CCC8</color>
+
+    <!-- Colores principales de Coffee Tech -->
+    <color name="coffee_primary">#3E2723</color>
+    <color name="coffee_secondary">#7D562D</color>
     <color name="coffee_accent">#FFB300</color>
-    <color name="text_dark">#212121</color>
+
+    <!-- Colores de texto -->
+    <color name="text_dark">#1D1B19</color>
     <color name="text_light">#FFFFFF</color>
+
+    <!-- Fondos -->
     <color name="background_app">#FEF8F3</color>
+    <color name="coffee_selector_background">#F5F0EB</color>
+    <color name="coffee_selector_active">#FFFFFF</color>
+    <color name="biometric_button_background">#F2EDE8</color>
+
+    <!-- Tonos complementarios -->
+    <color name="coffee_muted">#D7CCC8</color>
+    <color name="social_divider">#99D3C3C2</color>
+
 </resources>

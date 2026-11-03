@@ -1,16 +1,24 @@
 <resources>
 
-    // Strings for sign in view
     <string name="app_name">Coffee Tech Mobile</string>
+
+    // Strings for sign in view
+    <string name="logo_description">Logo de Coffee Tech</string>
     <string name="sign_in_title">Coffee Tech</string>
     <string name="sign_in_subtitle">El café que impulsa tus ideas</string>
-    <string name="logo_description">Logo de Coffee Tech</string>
+    <string name="sign_in_tab">Iniciar sesión</string>
+    <string name="sign_up_tab">Registrarse</string>
     <string name="email_label">Correo electrónico</string>
-    <string name="email_placeholder">nombre@ejemplo.com</string>
     <string name="password_label">Contraseña</string>
     <string name="show_password">Mostrar contraseña</string>
     <string name="hide_password">Ocultar contraseña</string>
     <string name="password_icon_description">Icono de contraseña</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="sign_in_button">Iniciar sesión</string>
+    <string name="biometric_button">Ingresar con huella dactilar</string>
+    <string name="social_divider_text">o conéctate con</string>
+    <string name="google_icon_description">Logotipo de Google</string>
+    <string name="facebook_icon_description">Logotipo de Facebook</string>
 
 
 </resources>
