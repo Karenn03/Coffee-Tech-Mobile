@@ -32,11 +32,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/sign_in_title"
+            android:textColor="@color/coffee_primary"
             android:textSize="30sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/Logo"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/Logo" />
 
         <TextView
             android:id="@+id/signUpSubtitle"
@@ -44,10 +45,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
             android:text="@string/sign_in_subtitle"
+            android:textColor="@color/coffee_primary"
             android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@id/signUpTitle"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/signUpTitle" />
 
         <LinearLayout
             android:id="@+id/auth_mode_selector"
