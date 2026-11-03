@@ -20,5 +20,15 @@
     <string name="google_icon_description">Logotipo de Google</string>
     <string name="facebook_icon_description">Logotipo de Facebook</string>
 
+    // Strings for sing up view
+    <string name="full_name_label">Nombre completo</string>
+    <string name="confirm_password_label">Confirmar contraseña</string>
+    <string name="password_minimum_hint">Mín. 8 caracteres</string>
+    <string name="sign_up_button">Regístrate en Coffee Tech</string>
+    <string name="name_icon_description">Icono de nombre de usuario</string>
+    <string name="confirm_password_icon_description">Indicador de confirmación de contraseña</string>
+    <string name="signup_terms_text">Acepto los <font color="#7D562D"><u>términos de servicio</u></font> y la política de tratamiento de datos personales conforme a la <font color="#7D562D"><u>Ley 1581 de 2012</u></font>.</string>
+    <string name="terms_checkbox_description">Aceptar los términos de servicio y el tratamiento de datos personales</string>
+
 
 </resources>
