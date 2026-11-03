@@ -1,9 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.CoffeeTechMobile" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Theme.CoffeeTechMobile" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/coffee_primary</item>
+        <item name="colorPrimaryVariant">@color/coffee_primary_variant</item>
+        <item name="colorOnPrimary">@color/text_light</item>
+        <item name="colorSecondary">@color/coffee_secondary</item>
+        <item name="colorOnSecondary">@color/text_dark</item>
+        <item name="android:statusBarColor">@color/coffee_primary_variant</item>
+        <item name="android:windowBackground">@color/background_app</item>
     </style>
-
-    <style name="Theme.CoffeeTechMobile" parent="Base.Theme.CoffeeTechMobile" />
 </resources>

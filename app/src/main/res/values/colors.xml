@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="coffee_primary">#4E342E</color>
+    <color name="coffee_primary_variant">#3E2723</color>
+    <color name="coffee_secondary">#D7CCC8</color>
+    <color name="coffee_accent">#FFB300</color>
+    <color name="text_dark">#212121</color>
+    <color name="text_light">#FFFFFF</color>
+    <color name="background_app">#FEF8F3</color>
 </resources>
