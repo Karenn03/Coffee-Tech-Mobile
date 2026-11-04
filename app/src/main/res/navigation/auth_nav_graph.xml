@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/auth_nav_graph"
+    app:startDestination="@id/sign_in_fragment">
+
+    <fragment
+        android:id="@+id/sign_in_fragment"
+        android:name="com.example.coffeetechmobile.ui.auth.SignInFragment"
+        android:label="Iniciar sesión">
+
+        <action
+            android:id="@+id/action_sign_in_to_sign_up"
+            app:destination="@id/sign_up_fragment" />
+
+        <action
+            android:id="@+id/action_sign_in_to_forgot_password"
+            app:destination="@id/forgot_password_fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/sign_up_fragment"
+        android:name="com.example.coffeetechmobile.ui.auth.SignUpFragment"
+        android:label="Registrarse" />
+
+    <fragment
+        android:id="@+id/forgot_password_fragment"
+        android:name="com.example.coffeetechmobile.ui.auth.ForgotPasswordFragment"
+        android:label="Recuperar contraseña" />
+
+</navigation>
