@@ -37,4 +37,16 @@
     <string name="remembered_password">¿Recordaste tu clave?</string>
     <string name="back_to_sign_in">Inicia sesión</string>
 
+    // Strings for home view
+    <string name="notifications">Notificaciones</string>
+    <string name="profile">Mi perfil</string>
+    <string name="delivery_location">Ubicación de entrega</string>
+    <string name="change_location">Cambiar ubicación</string>
+    <string name="all_products">Todos</string>
+    <string name="category_hot">Bebidas calientes</string>
+    <string name="category_cold">Bebidas frías</string>
+    <string name="product_image">Imagen del producto</string>
+    <string name="add_to_favorites">Agregar a favoritos</string>
+    <string name="add_to_cart">Agregar al carrito</string>
+    
 </resources>

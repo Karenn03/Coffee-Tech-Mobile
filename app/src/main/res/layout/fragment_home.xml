@@ -60,7 +60,7 @@
             android:layout_marginEnd="8dp"
             android:background="@drawable/bg_header_icon"
             android:src="@drawable/ic_notifications"
-            android:contentDescription="Notificaciones"
+            android:contentDescription="@string/notifications"
             app:tint="@color/background_app" />
 
         <ImageButton
@@ -69,7 +69,7 @@
             android:layout_height="36dp"
             android:background="@drawable/bg_header_icon"
             android:src="@drawable/ic_user"
-            android:contentDescription="Mi perfil"
+            android:contentDescription="@string/profile"
             app:tint="@color/background_app" />
 
     </LinearLayout>
@@ -114,16 +114,16 @@
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:background="@drawable/bg_location_icon"
+                        android:contentDescription="@string/delivery_location"
                         android:padding="10dp"
                         android:src="@drawable/ic_map_pin"
-                        android:contentDescription="Ubicación de entrega"
                         app:tint="@color/coffee_secondary" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_marginStart="10dp"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
@@ -138,11 +138,11 @@
                             android:id="@+id/delivery_address"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:maxLines="1"
                             android:text="Cl. 138 #11b-16, Bogotá"
                             android:textColor="@color/text_dark"
                             android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:maxLines="1" />
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -151,13 +151,212 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:background="@drawable/bg_location_button"
+                        android:contentDescription="@string/change_location"
                         android:src="@drawable/ic_chevron_down"
-                        android:contentDescription="Cambiar ubicación"
                         app:tint="@color/coffee_secondary" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
+
+            <include
+                layout="@layout/item_promo_banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_weight="1"
+                    android:background="@color/coffee_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:text="Menú"
+                    android:textColor="@color/coffee_primary"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_weight="1"
+                    android:background="@color/coffee_primary" />
+
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:clipToPadding="false"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/category_all"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_category_selected"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_layout_dashboard"
+                            android:contentDescription="@null"
+                            app:tint="#FFFFFF" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/all_products"
+                            android:textColor="#FFFFFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/category_hot"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/bg_category_unselected"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/bg_category_icon_hot"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_coffee"
+                            android:contentDescription="@null"
+                            app:tint="#A65320" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/category_hot"
+                            android:textColor="@color/text_dark"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/category_cold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/bg_category_unselected"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/bg_category_icon_cold"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_snowflake"
+                            android:contentDescription="@null"
+                            app:tint="#2585AD" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/category_cold"
+                            android:textColor="@color/text_dark"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:id="@+id/products_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="320dp"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
+                    <include
+                        android:id="@+id/product_iced_caramel"
+                        layout="@layout/item_product"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <View
+                        android:layout_width="12dp"
+                        android:layout_height="1dp" />
+
+                    <include
+                        android:id="@+id/product_frappe_oreo"
+                        layout="@layout/item_product"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="320dp"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
+                    <include
+                        android:id="@+id/product_muffin_red_velvet"
+                        layout="@layout/item_product"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <View
+                        android:layout_width="12dp"
+                        android:layout_height="1dp" />
+
+                    <include
+                        android:id="@+id/product_iced_macchiato"
+                        layout="@layout/item_product"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
