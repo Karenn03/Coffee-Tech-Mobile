@@ -48,5 +48,9 @@
     <string name="product_image">Imagen del producto</string>
     <string name="add_to_favorites">Agregar a favoritos</string>
     <string name="add_to_cart">Agregar al carrito</string>
+
+    // Strings for navigation
+    <string name="home_navigation">Ir al inicio</string>
+    <string name="cart_navigation">Abrir carrito</string>
     
 </resources>

@@ -116,8 +116,8 @@
 
             <ImageButton
                 android:id="@+id/add_product_button"
-                android:layout_width="54dp"
-                android:layout_height="54dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:layout_gravity="end|center_vertical"
                 android:background="@drawable/bg_product_add"
                 android:contentDescription="@string/add_to_cart"
