@@ -80,7 +80,7 @@
         android:fillViewport="true"
         android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/manager_header"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/manager_bottom_navigation_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -380,8 +380,59 @@
                 android:overScrollMode="never"
                 android:clipToPadding="false"/>
 
+            <LinearLayout
+                android:id="@+id/user_pagination"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/previous_page_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_pagination_button"
+                    android:contentDescription="@string/previous_page"
+                    android:padding="13dp"
+                    android:src="@drawable/ic_chevron_left"
+                    app:tint="#A3948D"
+                    app:elevation="3dp"/>
+
+                <TextView
+                    android:id="@+id/current_page_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Página 1 de 20"
+                    android:textColor="#A3948D"
+                    android:textSize="14sp"/>
+
+                <ImageButton
+                    android:id="@+id/next_page_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_pagination_button"
+                    android:contentDescription="@string/next_page"
+                    android:padding="13dp"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="#A3948D"
+                    app:elevation="3dp"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/manager_bottom_navigation_container"
+        layout="@layout/view_manager_bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="82dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
