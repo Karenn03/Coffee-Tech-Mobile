@@ -38,6 +38,17 @@
     <fragment
         android:id="@+id/userManagementFragment"
         android:name="com.example.coffeetechmobile.ui.manager.users.UserManagementFragment"
-        android:label="Gestión de usuarios" />
+        android:label="Gestión de usuarios">
+
+        <action
+            android:id="@+id/action_userManagementFragment_to_createUserFragment"
+            app:destination="@id/createUserFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/createUserFragment"
+        android:name="com.example.coffeetechmobile.ui.manager.users.CreateUserFragment"
+        android:label="Nuevo usuario" />
 
 </navigation>

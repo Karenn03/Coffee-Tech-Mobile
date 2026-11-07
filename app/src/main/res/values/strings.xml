@@ -62,5 +62,71 @@
     // String for user management view
     <string name="search_users">Buscar usuarios</string>
     <string name="user_options">Opciones de usuario</string>
-    
+
+    <string name="new_user_title">Nuevo usuario</string>
+    <string name="new_user_subtitle">Registra un nuevo colaborador</string>
+    <string name="basic_contact_title">1. Datos básicos y contacto</string>
+
+    <string name="document_type_label">Tipo de documento</string>
+    <string name="document_number_label">Número de documento</string>
+    <string name="document_number_hint">1020304050</string>
+
+    <string name="full_name_label_crud">Nombres y apellidos completos</string>
+    <string name="full_name_hint">Ej. Karen Sophia Molina Díaz</string>
+
+    <string name="corporate_email_label">Correo electrónico corporativo</string>
+    <string name="corporate_email_hint">developer@coffeetech.co</string>
+
+    <string name="corporate_phone_label">Celular corporativo</string>
+    <string name="corporate_phone_hint">+57 310 456 7890</string>
+
+    <string name="back_to_users">Regresar a gestión de usuarios</string>
+    <string name="document_type_description">Seleccionar tipo de documento</string>
+
+    <string-array name="document_types">
+        <item>CC (Cédula)</item>
+        <item>CE (Cédula de extranjería)</item>
+        <item>Pasaporte</item>
+        <item>NIT</item>
+    </string-array>
+
+    <string name="coffee_tech_data_title">2. Datos en Coffee Tech</string>
+
+    <string name="role_barista">Barista</string>
+    <string name="role_barista_description">Acceso a inventario, menú categorizado...</string>
+
+    <string name="role_baker">Panadero</string>
+    <string name="role_baker_description">Acceso a inventario, menú categorizado...</string>
+
+    <string name="role_cashier">Cajero</string>
+    <string name="role_cashier_description">Registro de ventas, cierre de turno...</string>
+
+    <string name="role_manager">Gerente</string>
+    <string name="role_manager_description">Acceso a métricas, gestión de usuarios y productos.</string>
+
+    <string name="role_super_admin">Super administrador</string>
+    <string name="role_super_admin_description">Acciones en base de datos como DDL, DML...</string>
+
+    <string name="assigned_branch_label">Sede asignada</string>
+    <string name="assigned_branch_hint">Elige una sede de Coffee Tech</string>
+
+    <string name="contract_type_label">Tipo de contrato</string>
+    <string name="contract_type_hint">Elige un tipo de contrato</string>
+
+    <string-array name="coffee_branches">
+        <item>Elige una sede de Coffee Tech</item>
+        <item>Bogotá - Usaquén</item>
+        <item>Bogotá - Chapinero</item>
+        <item>Bogotá - Engativá</item>
+    </string-array>
+
+    <string-array name="contract_types">
+        <item>Elige un tipo de contrato</item>
+        <item>Término indefinido</item>
+        <item>Término fijo</item>
+        <item>Prestación de servicios</item>
+    </string-array>
+
+
+
 </resources>

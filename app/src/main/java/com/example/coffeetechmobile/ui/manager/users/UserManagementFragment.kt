@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
 
 class UserManagementFragment : Fragment(R.layout.fragment_user_management) {
@@ -85,6 +86,14 @@ class UserManagementFragment : Fragment(R.layout.fragment_user_management) {
 
         usersRecyclerView.adapter = UserAdapter(getSampleUsers())
 
+        // Navegar al formulario de creación
+        view.findViewById<View>(R.id.create_user_button)
+            .setOnClickListener {
+                findNavController().navigate(
+                    R.id.action_userManagementFragment_to_createUserFragment
+                )
+            }
+
     }
 
     private fun bindStat(
@@ -121,7 +130,6 @@ class UserManagementFragment : Fragment(R.layout.fragment_user_management) {
         labelView.text = label
         labelView.setTextColor(Color.parseColor(foregroundColor))
     }
-
 
     private fun getSampleUsers(): List<UserItem> {
         return listOf(
