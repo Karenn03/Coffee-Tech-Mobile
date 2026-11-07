@@ -52,5 +52,9 @@
     // Strings for navigation
     <string name="home_navigation">Ir al inicio</string>
     <string name="cart_navigation">Abrir carrito</string>
+
+    // String for user management view
+    <string name="search_users">Buscar usuarios</string>
+    <string name="user_options">Opciones de usuario</string>
     
 </resources>
