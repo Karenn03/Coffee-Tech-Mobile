@@ -92,6 +92,23 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
             R.id.cart_checkout_button
         )
 
+        // Carrito vacío
+        val emptyState = view.findViewById<View>(
+            R.id.cart_empty_state
+        )
+
+        val exploreProductsButton = emptyState.findViewById<View>(
+            R.id.cart_explore_products_button
+        )
+
+        exploreProductsButton.setOnClickListener {
+            val navController = findNavController()
+
+            if (!navController.popBackStack(R.id.homeFragment, false)) {
+                navController.navigate(R.id.homeFragment)
+            }
+        }
+
         // Datos reactivos
         cartViewModel.items.observe(viewLifecycleOwner) { items ->
 
@@ -106,6 +123,18 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
             }
 
             val hasProducts = items.isNotEmpty()
+
+            emptyState.visibility = if (hasProducts) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+
+            recyclerView.visibility = if (hasProducts) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
 
             summary.visibility = if (hasProducts) {
                 View.VISIBLE

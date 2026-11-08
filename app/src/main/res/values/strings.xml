@@ -214,4 +214,9 @@
     <string name="cart_price_format">%1$s COP</string>
 
 
+    <string name="cart_empty_title">Tu carrito está vacío</string>
+    <string name="cart_empty_description">¡Todavía no has agregado ningún producto! Explora nuestro menú y encuentra tu próximo café favorito.</string>
+    <string name="cart_explore_products">Explorar productos</string>
+    <string name="cart_empty_footer">Preparado con amor, servido con café ☕</string>
+
 </resources>
