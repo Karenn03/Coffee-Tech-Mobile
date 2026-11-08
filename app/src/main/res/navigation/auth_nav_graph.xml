@@ -33,7 +33,25 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.coffeetechmobile.ui.home.HomeFragment"
-        android:label="Home" />
+        android:label="Home">
+
+        <action
+            android:id="@+id/action_homeFragment_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+
+    </fragment>
+
+    <!-- Detalle del producto -->
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="com.example.coffeetechmobile.ui.buyer.catalog.ProductDetailFragment"
+        android:label="Detalle del producto">
+
+        <argument
+            android:name="product_id"
+            app:argType="integer" />
+
+    </fragment>
 
     <!-- Carrito de compras -->
     <fragment

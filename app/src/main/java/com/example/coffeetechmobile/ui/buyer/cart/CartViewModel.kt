@@ -19,7 +19,9 @@ class CartViewModel : ViewModel() {
         val updatedItems = if (existingProduct != null) {
             currentItems.map { item ->
                 if (item.id == product.id) {
-                    item.copy(quantity = item.quantity + 1)
+                    item.copy(
+                        quantity = item.quantity + product.quantity
+                    )
                 } else {
                     item
                 }

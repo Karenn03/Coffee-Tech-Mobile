@@ -268,5 +268,25 @@
     <string name="payment_confirm_simulation">Confirmar simulación</string>
     <string name="payment_simulation_success">Simulación completada. No se realizó ningún cobro.</string>
 
+    <!-- Detalle de producto -->
+    <string name="product_detail_header">Detalle del producto</string>
+    <string name="product_detail_back">Volver al menú</string>
+    <string name="product_detail_category">Nuestro menú</string>
+    <string name="product_detail_unit_price">Precio base</string>
+    <string name="product_detail_customize_title">Personaliza tu bebida</string>
+    <string name="product_detail_size">Tamaño de la bebida</string>
+    <string name="product_detail_size_hint">Selecciona el tamaño que prefieras</string>
+    <string name="product_detail_milk">Tipo de leche</string>
+    <string name="product_detail_milk_hint">Personaliza tu bebida</string>
+    <string name="product_detail_sweetness">Nivel de dulzor</string>
+    <string name="product_detail_ice">Preparación con hielo</string>
+    <string name="product_detail_extras">Adicionales</string>
+    <string name="product_detail_extra_shot">Agregar shot extra de espresso (+$2.000)</string>
+    <string name="product_detail_quantity">Cantidad</string>
+    <string name="product_detail_add">Añadir al carrito</string>
+    <string name="product_detail_added">Producto agregado al carrito</string>
+    <string name="product_detail_not_found">No encontramos este producto.</string>
+    <string name="product_detail_open_cart">Ver carrito</string>
+
 
 </resources>
