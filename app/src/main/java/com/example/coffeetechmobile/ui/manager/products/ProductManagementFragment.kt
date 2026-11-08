@@ -17,6 +17,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.ui.manager.navigation.ManagerTab
+import com.example.coffeetechmobile.ui.manager.navigation.setupManagerBottomNavigation
 
 class ProductManagementFragment : Fragment(R.layout.fragment_product_management) {
 
@@ -26,6 +28,14 @@ class ProductManagementFragment : Fragment(R.layout.fragment_product_management)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupManagerBottomNavigation(
+            root = view.findViewById(
+                R.id.product_bottom_navigation
+            ),
+            navController = findNavController(),
+            selectedTab = ManagerTab.PRODUCTS
+        )
 
         val recycler = view.findViewById<RecyclerView>(R.id.products_recycler_view)
         adapter = ProductAdapter(products, ::editProduct, ::confirmDelete)

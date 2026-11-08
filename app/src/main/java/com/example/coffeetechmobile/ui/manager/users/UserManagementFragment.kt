@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.ui.manager.navigation.ManagerTab
+import com.example.coffeetechmobile.ui.manager.navigation.setupManagerBottomNavigation
 
 class UserManagementFragment : Fragment(R.layout.fragment_user_management) {
 
@@ -22,6 +24,14 @@ class UserManagementFragment : Fragment(R.layout.fragment_user_management) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupManagerBottomNavigation(
+            root = view.findViewById(
+                R.id.manager_bottom_navigation_container
+            ),
+            navController = findNavController(),
+            selectedTab = ManagerTab.USERS
+        )
 
         // Usuarios globales
         bindStat(
