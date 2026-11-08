@@ -6,7 +6,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.core.os.bundleOf
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.navigation.fragment.findNavController
@@ -74,15 +77,54 @@ class UserManagementFragment : Fragment(R.layout.fragment_user_management) {
         )
 
         // Listado de usuarios
-        val usersRecyclerView =
-            view.findViewById<RecyclerView>(R.id.users_recycler_view)
+        val usersRecyclerView = view.findViewById<RecyclerView>(
+            R.id.users_recycler_view
+        )
 
-        usersRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext())
-
+        usersRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         usersRecyclerView.isNestedScrollingEnabled = false
 
-        usersRecyclerView.adapter = UserAdapter(getSampleUsers())
+        // Lista modificable de usuarios
+        val sampleUsers = getSampleUsers().toMutableList()
+
+        // Declaramos el adaptador antes de inicializarlo
+        lateinit var userAdapter: UserAdapter
+
+        userAdapter = UserAdapter(
+            users = sampleUsers,
+
+            // Acción: editar usuario
+            onEdit = { user ->
+                val bundle = bundleOf("user_to_edit" to user)
+
+                findNavController().navigate(
+                    R.id.action_userManagementFragment_to_createUserFragment,
+                    bundle
+                )
+            },
+
+            // Acción: eliminar usuario
+            onDelete = { user ->
+                showDeleteConfirmation(user, userAdapter)
+            }
+        )
+
+        usersRecyclerView.adapter = userAdapter
+
+        // Recibir los cambios realizados en el formulario
+        findNavController()
+            .currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<UserItem>("updated_user")
+            ?.observe(viewLifecycleOwner) { updatedUser ->
+
+                userAdapter.updateUser(updatedUser)
+
+                findNavController()
+                    .currentBackStackEntry
+                    ?.savedStateHandle
+                    ?.remove<UserItem>("updated_user")
+            }
 
         // Navegar al formulario de creación
         view.findViewById<View>(R.id.create_user_button)
@@ -187,4 +229,27 @@ class UserManagementFragment : Fragment(R.layout.fragment_user_management) {
             )
         )
     }
+
+    private fun showDeleteConfirmation(
+        user: UserItem,
+        adapter: UserAdapter
+    ) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Eliminar usuario")
+            .setMessage(
+                "¿Estás seguro de que deseas eliminar a ${user.name}?"
+            )
+            .setNegativeButton("Cancelar", null)
+            .setPositiveButton("Eliminar") { _, _ ->
+                adapter.removeUser(user)
+
+                Toast.makeText(
+                    requireContext(),
+                    "Usuario eliminado correctamente",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            .show()
+    }
+
 }

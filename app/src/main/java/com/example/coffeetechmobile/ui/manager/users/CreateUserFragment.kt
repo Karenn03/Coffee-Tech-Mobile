@@ -15,9 +15,18 @@ import com.example.coffeetechmobile.R
 class CreateUserFragment : Fragment(R.layout.fragment_create_user) {
 
     private var selectedRole: String? = null
+    private var userToEdit: UserItem? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Recuperar el usuario enviado desde el listado
+        userToEdit = arguments?.getSerializable("user_to_edit") as? UserItem
+
+        // Si existe un usuario, cargar sus datos
+        userToEdit?.let { user ->
+            loadUserData(view, user)
+        }
 
         // Configuración de roles
         bindRoleOption(
@@ -135,11 +144,52 @@ class CreateUserFragment : Fragment(R.layout.fragment_create_user) {
                         Toast.makeText(requireContext(), "Selecciona un tipo de contrato", Toast.LENGTH_SHORT).show()
 
                     else -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "¡Formulario validado correctamente!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val documentType = view.findViewById<Spinner>(
+                            R.id.document_type_spinner
+                        ).selectedItem.toString()
+
+                        val updatedUser = userToEdit?.copy(
+                            name = name,
+                            initials = name.split(" ")
+                                .filter { it.isNotBlank() }
+                                .take(2)
+                                .map { it.first().uppercaseChar() }
+                                .joinToString(""),
+
+                            role = selectedRole!!,
+                            document = "$documentType $document",
+                            documentType = documentType,
+                            documentNumber = document,
+                            email = email,
+                            phone = phone,
+                            branch = branch.selectedItem.toString(),
+                            contractType = contract.selectedItem.toString(),
+                            primaryLabel = "Sede:",
+                            primaryValue = branch.selectedItem.toString()
+                        )
+
+                        if (updatedUser != null) {
+                            // Enviar el usuario actualizado al listado
+                            findNavController()
+                                .previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set("updated_user", updatedUser)
+
+                            Toast.makeText(
+                                requireContext(),
+                                "Usuario actualizado correctamente",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            findNavController().navigateUp()
+
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "¡Formulario validado correctamente!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }
@@ -195,4 +245,93 @@ class CreateUserFragment : Fragment(R.layout.fragment_create_user) {
             }
         }
     }
+
+    private fun loadUserData(root: View, user: UserItem) {
+
+        // Cambiar título y subtítulo
+        root.findViewById<TextView>(R.id.form_title)
+            .setText(R.string.edit_user_title)
+
+        root.findViewById<TextView>(R.id.form_subtitle)
+            .setText(R.string.edit_user_subtitle)
+
+        // Cargar documento
+        root.findViewById<EditText>(R.id.document_number_input)
+            .setText(
+                user.documentNumber.ifBlank {
+                    user.document.removePrefix("${user.documentType} ").trim()
+                }
+            )
+
+        // Cargar nombre, correo y teléfono
+        root.findViewById<EditText>(R.id.full_name_input)
+            .setText(user.name)
+
+        root.findViewById<EditText>(R.id.corporate_email_input)
+            .setText(user.email)
+
+        root.findViewById<EditText>(R.id.corporate_phone_input)
+            .setText(user.phone)
+
+        // Seleccionar tipo de documento
+        selectSpinnerItem(
+            root.findViewById(R.id.document_type_spinner),
+            user.documentType
+        )
+
+        // Seleccionar sede
+        val branch = user.branch.ifBlank {
+            if (user.role != "Cliente" && user.role != "Super Admin") {
+                user.primaryValue
+            } else {
+                ""
+            }
+        }
+
+        selectSpinnerItem(
+            root.findViewById(R.id.branch_spinner),
+            branch
+        )
+
+        // Seleccionar tipo de contrato
+        selectSpinnerItem(
+            root.findViewById(R.id.contract_type_spinner),
+            user.contractType
+        )
+
+        // Seleccionar rol
+        val roleId = when (user.role) {
+            getString(R.string.role_barista) -> R.id.role_barista
+            getString(R.string.role_baker) -> R.id.role_baker
+            getString(R.string.role_cashier) -> R.id.role_cashier
+            getString(R.string.role_manager) -> R.id.role_manager
+            getString(R.string.role_super_admin) -> R.id.role_super_admin
+            else -> null
+        }
+
+        roleId?.let {
+            selectRole(root, it)
+        }
+
+        // Cambiar texto del botón principal
+        root.findViewById<TextView>(R.id.form_action_text)
+            .setText(R.string.save_user_changes)
+    }
+
+    private fun selectSpinnerItem(
+        spinner: Spinner,
+        value: String
+    ) {
+        if (value.isBlank()) return
+
+        val adapter = spinner.adapter ?: return
+
+        for (position in 0 until adapter.count) {
+            if (adapter.getItem(position).toString() == value) {
+                spinner.setSelection(position)
+                return
+            }
+        }
+    }
+
 }

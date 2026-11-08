@@ -5,10 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
+import java.io.Serializable
+import java.util.UUID
 
 data class UserItem(
+    val id: String = UUID.randomUUID().toString(),
     val name: String,
     val initials: String,
     val role: String,
@@ -18,11 +22,19 @@ data class UserItem(
     val primaryValue: String,
     val secondaryIcon: Int? = null,
     val secondaryLabel: String? = null,
-    val secondaryValue: String? = null
-)
+    val secondaryValue: String? = null,
+    val documentType: String = "CC",
+    val documentNumber: String = "",
+    val email: String = "",
+    val phone: String = "",
+    val branch: String = "",
+    val contractType: String = ""
+) : Serializable
 
 class UserAdapter(
-    private val users: List<UserItem>
+    private val users: MutableList<UserItem>,
+    private val onEdit: (UserItem) -> Unit,
+    private val onDelete: (UserItem) -> Unit
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -32,7 +44,7 @@ class UserAdapter(
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_user, parent, false)
 
-        return UserViewHolder(view)
+        return UserViewHolder(view, onEdit, onDelete)
     }
 
     override fun onBindViewHolder(
@@ -44,8 +56,29 @@ class UserAdapter(
 
     override fun getItemCount(): Int = users.size
 
-    class UserViewHolder(itemView: View) :
-        RecyclerView.ViewHolder(itemView) {
+    fun removeUser(user: UserItem) {
+        val position = users.indexOfFirst { it.id == user.id }
+
+        if (position != -1) {
+            users.removeAt(position)
+            notifyItemRemoved(position)
+        }
+    }
+
+    fun updateUser(updatedUser: UserItem) {
+        val position = users.indexOfFirst { it.id == updatedUser.id }
+
+        if (position != -1) {
+            users[position] = updatedUser
+            notifyItemChanged(position)
+        }
+    }
+
+    class UserViewHolder(
+        itemView: View,
+        private val onEdit: (UserItem) -> Unit,
+        private val onDelete: (UserItem) -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(user: UserItem) {
 
@@ -98,6 +131,38 @@ class UserAdapter(
             } else {
                 secondary.visibility = View.GONE
             }
+
+            val optionsButton = itemView.findViewById<View>(
+                R.id.user_options_button
+            )
+
+            optionsButton.setOnClickListener { anchor ->
+
+                val popupMenu = PopupMenu(itemView.context, anchor)
+
+                popupMenu.menu.add(0, 1, 0, "Editar")
+                popupMenu.menu.add(0, 2, 1, "Eliminar")
+
+                popupMenu.setOnMenuItemClickListener { menuItem ->
+
+                    when (menuItem.itemId) {
+                        1 -> {
+                            onEdit(user)
+                            true
+                        }
+
+                        2 -> {
+                            onDelete(user)
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+
+                popupMenu.show()
+            }
+
         }
 
         private fun bindDetail(

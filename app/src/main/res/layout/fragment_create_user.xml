@@ -120,6 +120,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/form_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/new_user_title"
@@ -129,6 +130,7 @@
                         android:textStyle="bold"/>
 
                     <TextView
+                        android:id="@+id/form_subtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/new_user_subtitle"
@@ -560,6 +562,7 @@
                 android:elevation="2dp">
 
                 <ImageView
+                    android:id="@+id/form_action_icon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_user_plus"
@@ -567,6 +570,7 @@
                     app:tint="#FFFFFF"/>
 
                 <TextView
+                    android:id="@+id/form_action_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"

@@ -59,7 +59,7 @@
     <string name="manager_sales">Ventas</string>
     <string name="manager_statistics">Estadísticas</string>
 
-    // String for user management view
+    // Strings for user management view
     <string name="search_users">Buscar usuarios</string>
     <string name="user_options">Opciones de usuario</string>
 
@@ -127,6 +127,10 @@
         <item>Prestación de servicios</item>
     </string-array>
 
+    <string name="edit_user_title">Editar usuario</string>
+    <string name="edit_user_subtitle">Actualiza la información del colaborador</string>
+    <string name="save_user_changes">Guardar cambios</string>
+    <string name="cancel_edit">Cancelar edición</string>
 
 
 </resources>
