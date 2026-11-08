@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/auth_nav_graph"
-    app:startDestination="@id/userManagementFragment">
+    app:startDestination="@id/productManagementFragment">
 
     <fragment
         android:id="@+id/sign_in_fragment"
@@ -50,5 +50,20 @@
         android:id="@+id/createUserFragment"
         android:name="com.example.coffeetechmobile.ui.manager.users.CreateUserFragment"
         android:label="Nuevo usuario" />
+
+    <fragment
+        android:id="@+id/productManagementFragment"
+        android:name="com.example.coffeetechmobile.ui.manager.products.ProductManagementFragment"
+        android:label="Gestión de productos">
+
+        <action
+            android:id="@+id/action_productManagementFragment_to_createProductFragment"
+            app:destination="@id/createProductFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createProductFragment"
+        android:name="com.example.coffeetechmobile.ui.manager.products.CreateProductFragment"
+        android:label="Nuevo producto" />
 
 </navigation>

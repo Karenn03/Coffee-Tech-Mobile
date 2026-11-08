@@ -132,5 +132,68 @@
     <string name="save_user_changes">Guardar cambios</string>
     <string name="cancel_edit">Cancelar edición</string>
 
+    // Strings for product management view
+    <string name="create_product">Crear nuevo producto</string>
+    <string name="search_products">Buscar por nombre</string>
+    <string name="products_title">Productos</string>
+    <string name="category_bakery">Pastelería</string>
+    <string name="product_options">Opciones del producto</string>
+    <string name="edit_product">Editar</string>
+    <string name="delete_product">Eliminar</string>
+    <string name="delete_product_confirmation">¿Deseas eliminar %1$s?</string>
+    <string name="cancel">Cancelar</string>
+    <string name="product_deleted">Producto eliminado correctamente</string>
+    <string name="product_created">Producto creado correctamente</string>
+    <string name="product_updated">Producto actualizado correctamente</string>
+    <string name="search_not_available">Escribe un nombre para buscar productos</string>
+    <string name="new_product_title">Nuevo producto</string>
+    <string name="new_product_subtitle">Registra un nuevo ítem en el menú</string>
+    <string name="edit_product_title">Editar producto</string>
+    <string name="edit_product_subtitle">Actualiza la información del producto</string>
+    <string name="back_to_products">Regresar a productos</string>
+
+    <string name="basic_product_information">1. Información básica</string>
+    <string name="product_name_label">Nombre del producto</string>
+    <string name="product_name_hint">Ej. Tostadas francesas</string>
+    <string name="product_category_label">Categoría del producto</string>
+    <string name="product_description_label">Descripción</string>
+    <string name="product_description_hint">Ej. Rebanadas de pan sumergidas en una mezcla de huevo y leche...</string>
+    <string name="product_image_label">Imagen</string>
+    <string name="selected_product_image">Imagen seleccionada del producto</string>
+
+    <string name="prices_inventory">2. Precios e inventario</string>
+    <string name="sale_price_hint">Precio de venta</string>
+    <string name="preparation_cost_hint">Costo de preparación</string>
+
+    <string name="tax_rate_label">Tasa IVA aplicable</string>
+    <string name="tax_exempt">Exento 0%\nCafé en grano o tostado natural sin transformar</string>
+    <string name="tax_reduced">Tarifa reducida 5%\nInsumos de maquinaria agrícola y empaques bio</string>
+    <string name="tax_general">Tarifa general 19%\nBebidas de servicio en mesa y barismo premium</string>
+
+
+    <string name="initial_stock_hint">Stock inicial</string>
+    <string name="minimum_stock_hint">Stock mínimo</string>
+
+    <string name="create_publish_product">Crear y publicar en tienda</string>
+    <string name="save_product_changes">Guardar cambios</string>
+    <string name="cancel_registration">Cancelar registro</string>
+
+    <string name="enter_product_name">Ingresa el nombre del producto</string>
+    <string name="select_product_category">Selecciona una categoría</string>
+    <string name="enter_product_description">Ingresa la descripción</string>
+    <string name="enter_sale_price">Ingresa un precio de venta válido</string>
+    <string name="enter_preparation_cost">Ingresa un costo de preparación válido</string>
+    <string name="select_tax_rate">Selecciona una tasa de IVA</string>
+    <string name="enter_initial_stock">Ingresa un stock inicial válido</string>
+    <string name="enter_minimum_stock">Ingresa un stock mínimo válido</string>
+    <string name="minimum_stock_error">El stock mínimo no puede superar el stock inicial</string>
+
+    <string-array name="product_categories">
+        <item>Selecciona la categoría</item>
+        <item>Bebidas calientes</item>
+        <item>Bebidas frías</item>
+        <item>Pastelería</item>
+        <item>Desayunos y brunch</item>
+    </string-array>
 
 </resources>
