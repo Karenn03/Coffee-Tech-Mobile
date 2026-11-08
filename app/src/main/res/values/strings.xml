@@ -196,4 +196,22 @@
         <item>Desayunos y brunch</item>
     </string-array>
 
+    // Strings for shopping cart
+    <string name="cart_title">Tu carrito de compra</string>
+    <string name="cart_subtitle">Carrito con tus productos favoritos</string>
+
+    <string name="cart_delete_button">Eliminar producto</string>
+    <string name="cart_quantity_decrease">Disminuir cantidad</string>
+    <string name="cart_quantity_increase">Aumentar cantidad</string>
+
+    <string name="cart_order_summary">Resumen del pedido</string>
+    <string name="cart_subtotal">Subtotal</string>
+    <string name="cart_discount">Descuentos</string>
+    <string name="cart_shipping">Envío estimado</string>
+    <string name="cart_total">Total a pagar</string>
+    <string name="cart_continue_payment">Continuar al pago</string>
+    <string name="cart_payment_pending">La pantalla de pago estará disponible próximamente</string>
+    <string name="cart_price_format">%1$s COP</string>
+
+
 </resources>

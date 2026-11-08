@@ -64,4 +64,20 @@ class CartViewModel : ViewModel() {
             it.price * it.quantity
         }
     }
+
+    companion object {
+        // Valor temporal para la demostración del frontend
+        const val SHIPPING_COST = 4500
+        const val DISCOUNT = 0
+    }
+
+    fun getTotal(): Int {
+        val subtotal = getSubtotal()
+
+        return if (_items.value.orEmpty().isEmpty()) {
+            0
+        } else {
+            subtotal - DISCOUNT + SHIPPING_COST
+        }
+    }
 }
