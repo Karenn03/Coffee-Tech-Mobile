@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/auth_nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/adminDashboardFragment">
 
     <fragment
         android:id="@+id/sign_in_fragment"
@@ -70,6 +70,12 @@
         android:id="@+id/paymentFragment"
         android:name="com.example.coffeetechmobile.ui.buyer.payment.PaymentFragment"
         android:label="Proceso de pago" />
+
+    <!-- Dashboard principal del administrador -->
+    <fragment
+        android:id="@+id/adminDashboardFragment"
+        android:name="com.example.coffeetechmobile.ui.manager.dashboard.AdminDashboardFragment"
+        android:label="Panel general" />
 
     <!-- Gestión de usuarios -->
     <fragment

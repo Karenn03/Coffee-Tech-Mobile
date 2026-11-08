@@ -288,5 +288,42 @@
     <string name="product_detail_not_found">No encontramos este producto.</string>
     <string name="product_detail_open_cart">Ver carrito</string>
 
+    // Strings for main dashboard
+    <string name="dashboard_title">Panel general</string>
+    <string name="dashboard_subtitle">Resumen de actividad de Coffee Tech</string>
+
+    <string name="dashboard_month">Este mes</string>
+    <string name="dashboard_today">Hoy</string>
+    <string name="dashboard_week">Esta semana</string>
+
+    <string name="dashboard_total_revenue">INGRESOS TOTALES</string>
+    <string name="dashboard_avg_ticket">Ticket promedio</string>
+    <string name="dashboard_transactions">Transacciones</string>
+
+    <string name="dashboard_sales_flow">Flujo de ventas</string>
+    <string name="dashboard_sales_flow_subtitle">Actividad por franja horaria</string>
+
+    <string name="dashboard_top_products">Productos más vendidos</string>
+    <string name="dashboard_top_products_subtitle">Productos destacados del período</string>
+
+    <string name="dashboard_payment_methods">Métodos de pago</string>
+    <string name="dashboard_payment_subtitle">Distribución de los ingresos</string>
+
+    <string name="dashboard_audit">Auditoría y cumplimiento</string>
+    <string name="dashboard_audit_invoices">Facturación electrónica</string>
+    <string name="dashboard_audit_access">Registro de accesos</string>
+    <string name="dashboard_audit_subtitle">Seguimiento de procesos administrativos</string>
+    <string name="dashboard_audit_invoices_detail">Control de documentos y facturas</string>
+    <string name="dashboard_audit_access_detail">Seguimiento de actividad del sistema</string>
+    <string name="dashboard_audit_demo">Demo</string>
+
+    <string name="dashboard_export">Exportar reporte de ventas</string>
+    <string name="dashboard_export_pending">La exportación de reportes estará disponible próximamente.</string>
+    <string name="dashboard_demo_note">Indicadores de demostración, sin conexión a ventas reales.</string>
+    <string name="dashboard_reports_pending">El reporte de ventas estará disponible próximamente.</string>
+
+    <string name="dashboard_ticket_caption">COP por venta</string>
+    <string name="dashboard_transactions_caption">Registradas</string>
+
 
 </resources>

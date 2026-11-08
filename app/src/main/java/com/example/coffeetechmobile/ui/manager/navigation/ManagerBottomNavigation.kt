@@ -1,16 +1,16 @@
-
 package com.example.coffeetechmobile.ui.manager.navigation
 
-import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import com.example.coffeetechmobile.R
 
 enum class ManagerTab {
+    DASHBOARD,
     USERS,
     PRODUCTS
 }
@@ -20,40 +20,56 @@ fun setupManagerBottomNavigation(
     navController: NavController,
     selectedTab: ManagerTab
 ) {
+    // El include puede reemplazar el ID de la vista raíz.
     val navigation = root as ConstraintLayout
 
     val background = navigation.findViewById<ImageView>(
         R.id.manager_navigation_background
     )
 
-    background.setImageResource(
-        if (selectedTab == ManagerTab.USERS) {
-            R.drawable.bg_manager_bottom_navigation
-        } else {
-            R.drawable.bg_manager_bottom_navigation_products
-        }
+    val homeButton = navigation.findViewById<ImageButton>(
+        R.id.manager_home_button
     )
 
-    val userButton = navigation.findViewById<ImageButton>(
+    val usersButton = navigation.findViewById<ImageButton>(
         R.id.manager_users_button
     )
 
-    val productButton = navigation.findViewById<ImageButton>(
+    val productsButton = navigation.findViewById<ImageButton>(
         R.id.manager_sales_button
     )
+
+    val reportsButton = navigation.findViewById<ImageButton>(
+        R.id.manager_stats_button
+    )
+
+    background.setImageResource(
+        when (selectedTab) {
+            ManagerTab.DASHBOARD ->
+                R.drawable.bg_manager_bottom_navigation_home
+
+            ManagerTab.USERS ->
+                R.drawable.bg_manager_bottom_navigation
+
+            ManagerTab.PRODUCTS ->
+                R.drawable.bg_manager_bottom_navigation_products
+        }
+    )
+
+    fun dp(value: Int): Int {
+        return (
+                value * navigation.resources.displayMetrics.density + 0.5f
+                ).toInt()
+    }
 
     fun configureButton(
         button: ImageButton,
         selected: Boolean,
         selectedBias: Float,
-        normalBias: Float,
-        normalPadding: Int
+        normalBias: Float
     ) {
-        val density = navigation.resources.displayMetrics.density
-
-        fun dp(value: Int): Int = (value * density + 0.5f).toInt()
-
-        val params = button.layoutParams as ConstraintLayout.LayoutParams
+        val params = button.layoutParams as
+                ConstraintLayout.LayoutParams
 
         params.width = dp(if (selected) 54 else 36)
         params.height = dp(if (selected) 54 else 36)
@@ -71,56 +87,109 @@ fun setupManagerBottomNavigation(
         }
 
         params.bottomMargin = if (selected) 0 else dp(8)
-        params.horizontalBias = if (selected) selectedBias else normalBias
+
+        params.horizontalBias = if (selected) {
+            selectedBias
+        } else {
+            normalBias
+        }
 
         button.layoutParams = params
 
         if (selected) {
-            button.setBackgroundResource(R.drawable.bg_home_nav_button)
+            button.setBackgroundResource(
+                R.drawable.bg_home_nav_button
+            )
         } else {
             val value = TypedValue()
+
             button.context.theme.resolveAttribute(
                 android.R.attr.selectableItemBackgroundBorderless,
                 value,
                 true
             )
-            button.setBackgroundResource(value.resourceId)
+
+            if (value.resourceId != 0) {
+                button.setBackgroundResource(value.resourceId)
+            } else {
+                button.background = null
+            }
         }
 
-        val padding = dp(if (selected) 12 else normalPadding)
-        button.setPadding(padding, padding, padding, padding)
-        button.elevation = dp(if (selected) 6 else 0).toFloat()
+        val padding = dp(if (selected) 12 else 6)
+
+        button.setPadding(
+            padding,
+            padding,
+            padding,
+            padding
+        )
+
+        button.elevation = if (selected) {
+            dp(6).toFloat()
+        } else {
+            0f
+        }
+
+        button.isSelected = selected
     }
 
     configureButton(
-        userButton,
-        selectedTab == ManagerTab.USERS,
-        0.385f,
-        0.385f,
-        9
+        button = homeButton,
+        selected = selectedTab == ManagerTab.DASHBOARD,
+        selectedBias = 0.10f,
+        normalBias = 0.10f
     )
 
     configureButton(
-        productButton,
-        selectedTab == ManagerTab.PRODUCTS,
-        0.59f,
-        0.68f,
-        8
+        button = usersButton,
+        selected = selectedTab == ManagerTab.USERS,
+        selectedBias = 0.385f,
+        normalBias = 0.385f
+    )
+
+    configureButton(
+        button = productsButton,
+        selected = selectedTab == ManagerTab.PRODUCTS,
+        selectedBias = 0.60f,
+        normalBias = 0.68f
+    )
+
+    // Los reportes tendrán su propia pantalla después.
+    configureButton(
+        button = reportsButton,
+        selected = false,
+        selectedBias = 0.90f,
+        normalBias = 0.90f
     )
 
     fun navigateTo(destinationId: Int) {
-        if (navController.currentDestination?.id == destinationId) return
+        if (navController.currentDestination?.id == destinationId) {
+            return
+        }
 
         if (!navController.popBackStack(destinationId, false)) {
             navController.navigate(destinationId)
         }
     }
 
-    userButton.setOnClickListener {
+    homeButton.setOnClickListener {
+        navigateTo(R.id.adminDashboardFragment)
+    }
+
+    usersButton.setOnClickListener {
         navigateTo(R.id.userManagementFragment)
     }
 
-    productButton.setOnClickListener {
+    productsButton.setOnClickListener {
         navigateTo(R.id.productManagementFragment)
+    }
+
+    reportsButton.setOnClickListener {
+        Toast.makeText(
+            navigation.context,
+            R.string.dashboard_reports_pending,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }
