@@ -23,11 +23,6 @@ class CreateUserFragment : Fragment(R.layout.fragment_create_user) {
         // Recuperar el usuario enviado desde el listado
         userToEdit = arguments?.getSerializable("user_to_edit") as? UserItem
 
-        // Si existe un usuario, cargar sus datos
-        userToEdit?.let { user ->
-            loadUserData(view, user)
-        }
-
         // Configuración de roles
         bindRoleOption(
             view,
@@ -82,6 +77,10 @@ class CreateUserFragment : Fragment(R.layout.fragment_create_user) {
             view.findViewById<View>(roleId).setOnClickListener {
                 selectRole(view, roleId)
             }
+        }
+
+        userToEdit?.let { user ->
+            loadUserData(view, user)
         }
 
         view.findViewById<View>(R.id.back_to_users_button)
@@ -148,48 +147,66 @@ class CreateUserFragment : Fragment(R.layout.fragment_create_user) {
                             R.id.document_type_spinner
                         ).selectedItem.toString()
 
-                        val updatedUser = userToEdit?.copy(
+                        val role = selectedRole!!
+
+                        val user = UserItem(
+                            id = userToEdit?.id
+                                ?: java.util.UUID.randomUUID().toString(),
+
                             name = name,
+
                             initials = name.split(" ")
                                 .filter { it.isNotBlank() }
                                 .take(2)
                                 .map { it.first().uppercaseChar() }
                                 .joinToString(""),
 
-                            role = selectedRole!!,
+                            role = role,
+
                             document = "$documentType $document",
+
                             documentType = documentType,
                             documentNumber = document,
+
                             email = email,
                             phone = phone,
+
                             branch = branch.selectedItem.toString(),
                             contractType = contract.selectedItem.toString(),
+
+                            primaryIcon = userToEdit?.primaryIcon
+                                ?: R.drawable.ic_store,
+
                             primaryLabel = "Sede:",
-                            primaryValue = branch.selectedItem.toString()
+                            primaryValue = branch.selectedItem.toString(),
+
+                            secondaryIcon = userToEdit?.secondaryIcon,
+                            secondaryLabel = userToEdit?.secondaryLabel,
+                            secondaryValue = userToEdit?.secondaryValue
                         )
 
-                        if (updatedUser != null) {
-                            // Enviar el usuario actualizado al listado
-                            findNavController()
-                                .previousBackStackEntry
-                                ?.savedStateHandle
-                                ?.set("updated_user", updatedUser)
-
-                            Toast.makeText(
-                                requireContext(),
-                                "Usuario actualizado correctamente",
-                                Toast.LENGTH_SHORT
-                            ).show()
-
-                            findNavController().navigateUp()
-
+                        val key = if (userToEdit == null) {
+                            "created_user"
                         } else {
-                            Toast.makeText(
-                                requireContext(),
-                                "¡Formulario validado correctamente!",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            "updated_user"
                         }
+
+                        findNavController()
+                            .previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set(key, user)
+
+                        Toast.makeText(
+                            requireContext(),
+                            if (userToEdit == null) {
+                                "Usuario creado correctamente"
+                            } else {
+                                "Usuario actualizado correctamente"
+                            },
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        findNavController().navigateUp()
                     }
                 }
             }

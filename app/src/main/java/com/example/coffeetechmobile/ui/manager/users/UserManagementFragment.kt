@@ -17,6 +17,9 @@ import com.example.coffeetechmobile.R
 
 class UserManagementFragment : Fragment(R.layout.fragment_user_management) {
 
+    private val users = getSampleUsers().toMutableList()
+    private lateinit var userAdapter: UserAdapter
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -84,14 +87,8 @@ class UserManagementFragment : Fragment(R.layout.fragment_user_management) {
         usersRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         usersRecyclerView.isNestedScrollingEnabled = false
 
-        // Lista modificable de usuarios
-        val sampleUsers = getSampleUsers().toMutableList()
-
-        // Declaramos el adaptador antes de inicializarlo
-        lateinit var userAdapter: UserAdapter
-
         userAdapter = UserAdapter(
-            users = sampleUsers,
+            users = users,
 
             // Acción: editar usuario
             onEdit = { user ->
@@ -112,18 +109,24 @@ class UserManagementFragment : Fragment(R.layout.fragment_user_management) {
         usersRecyclerView.adapter = userAdapter
 
         // Recibir los cambios realizados en el formulario
-        findNavController()
+        val result = findNavController()
             .currentBackStackEntry
             ?.savedStateHandle
-            ?.getLiveData<UserItem>("updated_user")
+
+        result?.getLiveData<UserItem>("created_user")
+            ?.observe(viewLifecycleOwner) { newUser ->
+
+                userAdapter.addUser(newUser)
+
+                result.remove<UserItem>("created_user")
+            }
+
+        result?.getLiveData<UserItem>("updated_user")
             ?.observe(viewLifecycleOwner) { updatedUser ->
 
                 userAdapter.updateUser(updatedUser)
 
-                findNavController()
-                    .currentBackStackEntry
-                    ?.savedStateHandle
-                    ?.remove<UserItem>("updated_user")
+                result.remove<UserItem>("updated_user")
             }
 
         // Navegar al formulario de creación

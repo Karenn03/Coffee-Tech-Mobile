@@ -56,6 +56,11 @@ class UserAdapter(
 
     override fun getItemCount(): Int = users.size
 
+    fun addUser(user: UserItem) {
+        users.add(0, user)
+        notifyItemInserted(0)
+    }
+
     fun removeUser(user: UserItem) {
         val position = users.indexOfFirst { it.id == user.id }
 
