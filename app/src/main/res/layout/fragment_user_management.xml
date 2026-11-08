@@ -210,111 +210,121 @@
 
             </LinearLayout>
 
-            <HorizontalScrollView
-                android:id="@+id/user_filters_scroll"
+            <FrameLayout
+                android:id="@+id/product_filters_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:clipToPadding="false"
-                android:scrollbars="none">
+                android:clipChildren="true"
+                android:clipToPadding="true">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <HorizontalScrollView
+                    android:id="@+id/user_filters_scroll"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:clipChildren="true"
+                    android:clipToPadding="true"
+                    android:scrollbars="none">
 
                     <LinearLayout
-                        android:id="@+id/filter_all"
                         android:layout_width="wrap_content"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_filter_selected"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_filter_all"
-                            android:contentDescription="@null"
-                            app:tint="#FFFFFF"/>
-
-                        <TextView
+                        <LinearLayout
+                            android:id="@+id/filter_all"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_filter_selected"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_filter_all"
+                                android:contentDescription="@null"
+                                app:tint="#FFFFFF"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Todos (1.420)"
+                                android:textColor="#FFFFFF"
+                                android:textSize="14sp"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/filter_employees"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
                             android:layout_marginStart="8dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:text="Todos (1.420)"
-                            android:textColor="#FFFFFF"
-                            android:textSize="14sp"/>
+                            android:background="@drawable/bg_filter_unselected"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_coffee"
+                                android:contentDescription="@null"
+                                app:tint="@color/coffee_secondary"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Empleados (28)"
+                                android:textColor="@color/coffee_primary"
+                                android:textSize="14sp"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/filter_clients"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_filter_unselected"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_user"
+                                android:contentDescription="@null"
+                                app:tint="@color/coffee_secondary"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Clientes (1.385)"
+                                android:textColor="@color/coffee_primary"
+                                android:textSize="14sp"/>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/filter_employees"
-                        android:layout_width="wrap_content"
-                        android:layout_height="44dp"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/bg_filter_unselected"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp">
+                </HorizontalScrollView>
 
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_coffee"
-                            android:contentDescription="@null"
-                            app:tint="@color/coffee_secondary"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:text="Empleados (28)"
-                            android:textColor="@color/coffee_primary"
-                            android:textSize="14sp"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/filter_clients"
-                        android:layout_width="wrap_content"
-                        android:layout_height="44dp"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/bg_filter_unselected"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_user"
-                            android:contentDescription="@null"
-                            app:tint="@color/coffee_secondary"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:text="Clientes (1.385)"
-                            android:textColor="@color/coffee_primary"
-                            android:textSize="14sp"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </HorizontalScrollView>
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/user_list_header"
