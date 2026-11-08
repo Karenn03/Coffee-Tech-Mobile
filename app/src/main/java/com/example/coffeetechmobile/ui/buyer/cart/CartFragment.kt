@@ -168,11 +168,11 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
         }
 
         checkoutButton.setOnClickListener {
-            Toast.makeText(
-                requireContext(),
-                R.string.cart_payment_pending,
-                Toast.LENGTH_SHORT
-            ).show()
+            if (cartViewModel.items.value.orEmpty().isNotEmpty()) {
+                findNavController().navigate(
+                    R.id.action_cartFragment_to_paymentFragment
+                )
+            }
         }
     }
 

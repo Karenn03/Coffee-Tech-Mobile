@@ -213,10 +213,60 @@
     <string name="cart_payment_pending">La pantalla de pago estará disponible próximamente</string>
     <string name="cart_price_format">%1$s COP</string>
 
-
     <string name="cart_empty_title">Tu carrito está vacío</string>
     <string name="cart_empty_description">¡Todavía no has agregado ningún producto! Explora nuestro menú y encuentra tu próximo café favorito.</string>
     <string name="cart_explore_products">Explorar productos</string>
     <string name="cart_empty_footer">Preparado con amor, servido con café ☕</string>
+
+    // Strings for payment
+    <string name="payment_title">Proceso de pago</string>
+    <string name="payment_subtitle">Finaliza tu compra de forma sencilla</string>
+    <string name="payment_back">Volver al carrito</string>
+    <string name="payment_step_cart">Carrito</string>
+    <string name="payment_step_delivery">Entrega</string>
+    <string name="payment_step_payment">Pago</string>
+
+    <string name="payment_delivery_title">Información de entrega</string>
+    <string name="payment_delivery_subtitle">Confirma los datos de tu pedido</string>
+    <string name="payment_delivery_address">Dirección de entrega</string>
+    <string name="payment_delivery_pending">Dirección pendiente de confirmar</string>
+    <string name="payment_delivery_time">Entrega estimada: 30 - 45 min</string>
+
+    <string name="payment_methods_title">Método de pago</string>
+    <string name="payment_methods_subtitle">Selecciona cómo deseas pagar</string>
+
+    <string name="payment_terms">Acepto los términos y condiciones y autorizo el tratamiento de mis datos personales.</string>
+    <string name="payment_confirm">Confirmar pago</string>
+    <string name="payment_total_label">Total a pagar</string>
+
+    <string name="payment_pse_name">PSE - Débito bancario</string>
+    <string name="payment_pse_description">Transferencia desde tu banco</string>
+
+    <string name="payment_wallet_name">Nequi / Daviplata</string>
+    <string name="payment_wallet_description">Pago mediante billetera digital</string>
+
+    <string name="payment_card_name">Tarjeta débito o crédito</string>
+    <string name="payment_card_description">Visa, Mastercard y otras tarjetas</string>
+
+    <string name="payment_cash_name">Pago contra entrega</string>
+    <string name="payment_cash_description">Paga en efectivo cuando recibas tu pedido</string>
+
+    <string name="payment_popular">Popular</string>
+    <string name="payment_pse_details">Selecciona tu banco y proporciona los datos de prueba para simular el pago.</string>
+
+    <!-- Detalles de métodos de pago simulados -->
+    <string name="payment_wallet_details">Selecciona tu billetera digital. Esta opción se utiliza únicamente para demostrar el flujo de pago.</string>
+    <string name="payment_card_details">Esta es una demostración del pago con tarjeta. No se solicitarán números de tarjeta ni datos bancarios reales.</string>
+    <string name="payment_cash_details">Podrás simular la confirmación de un pedido con pago en efectivo al momento de la entrega.</string>
+
+    <!-- Validaciones y confirmación -->
+    <string name="payment_empty_cart">Agrega productos antes de continuar con el pago.</string>
+    <string name="payment_accept_terms">Debes aceptar los términos y condiciones para continuar.</string>
+    <string name="payment_confirmation_title">Confirmar pedido de prueba</string>
+    <string name="payment_confirmation_message">Método seleccionado: %1$s\nTotal: %2$s\n\nEsto es una simulación. No se realizará ningún cobro ni se generará un pedido real.</string>
+    <string name="payment_cancel">Cancelar</string>
+    <string name="payment_confirm_simulation">Confirmar simulación</string>
+    <string name="payment_simulation_success">Simulación completada. No se realizó ningún cobro.</string>
+
 
 </resources>

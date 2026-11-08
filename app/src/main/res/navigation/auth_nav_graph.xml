@@ -39,7 +39,19 @@
     <fragment
         android:id="@+id/cartFragment"
         android:name="com.example.coffeetechmobile.ui.buyer.cart.CartFragment"
-        android:label="Carrito de compras" />
+        android:label="Carrito de compras">
+
+        <action
+            android:id="@+id/action_cartFragment_to_paymentFragment"
+            app:destination="@id/paymentFragment" />
+
+    </fragment>
+
+    <!-- Pasarela de pagos -->
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.example.coffeetechmobile.ui.buyer.payment.PaymentFragment"
+        android:label="Proceso de pago" />
 
     <!-- Gestión de usuarios -->
     <fragment
