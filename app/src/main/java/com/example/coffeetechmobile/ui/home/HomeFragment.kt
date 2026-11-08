@@ -4,15 +4,31 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.ImageButton
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.ui.buyer.cart.CartItem
+import com.example.coffeetechmobile.ui.buyer.cart.CartViewModel
+import com.example.coffeetechmobile.ui.buyer.navigation.BuyerTab
+import com.example.coffeetechmobile.ui.buyer.navigation.setupBuyerBottomNavigation
 import java.text.NumberFormat
 import java.util.Locale
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
+    private val cartViewModel: CartViewModel by activityViewModels()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupBuyerBottomNavigation(
+            root = view.findViewById(R.id.bottom_navigation_container),
+            navController = findNavController(),
+            selectedTab = BuyerTab.HOME
+        )
 
         // Primera fila
         bindProduct(
@@ -61,23 +77,49 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         description: String,
         price: Int
     ) {
+        // Obtener la tarjeta del producto
         val productCard = root.findViewById<View>(containerId)
 
+        // Configurar imagen
         productCard.findViewById<ImageView>(R.id.product_image).apply {
             setImageResource(imageRes)
             contentDescription = name
         }
 
+        // Configurar nombre y descripción
         productCard.findViewById<TextView>(R.id.product_name).text = name
 
         productCard.findViewById<TextView>(R.id.product_description).text =
             description
 
+        // Formatear precio en pesos colombianos
         val formattedPrice = NumberFormat
             .getIntegerInstance(Locale("es", "CO"))
             .format(price)
 
         productCard.findViewById<TextView>(R.id.product_price).text =
             "\$$formattedPrice"
+
+        // Agregar producto al carrito
+        productCard.findViewById<ImageButton>(
+            R.id.add_product_button
+        ).setOnClickListener {
+
+            val product = CartItem(
+                id = containerId,
+                name = name,
+                description = description,
+                price = price,
+                imageRes = imageRes
+            )
+
+            cartViewModel.addProduct(product)
+
+            Toast.makeText(
+                root.context,
+                "$name agregado al carrito",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 }

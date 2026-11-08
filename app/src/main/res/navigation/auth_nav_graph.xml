@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/auth_nav_graph"
-    app:startDestination="@id/userManagementFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/sign_in_fragment"
@@ -34,6 +34,12 @@
         android:id="@+id/homeFragment"
         android:name="com.example.coffeetechmobile.ui.home.HomeFragment"
         android:label="Home" />
+
+    <!-- Carrito de compras -->
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.coffeetechmobile.ui.buyer.cart.CartFragment"
+        android:label="Carrito de compras" />
 
     <!-- Gestión de usuarios -->
     <fragment
