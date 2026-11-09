@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/auth_nav_graph"
-    app:startDestination="@id/sellerOrdersFragment">
+    app:startDestination="@id/profileFragment">
 
 
     <!-- ................................................................................. -->
@@ -33,6 +33,19 @@
         android:id="@+id/forgot_password_fragment"
         android:name="com.example.coffeetechmobile.ui.auth.ForgotPasswordFragment"
         android:label="Recuperar contraseña" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.coffeetechmobile.ui.profile.ProfileFragment"
+        android:label="Mi perfil">
+
+        <argument
+            android:name="profile_role"
+            app:argType="string"
+            android:defaultValue="BUYER" />
+        <!-- SELLER -->
+
+    </fragment>
 
 
     <!-- ................................................................................. -->
