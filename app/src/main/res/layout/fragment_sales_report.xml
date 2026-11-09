@@ -7,8 +7,6 @@
     android:background="@color/background_app"
     android:clipChildren="false">
 
-    <!-- HEADER -->
-
     <LinearLayout
         android:id="@+id/report_header"
         android:layout_width="0dp"
@@ -76,8 +74,6 @@
 
     </LinearLayout>
 
-    <!-- CONTENIDO -->
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/report_scroll"
         android:layout_width="0dp"
@@ -117,8 +113,6 @@
                 android:textColor="@color/coffee_primary"
                 android:textSize="15sp" />
 
-            <!-- PERÍODO DE DEMOSTRACIÓN -->
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,8 +123,6 @@
                 android:text="@string/report_period"
                 android:textColor="@color/coffee_primary"
                 android:textSize="12sp" />
-
-            <!-- FILTROS -->
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -389,8 +381,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ENCABEZADO TRANSACCIONES -->
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -427,8 +417,6 @@
                 android:orientation="vertical"
                 android:clipChildren="false"
                 android:clipToPadding="false" />
-
-            <!-- EXPORTACIÓN -->
 
             <LinearLayout
                 android:id="@+id/report_export_button"

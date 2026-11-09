@@ -20,7 +20,7 @@ fun setupManagerBottomNavigation(
     navController: NavController,
     selectedTab: ManagerTab
 ) {
-    // El include puede reemplazar el ID de la vista raíz.
+    // El include puede reemplazar el ID de la vista raíz
     val navigation = root as ConstraintLayout
 
     val background = navigation.findViewById<ImageView>(

@@ -349,4 +349,21 @@
     <string name="report_payment_label">Método de pago</string>
     <string name="report_amount_label">Importe</string>
 
+    // Strings for order history
+    <string name="seller_orders_title">Pedidos recibidos</string>
+    <string name="seller_orders_subtitle">Consulta y seguimiento de pedidos de Coffee Tech</string>
+    <string name="seller_orders_active">Activos</string>
+    <string name="seller_orders_delivered">Entregados</string>
+    <string name="seller_orders_all">Todos</string>
+    <string name="seller_orders_count">%1$d pedidos</string>
+    <string name="seller_orders_list_title">Historial de pedidos</string>
+    <string name="seller_orders_status_received">Recibido</string>
+    <string name="seller_orders_status_preparing">Preparando</string>
+    <string name="seller_orders_status_ready">Listo</string>
+    <string name="seller_orders_status_delivered">Entregado</string>
+    <string name="seller_orders_units">%1$d unidades</string>
+    <string name="seller_orders_empty">No hay pedidos para este filtro.</string>
+    <string name="seller_orders_amount_format">$%1$s COP</string>
+    <string name="seller_orders_back">Regresar</string>
+
 </resources>

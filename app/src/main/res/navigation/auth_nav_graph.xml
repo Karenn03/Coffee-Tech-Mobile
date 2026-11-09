@@ -3,7 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/auth_nav_graph"
-    app:startDestination="@id/adminDashboardFragment">
+    app:startDestination="@id/sellerOrdersFragment">
+
+
+    <!-- ................................................................................. -->
+
 
     <fragment
         android:id="@+id/sign_in_fragment"
@@ -29,6 +33,10 @@
         android:id="@+id/forgot_password_fragment"
         android:name="com.example.coffeetechmobile.ui.auth.ForgotPasswordFragment"
         android:label="Recuperar contraseña" />
+
+
+    <!-- ................................................................................. -->
+
 
     <fragment
         android:id="@+id/homeFragment"
@@ -70,6 +78,10 @@
         android:id="@+id/paymentFragment"
         android:name="com.example.coffeetechmobile.ui.buyer.payment.PaymentFragment"
         android:label="Proceso de pago" />
+
+
+    <!-- ................................................................................. -->
+
 
     <!-- Dashboard principal del administrador -->
     <fragment
@@ -115,5 +127,17 @@
         android:id="@+id/salesReportFragment"
         android:name="com.example.coffeetechmobile.ui.manager.reports.SalesReportFragment"
         android:label="Reporte de ventas" />
+
+
+    <!-- ................................................................................. -->
+
+
+    <!-- Historial de pedidos del vendedor -->
+    <fragment
+        android:id="@+id/sellerOrdersFragment"
+        android:name="com.example.coffeetechmobile.ui.seller.orders.SellerOrdersFragment"
+        android:label="Pedidos recibidos" />
+
+
 
 </navigation>
