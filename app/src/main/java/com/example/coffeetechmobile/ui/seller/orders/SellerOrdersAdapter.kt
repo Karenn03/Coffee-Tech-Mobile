@@ -1,7 +1,9 @@
 package com.example.coffeetechmobile.ui.seller.orders
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.ui.buyer.catalog.MenuCatalog
 import com.google.android.material.card.MaterialCardView
 import java.text.NumberFormat
 import java.util.Locale
@@ -25,12 +28,16 @@ class SellerOrdersAdapter :
                 override fun areItemsTheSame(
                     oldItem: SellerOrder,
                     newItem: SellerOrder
-                ) = oldItem.id == newItem.id
+                ): Boolean {
+                    return oldItem.id == newItem.id
+                }
 
                 override fun areContentsTheSame(
                     oldItem: SellerOrder,
                     newItem: SellerOrder
-                ) = oldItem == newItem
+                ): Boolean {
+                    return oldItem == newItem
+                }
             }
     }
 
@@ -39,7 +46,6 @@ class SellerOrdersAdapter :
     ) : RecyclerView.ViewHolder(card) {
 
         fun bind(order: SellerOrder) {
-
             val context = card.context
 
             card.findViewById<TextView>(
@@ -73,40 +79,8 @@ class SellerOrdersAdapter :
                 formattedAmount
             )
 
-            val productsContainer =
-                card.findViewById<LinearLayout>(
-                    R.id.seller_order_products_container
-                )
-
-            productsContainer.removeAllViews()
-
-            order.products.forEach { productName ->
-                val productText = TextView(context).apply {
-                    text = productName
-                    textSize = 13f
-
-                    setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.coffee_secondary
-                        )
-                    )
-                }
-
-                val params = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-
-                params.bottomMargin = (
-                        5 * context.resources.displayMetrics.density
-                        ).toInt()
-
-                productsContainer.addView(
-                    productText,
-                    params
-                )
-            }
+            bindProducts(order)
+            bindCustomerNote(order)
 
             configureStatus(
                 card.findViewById(R.id.seller_order_status),
@@ -114,12 +88,91 @@ class SellerOrdersAdapter :
             )
         }
 
+        private fun bindProducts(order: SellerOrder) {
+            val container = card.findViewById<LinearLayout>(
+                R.id.seller_order_products_container
+            )
+
+            container.removeAllViews()
+
+            val inflater = LayoutInflater.from(card.context)
+
+            order.products.forEach { orderProduct ->
+                val product = MenuCatalog.findById(
+                    orderProduct.productId
+                )
+
+                val itemView = inflater.inflate(
+                    R.layout.item_seller_order_product,
+                    container,
+                    false
+                )
+
+                val image = itemView.findViewById<ImageView>(
+                    R.id.order_product_image
+                )
+
+                val name = itemView.findViewById<TextView>(
+                    R.id.order_product_name
+                )
+
+                val quantity = itemView.findViewById<TextView>(
+                    R.id.order_product_quantity
+                )
+
+                if (product != null) {
+                    image.setImageResource(product.imageRes)
+                    image.contentDescription = product.name
+                    image.visibility = View.VISIBLE
+                    name.text = product.name
+                } else {
+                    image.visibility = View.GONE
+                    name.setText(
+                        R.string.seller_order_missing_product
+                    )
+                }
+
+                quantity.text = if (orderProduct.quantity == 1) {
+                    card.context.getString(
+                        R.string.seller_order_single_unit
+                    )
+                } else {
+                    card.context.getString(
+                        R.string.seller_order_product_quantity,
+                        orderProduct.quantity
+                    )
+                }
+
+                container.addView(itemView)
+            }
+        }
+
+        private fun bindCustomerNote(order: SellerOrder) {
+            val noteContainer = card.findViewById<View>(
+                R.id.seller_order_note_container
+            )
+
+            val noteText = card.findViewById<TextView>(
+                R.id.seller_order_note
+            )
+
+            val note = order.customerNote
+                ?.trim()
+                .orEmpty()
+
+            if (note.isNotEmpty()) {
+                noteText.text = note
+                noteContainer.visibility = View.VISIBLE
+            } else {
+                noteText.text = ""
+                noteContainer.visibility = View.GONE
+            }
+        }
+
         private fun configureStatus(
             label: TextView,
             status: SellerOrderStatus
         ) {
-            val context = label.context
-
             val (textRes, backgroundRes, colorRes) =
                 when (status) {
 
@@ -156,7 +209,10 @@ class SellerOrdersAdapter :
             label.setBackgroundResource(backgroundRes)
 
             label.setTextColor(
-                ContextCompat.getColor(context, colorRes)
+                ContextCompat.getColor(
+                    label.context,
+                    colorRes
+                )
             )
         }
     }

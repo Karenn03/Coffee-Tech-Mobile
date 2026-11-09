@@ -152,14 +152,6 @@
                             app:tint="#F0BC8F" />
 
                         <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="@string/seller_orders_active"
-                            android:textColor="#E6D9D2"
-                            android:textSize="12sp" />
-
-                        <TextView
                             android:id="@+id/seller_orders_active_count"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -167,6 +159,14 @@
                             android:textColor="@color/background_app"
                             android:textSize="28sp"
                             android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/seller_orders_active"
+                            android:textColor="#E6D9D2"
+                            android:textSize="12sp" />
 
                     </LinearLayout>
 
@@ -200,14 +200,6 @@
                             app:tint="@color/coffee_secondary" />
 
                         <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="@string/seller_orders_delivered"
-                            android:textColor="@color/coffee_secondary"
-                            android:textSize="12sp" />
-
-                        <TextView
                             android:id="@+id/seller_orders_delivered_count"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -216,9 +208,121 @@
                             android:textSize="28sp"
                             android:textStyle="bold" />
 
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/seller_orders_delivered"
+                            android:textColor="@color/coffee_secondary"
+                            android:textSize="12sp" />
+
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_seller_order_stat"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="12dp">
+
+                    <TextView
+                        android:id="@+id/seller_stat_received"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/coffee_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="@string/seller_orders_status_received"
+                        android:textColor="@color/coffee_secondary"
+                        android:textSize="11sp" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="1dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_seller_order_stat"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="12dp">
+
+                    <TextView
+                        android:id="@+id/seller_stat_preparing"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/coffee_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="@string/seller_orders_status_preparing"
+                        android:textColor="@color/coffee_secondary"
+                        android:textSize="11sp" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="1dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_seller_order_stat"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="12dp">
+
+                    <TextView
+                        android:id="@+id/seller_stat_ready"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/coffee_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="@string/seller_orders_status_ready"
+                        android:textColor="@color/coffee_secondary"
+                        android:textSize="11sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -239,46 +343,100 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <TextView
+                        <LinearLayout
                             android:id="@+id/seller_orders_filter_all"
                             android:layout_width="wrap_content"
-                            android:layout_height="46dp"
+                            android:layout_height="44dp"
                             android:background="@drawable/bg_filter_selected"
-                            android:gravity="center"
-                            android:paddingHorizontal="20dp"
-                            android:text="@string/seller_orders_all"
-                            android:textColor="@color/background_app"
-                            android:textSize="13sp"
                             android:clickable="true"
-                            android:focusable="true" />
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp">
 
-                        <TextView
+                            <ImageView
+                                android:id="@+id/seller_filter_all_icon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_filter_all"
+                                android:contentDescription="@null"
+                                app:tint="@color/background_app" />
+
+                            <TextView
+                                android:id="@+id/seller_filter_all_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/seller_orders_all"
+                                android:textColor="@color/background_app"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:id="@+id/seller_orders_filter_active"
                             android:layout_width="wrap_content"
-                            android:layout_height="46dp"
-                            android:layout_marginStart="10dp"
+                            android:layout_height="44dp"
+                            android:layout_marginStart="8dp"
                             android:background="@drawable/bg_dashboard_filter_unselected"
-                            android:gravity="center"
-                            android:paddingHorizontal="20dp"
-                            android:text="@string/seller_orders_active"
-                            android:textColor="@color/coffee_primary"
-                            android:textSize="13sp"
                             android:clickable="true"
-                            android:focusable="true" />
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp">
 
-                        <TextView
+                            <ImageView
+                                android:id="@+id/seller_filter_active_icon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_circle_fading_play"
+                                android:contentDescription="@null"
+                                app:tint="@color/coffee_secondary" />
+
+                            <TextView
+                                android:id="@+id/seller_filter_active_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/seller_orders_active"
+                                android:textColor="@color/coffee_primary"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:id="@+id/seller_orders_filter_delivered"
                             android:layout_width="wrap_content"
-                            android:layout_height="46dp"
-                            android:layout_marginStart="10dp"
+                            android:layout_height="44dp"
+                            android:layout_marginStart="8dp"
                             android:background="@drawable/bg_dashboard_filter_unselected"
-                            android:gravity="center"
-                            android:paddingHorizontal="20dp"
-                            android:text="@string/seller_orders_delivered"
-                            android:textColor="@color/coffee_primary"
-                            android:textSize="13sp"
                             android:clickable="true"
-                            android:focusable="true" />
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="16dp">
+
+                            <ImageView
+                                android:id="@+id/seller_filter_delivered_icon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_package_check"
+                                android:contentDescription="@null"
+                                app:tint="@color/coffee_secondary" />
+
+                            <TextView
+                                android:id="@+id/seller_filter_delivered_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/seller_orders_delivered"
+                                android:textColor="@color/coffee_primary"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -333,14 +491,6 @@
                 android:textColor="@color/coffee_secondary"
                 android:textSize="14sp"
                 android:visibility="gone" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:gravity="center"
-                android:textColor="@color/coffee_secondary"
-                android:textSize="12sp" />
 
         </LinearLayout>
 

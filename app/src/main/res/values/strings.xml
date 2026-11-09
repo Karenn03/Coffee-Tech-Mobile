@@ -366,4 +366,9 @@
     <string name="seller_orders_amount_format">$%1$s COP</string>
     <string name="seller_orders_back">Regresar</string>
 
+    <string name="seller_order_note_title">Nota del cliente</string>
+    <string name="seller_order_product_quantity">%1$d unidades</string>
+    <string name="seller_order_single_unit">1 unidad</string>
+    <string name="seller_order_missing_product">Producto no disponible</string>
+
 </resources>

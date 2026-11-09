@@ -1,3 +1,4 @@
+
 package com.example.coffeetechmobile.ui.seller.orders
 
 enum class SellerOrderStatus {
@@ -13,14 +14,20 @@ enum class SellerOrderFilter {
     DELIVERED
 }
 
+data class SellerOrderProduct(
+    val productId: Int,
+    val quantity: Int
+)
+
 data class SellerOrder(
     val id: String,
     val date: String,
     val customer: String,
-    val products: List<String>,
+    val products: List<SellerOrderProduct>,
     val totalUnits: Int,
     val deliveryType: String,
     val paymentMethod: String,
     val total: Int,
-    val status: SellerOrderStatus
+    val status: SellerOrderStatus,
+    val customerNote: String? = null
 )
