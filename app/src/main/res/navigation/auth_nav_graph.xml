@@ -110,4 +110,10 @@
         android:name="com.example.coffeetechmobile.ui.manager.products.CreateProductFragment"
         android:label="Nuevo producto" />
 
+    <!-- Reporte de ventas del administrador -->
+    <fragment
+        android:id="@+id/salesReportFragment"
+        android:name="com.example.coffeetechmobile.ui.manager.reports.SalesReportFragment"
+        android:label="Reporte de ventas" />
+
 </navigation>

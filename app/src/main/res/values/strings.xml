@@ -320,10 +320,33 @@
     <string name="dashboard_export">Exportar reporte de ventas</string>
     <string name="dashboard_export_pending">La exportación de reportes estará disponible próximamente.</string>
     <string name="dashboard_demo_note">Indicadores de demostración, sin conexión a ventas reales.</string>
-    <string name="dashboard_reports_pending">El reporte de ventas estará disponible próximamente.</string>
 
     <string name="dashboard_ticket_caption">COP por venta</string>
     <string name="dashboard_transactions_caption">Registradas</string>
 
+    // Strings for sales reports
+    <string name="report_title">Reporte de ventas</string>
+    <string name="report_subtitle">Consulta y seguimiento de transacciones</string>
+    <string name="report_period">Noviembre 2026</string>
+
+    <string name="report_filter_all">Todas</string>
+    <string name="report_filter_completed">Completadas</string>
+    <string name="report_filter_pending">Pendientes</string>
+
+    <string name="report_confirmed_revenue">INGRESOS CONFIRMADOS</string>
+    <string name="report_completed">Completadas</string>
+    <string name="report_pending">Pendientes</string>
+    <string name="report_transactions">Transacciones</string>
+    <string name="report_results_format">%1$d registros</string>
+
+    <string name="report_export">Exportar reporte de ventas</string>
+    <string name="report_export_pending">La exportación es demostrativa. Todavía no se genera un archivo.</string>
+
+    <string name="report_revenue_caption">Ventas registradas · Datos de demostración</string>
+    <string name="report_completed_caption">Ingresos confirmados</string>
+    <string name="report_pending_caption">En seguimiento</string>
+
+    <string name="report_payment_label">Método de pago</string>
+    <string name="report_amount_label">Importe</string>
 
 </resources>

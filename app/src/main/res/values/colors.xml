@@ -20,4 +20,7 @@
     <color name="coffee_muted">#D7CCC8</color>
     <color name="social_divider">#99D3C3C2</color>
 
+    <color name="sale_completed_text">#386747</color>
+    <color name="sale_pending_text">#946029</color>
+
 </resources>

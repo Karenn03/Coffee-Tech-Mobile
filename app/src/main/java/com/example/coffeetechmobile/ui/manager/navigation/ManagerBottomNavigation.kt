@@ -4,7 +4,6 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import com.example.coffeetechmobile.R
@@ -12,7 +11,8 @@ import com.example.coffeetechmobile.R
 enum class ManagerTab {
     DASHBOARD,
     USERS,
-    PRODUCTS
+    PRODUCTS,
+    REPORTS
 }
 
 fun setupManagerBottomNavigation(
@@ -53,6 +53,9 @@ fun setupManagerBottomNavigation(
 
             ManagerTab.PRODUCTS ->
                 R.drawable.bg_manager_bottom_navigation_products
+
+            ManagerTab.REPORTS ->
+                R.drawable.bg_manager_bottom_navigation_reports
         }
     )
 
@@ -155,10 +158,9 @@ fun setupManagerBottomNavigation(
         normalBias = 0.68f
     )
 
-    // Los reportes tendrán su propia pantalla después.
     configureButton(
         button = reportsButton,
-        selected = false,
+        selected = selectedTab == ManagerTab.REPORTS,
         selectedBias = 0.90f,
         normalBias = 0.90f
     )
@@ -186,10 +188,6 @@ fun setupManagerBottomNavigation(
     }
 
     reportsButton.setOnClickListener {
-        Toast.makeText(
-            navigation.context,
-            R.string.dashboard_reports_pending,
-            Toast.LENGTH_SHORT
-        ).show()
+        navigateTo(R.id.salesReportFragment)
     }
 }
