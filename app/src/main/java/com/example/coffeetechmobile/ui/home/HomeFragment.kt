@@ -17,6 +17,8 @@ import com.example.coffeetechmobile.ui.buyer.catalog.MenuCatalog
 import com.example.coffeetechmobile.ui.buyer.catalog.MenuProduct
 import com.example.coffeetechmobile.ui.buyer.navigation.BuyerTab
 import com.example.coffeetechmobile.ui.buyer.navigation.setupBuyerBottomNavigation
+import com.example.coffeetechmobile.ui.profile.ProfileFragment
+import com.example.coffeetechmobile.ui.profile.UserRole
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -37,6 +39,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             navController = findNavController(),
             selectedTab = BuyerTab.HOME
         )
+
+        view.findViewById<View>(
+            R.id.profile_button
+        ).setOnClickListener {
+            findNavController().navigate(
+                R.id.profileFragment,
+                ProfileFragment.createArguments(UserRole.BUYER)
+            )
+        }
 
         MenuCatalog.products.forEach { product ->
             bindProduct(
