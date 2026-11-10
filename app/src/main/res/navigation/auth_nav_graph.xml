@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/auth_nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/profileFragment">
 
 
     <!-- ................................................................................. -->
@@ -42,7 +42,7 @@
         <argument
             android:name="profile_role"
             app:argType="string"
-            android:defaultValue="BUYER" />
+            android:defaultValue="SELLER" />
         <!-- SELLER -->
 
     </fragment>

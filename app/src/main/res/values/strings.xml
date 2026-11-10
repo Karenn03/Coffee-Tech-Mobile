@@ -26,9 +26,7 @@
     <string name="password_minimum_hint">Mín. 8 caracteres</string>
     <string name="sign_up_button">Regístrate en Coffee Tech</string>
     <string name="name_icon_description">Icono de nombre de usuario</string>
-    <string name="confirm_password_icon_description">Indicador de confirmación de contraseña</string>
     <string name="signup_terms_text">Acepto los <font color="#7D562D"><u>términos de servicio</u></font> y la política de tratamiento de datos personales conforme a la <font color="#7D562D"><u>Ley 1581 de 2012</u></font>.</string>
-    <string name="terms_checkbox_description">Aceptar los términos de servicio y el tratamiento de datos personales</string>
 
    // Strings for forgot password view
     <string name="forgot_password_title">¿Olvidaste tu contraseña?</string>
@@ -71,7 +69,6 @@
     <string name="document_number_label">Número de documento</string>
     <string name="document_number_hint">1020304050</string>
 
-    <string name="full_name_label_crud">Nombres y apellidos completos</string>
     <string name="full_name_hint">Ej. Karen Sophia Molina Díaz</string>
 
     <string name="corporate_email_label">Correo electrónico corporativo</string>
@@ -108,10 +105,8 @@
     <string name="role_super_admin_description">Acciones en base de datos como DDL, DML...</string>
 
     <string name="assigned_branch_label">Sede asignada</string>
-    <string name="assigned_branch_hint">Elige una sede de Coffee Tech</string>
 
     <string name="contract_type_label">Tipo de contrato</string>
-    <string name="contract_type_hint">Elige un tipo de contrato</string>
 
     <string-array name="coffee_branches">
         <item>Elige una sede de Coffee Tech</item>
@@ -130,13 +125,10 @@
     <string name="edit_user_title">Editar usuario</string>
     <string name="edit_user_subtitle">Actualiza la información del colaborador</string>
     <string name="save_user_changes">Guardar cambios</string>
-    <string name="cancel_edit">Cancelar edición</string>
 
     // Strings for product management view
     <string name="create_product">Crear nuevo producto</string>
     <string name="search_products">Buscar por nombre</string>
-    <string name="products_title">Productos</string>
-    <string name="category_bakery">Pastelería</string>
     <string name="product_options">Opciones del producto</string>
     <string name="edit_product">Editar</string>
     <string name="delete_product">Eliminar</string>
@@ -145,7 +137,6 @@
     <string name="product_deleted">Producto eliminado correctamente</string>
     <string name="product_created">Producto creado correctamente</string>
     <string name="product_updated">Producto actualizado correctamente</string>
-    <string name="search_not_available">Escribe un nombre para buscar productos</string>
     <string name="new_product_title">Nuevo producto</string>
     <string name="new_product_subtitle">Registra un nuevo ítem en el menú</string>
     <string name="edit_product_title">Editar producto</string>
@@ -210,7 +201,6 @@
     <string name="cart_shipping">Envío estimado</string>
     <string name="cart_total">Total a pagar</string>
     <string name="cart_continue_payment">Continuar al pago</string>
-    <string name="cart_payment_pending">La pantalla de pago estará disponible próximamente</string>
     <string name="cart_price_format">%1$s COP</string>
 
     <string name="cart_empty_title">Tu carrito está vacío</string>
@@ -222,13 +212,9 @@
     <string name="payment_title">Proceso de pago</string>
     <string name="payment_subtitle">Finaliza tu compra de forma sencilla</string>
     <string name="payment_back">Volver al carrito</string>
-    <string name="payment_step_cart">Carrito</string>
-    <string name="payment_step_delivery">Entrega</string>
     <string name="payment_step_payment">Pago</string>
 
     <string name="payment_delivery_title">Información de entrega</string>
-    <string name="payment_delivery_subtitle">Confirma los datos de tu pedido</string>
-    <string name="payment_delivery_address">Dirección de entrega</string>
     <string name="payment_delivery_pending">Dirección pendiente de confirmar</string>
     <string name="payment_delivery_time">Entrega estimada: 30 - 45 min</string>
 
@@ -271,7 +257,6 @@
     <!-- Detalle de producto -->
     <string name="product_detail_header">Detalle del producto</string>
     <string name="product_detail_back">Volver al menú</string>
-    <string name="product_detail_category">Nuestro menú</string>
     <string name="product_detail_unit_price">Precio base</string>
     <string name="product_detail_customize_title">Personaliza tu bebida</string>
     <string name="product_detail_size">Tamaño de la bebida</string>
@@ -282,7 +267,6 @@
     <string name="product_detail_ice">Preparación con hielo</string>
     <string name="product_detail_extras">Adicionales</string>
     <string name="product_detail_extra_shot">Agregar shot extra de espresso (+$2.000)</string>
-    <string name="product_detail_quantity">Cantidad</string>
     <string name="product_detail_add">Añadir al carrito</string>
     <string name="product_detail_added">Producto agregado al carrito</string>
     <string name="product_detail_not_found">No encontramos este producto.</string>
@@ -361,7 +345,6 @@
     <string name="seller_orders_status_preparing">Preparando</string>
     <string name="seller_orders_status_ready">Listo</string>
     <string name="seller_orders_status_delivered">Entregado</string>
-    <string name="seller_orders_units">%1$d unidades</string>
     <string name="seller_orders_empty">No hay pedidos para este filtro.</string>
     <string name="seller_orders_amount_format">$%1$s COP</string>
     <string name="seller_orders_back">Regresar</string>
