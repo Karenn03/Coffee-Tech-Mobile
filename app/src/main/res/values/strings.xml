@@ -30,7 +30,7 @@
 
    // Strings for forgot password view
     <string name="forgot_password_title">¿Olvidaste tu contraseña?</string>
-    <string name="forgot_password_description">Ingresa el correo electrónico asociado a tu cuenta de Coffee Tech para enviarte un enlace de recuperación.</string>
+    <string name="forgot_password_description">Ingresa el correo asociado a tu cuenta para verificar tu identidad y crear una nueva contraseña.</string>
     <string name="reset_password_button">Restablecer contraseña</string>
     <string name="remembered_password">¿Recordaste tu clave?</string>
     <string name="back_to_sign_in">Inicia sesión</string>
@@ -353,5 +353,13 @@
     <string name="seller_order_product_quantity">%1$d unidades</string>
     <string name="seller_order_single_unit">1 unidad</string>
     <string name="seller_order_missing_product">Producto no disponible</string>
+
+    <!-- Recuperación de contraseña: paso de nueva contraseña -->
+    <string name="reset_password_title">Crea una nueva contraseña</string>
+    <string name="reset_password_description">Confirma tu cuenta e ingresa la nueva contraseña que usarás para iniciar sesión.</string>
+    <string name="recovery_account_label">Cuenta asociada</string>
+    <string name="new_password_label">Nueva contraseña</string>
+    <string name="confirm_new_password_label">Confirmar nueva contraseña</string>
+    <string name="save_password_button">Guardar contraseña</string>
 
 </resources>

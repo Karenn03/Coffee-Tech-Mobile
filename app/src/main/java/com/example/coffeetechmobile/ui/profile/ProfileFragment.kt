@@ -17,6 +17,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.data.model.UserRole
+import com.example.coffeetechmobile.data.session.SessionManager
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
@@ -270,6 +272,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 sectionTitle.text = "Información laboral"
                 locationLabel.text = "Sede asignada"
             }
+
+            UserRole.ADMIN -> {
+                sectionTitle.text = "Información administrativa"
+                locationLabel.text = "Sede asignada"
+            }
         }
     }
 
@@ -281,6 +288,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             )
             .setNegativeButton("Cancelar", null)
             .setPositiveButton("Salir") { _, _ ->
+
+                // Cierra la sesión persistida antes de volver al login
+                SessionManager(requireContext()).clear()
 
                 val navController = findNavController()
 

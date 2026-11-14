@@ -12,6 +12,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.data.model.UserRole
+import com.example.coffeetechmobile.ui.profile.ProfileFragment
 
 class SellerOrdersFragment :
     Fragment(R.layout.fragment_seller_orders) {
@@ -31,6 +33,15 @@ class SellerOrdersFragment :
         ).setOnClickListener {
             findNavController().navigateUp()
         }
+
+        // Perfil compartido del vendedor, desde donde puede cerrar sesión.
+        view.findViewById<View>(R.id.profile_button)
+            .setOnClickListener {
+                findNavController().navigate(
+                    R.id.profileFragment,
+                    ProfileFragment.createArguments(UserRole.SELLER)
+                )
+            }
 
         ordersAdapter = SellerOrdersAdapter()
 

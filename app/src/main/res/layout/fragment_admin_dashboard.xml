@@ -64,6 +64,7 @@
             app:tint="@color/background_app" />
 
         <ImageButton
+            android:id="@+id/profile_button"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:background="@drawable/bg_header_icon"

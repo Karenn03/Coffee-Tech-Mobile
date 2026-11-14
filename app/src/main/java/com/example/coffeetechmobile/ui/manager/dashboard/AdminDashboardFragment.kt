@@ -15,6 +15,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.data.model.UserRole
+import com.example.coffeetechmobile.ui.profile.ProfileFragment
 import com.example.coffeetechmobile.ui.buyer.catalog.MenuCatalog
 import com.example.coffeetechmobile.ui.manager.navigation.ManagerTab
 import com.example.coffeetechmobile.ui.manager.navigation.setupManagerBottomNavigation
@@ -83,6 +85,16 @@ class AdminDashboardFragment :
         )
 
         setupPeriodFilters(view)
+
+        // El icono de perfil abre el perfil compartido para
+        // que el administrador también pueda cerrar sesión
+        view.findViewById<View>(R.id.profile_button)
+            .setOnClickListener {
+                findNavController().navigate(
+                    R.id.profileFragment,
+                    ProfileFragment.createArguments(UserRole.ADMIN)
+                )
+            }
 
         view.findViewById<View>(
             R.id.dashboard_export_button

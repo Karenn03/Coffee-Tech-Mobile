@@ -18,7 +18,7 @@ import com.example.coffeetechmobile.ui.buyer.catalog.MenuProduct
 import com.example.coffeetechmobile.ui.buyer.navigation.BuyerTab
 import com.example.coffeetechmobile.ui.buyer.navigation.setupBuyerBottomNavigation
 import com.example.coffeetechmobile.ui.profile.ProfileFragment
-import com.example.coffeetechmobile.ui.profile.UserRole
+import com.example.coffeetechmobile.data.model.UserRole
 import java.text.NumberFormat
 import java.util.Locale
 

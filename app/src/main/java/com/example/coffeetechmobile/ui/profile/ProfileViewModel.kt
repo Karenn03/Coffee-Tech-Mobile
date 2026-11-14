@@ -3,6 +3,7 @@ package com.example.coffeetechmobile.ui.profile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.coffeetechmobile.data.model.UserRole
 
 class ProfileViewModel : ViewModel() {
 
@@ -22,6 +23,14 @@ class ProfileViewModel : ViewModel() {
             role = UserRole.SELLER,
             document = "1098765432",
             location = "Sede Chapinero Alto"
+        ),
+        UserRole.ADMIN to UserProfile(
+            name = "Administrador Coffee Tech",
+            email = "admin@coffeetech.com",
+            phone = "300 000 0000",
+            role = UserRole.ADMIN,
+            document = "1000000000",
+            location = "Sede principal"
         )
     )
 
@@ -29,7 +38,9 @@ class ProfileViewModel : ViewModel() {
     val profile: LiveData<UserProfile> = _profile
 
     fun loadProfile(role: UserRole) {
-        _profile.value = profiles.getValue(role)
+        // Si llega un rol sin datos de demostración, se usa el comprador
+        // para evitar que la pantalla se cierre por una excepción
+        _profile.value = profiles[role] ?: profiles.getValue(UserRole.BUYER)
     }
 
     fun updateProfile(

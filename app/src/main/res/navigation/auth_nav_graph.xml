@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/auth_nav_graph"
-    app:startDestination="@id/sign_up_fragment">
+    app:startDestination="@id/sign_in_fragment">
 
 
     <!-- ................................................................................. -->
@@ -32,7 +32,25 @@
     <fragment
         android:id="@+id/forgot_password_fragment"
         android:name="com.example.coffeetechmobile.ui.auth.ForgotPasswordFragment"
-        android:label="Recuperar contraseña" />
+        android:label="Recuperar contraseña">
+
+        <action
+            android:id="@+id/action_forgot_password_to_reset_password"
+            app:destination="@id/resetPasswordFragment" />
+
+    </fragment>
+
+    <!-- Segundo paso de la recuperación: nueva contraseña -->
+    <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="com.example.coffeetechmobile.ui.auth.ResetPasswordFragment"
+        android:label="Nueva contraseña">
+
+        <argument
+            android:name="recovery_email"
+            app:argType="string" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/profileFragment"
