@@ -53,7 +53,7 @@ class SessionManager(context: Context) {
     }
 
     /**
-     * Elimina la sesión activa.
+     * Elimina la sesión activa
      *
      * La habilitación biométrica de la cuenta se conserva en la tabla `users`
      * para que el usuario pueda volver a entrar con huella después del logout

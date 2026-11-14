@@ -8,11 +8,15 @@ import android.widget.TextView
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.data.model.User
+import com.example.coffeetechmobile.data.model.UserRole
 import java.io.Serializable
 import java.util.UUID
 
 data class UserItem(
     val id: String = UUID.randomUUID().toString(),
+    val userId: Long = 0L,
+    val authRole: String = "BUYER",
     val name: String,
     val initials: String,
     val role: String,
@@ -23,13 +27,86 @@ data class UserItem(
     val secondaryIcon: Int? = null,
     val secondaryLabel: String? = null,
     val secondaryValue: String? = null,
-    val documentType: String = "CC",
+    val documentType: String = "CC (Cédula)",
     val documentNumber: String = "",
     val email: String = "",
     val phone: String = "",
     val branch: String = "",
     val contractType: String = ""
-) : Serializable
+) : Serializable {
+
+    companion object {
+
+        /**
+         * Convierte una cuenta de SQLite en el modelo que pinta el RecyclerView
+         *
+         * Los compradores muestran correo y teléfono; los colaboradores muestran
+         * sede y tipo de contrato
+         */
+        fun fromUser(user: User): UserItem {
+            val isBuyer = user.role == UserRole.BUYER
+
+            val displayRole = user.jobTitle.ifBlank {
+                when (user.role) {
+                    UserRole.ADMIN -> "Administrador"
+                    UserRole.SELLER -> "Vendedor"
+                    UserRole.BUYER -> "Cliente"
+                }
+            }
+
+            val initials = user.fullName
+                .trim()
+                .split(Regex("\\s+"))
+                .filter { it.isNotBlank() }
+                .take(2)
+                .joinToString("") { it.first().uppercase() }
+
+            val document = if (user.document.isBlank()) {
+                "Sin documento"
+            } else {
+                "${user.documentType} ${user.document}".trim()
+            }
+
+            return UserItem(
+                id = user.id.toString(),
+                userId = user.id,
+                authRole = user.role.name,
+                name = user.fullName,
+                initials = initials,
+                role = displayRole,
+                document = document,
+                primaryIcon = if (isBuyer) {
+                    R.drawable.ic_mail
+                } else {
+                    R.drawable.ic_store
+                },
+                primaryLabel = if (isBuyer) "Correo:" else "Sede:",
+                primaryValue = if (isBuyer) {
+                    user.email
+                } else {
+                    user.branch.ifBlank { "Sin sede" }
+                },
+                secondaryIcon = if (isBuyer) {
+                    R.drawable.ic_phone
+                } else {
+                    R.drawable.ic_clipboard_clock
+                },
+                secondaryLabel = if (isBuyer) "Teléfono:" else "Contrato:",
+                secondaryValue = if (isBuyer) {
+                    user.phone.ifBlank { "Sin teléfono" }
+                } else {
+                    user.contractType.ifBlank { "Sin contrato" }
+                },
+                documentType = user.documentType,
+                documentNumber = user.document,
+                email = user.email,
+                phone = user.phone,
+                branch = user.branch,
+                contractType = user.contractType
+            )
+        }
+    }
+}
 
 class UserAdapter(
     private val users: MutableList<UserItem>,
@@ -77,6 +154,15 @@ class UserAdapter(
             users[position] = updatedUser
             notifyItemChanged(position)
         }
+    }
+
+    /**
+     * Reemplaza la lista completa. Se usa después de cada consulta a SQLite.
+     */
+    fun submitList(newUsers: List<UserItem>) {
+        users.clear()
+        users.addAll(newUsers)
+        notifyDataSetChanged()
     }
 
     class UserViewHolder(

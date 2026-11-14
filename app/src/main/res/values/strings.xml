@@ -362,4 +362,14 @@
     <string name="confirm_new_password_label">Confirmar nueva contraseña</string>
     <string name="save_password_button">Guardar contraseña</string>
 
+    <!-- CRUD de usuarios del administrador -->
+    <string name="edit_client_title">Editar cliente</string>
+    <string name="edit_client_subtitle">Actualiza los datos del cliente</string>
+    <string name="user_created_title">Usuario creado</string>
+    <string name="user_created_message">La cuenta de %1$s se creó correctamente.\n\nContraseña temporal: %2$s\n\nEl usuario puede cambiarla desde «¿Olvidaste tu contraseña?» en el inicio de sesión.</string>
+    <string name="understood">Entendido</string>
+    <string name="buyer_phone_label">Celular</string>
+    <string name="buyer_email_hint">ejemplo@correo.com</string>
+    <string name="buyer_phone_hint">+57 300 000 0000</string>
+
 </resources>

@@ -33,6 +33,38 @@ class CoffeeTechDatabase private constructor(
     ) {
         // Las migraciones se irán agregando aquí
         // Importante: nunca recrear `users` para no perder los usuarios
+
+        if (oldVersion < 2) {
+            // Campos usados por el CRUD de usuarios del administrador
+            database.execSQL(
+                "ALTER TABLE ${UserDao.TABLE_USERS} " +
+                    "ADD COLUMN ${UserDao.COLUMN_DOCUMENT_TYPE} TEXT NOT NULL DEFAULT 'CC (Cédula)'"
+            )
+            database.execSQL(
+                "ALTER TABLE ${UserDao.TABLE_USERS} " +
+                    "ADD COLUMN ${UserDao.COLUMN_JOB_TITLE} TEXT NOT NULL DEFAULT 'Cliente'"
+            )
+            database.execSQL(
+                "ALTER TABLE ${UserDao.TABLE_USERS} " +
+                    "ADD COLUMN ${UserDao.COLUMN_BRANCH} TEXT NOT NULL DEFAULT ''"
+            )
+            database.execSQL(
+                "ALTER TABLE ${UserDao.TABLE_USERS} " +
+                    "ADD COLUMN ${UserDao.COLUMN_CONTRACT_TYPE} TEXT NOT NULL DEFAULT ''"
+            )
+
+            // Conserva un cargo visible para las cuentas que ya existían
+            database.execSQL(
+                """
+                UPDATE ${UserDao.TABLE_USERS}
+                SET ${UserDao.COLUMN_JOB_TITLE} = CASE ${UserDao.COLUMN_ROLE}
+                    WHEN 'ADMIN' THEN 'Gerente'
+                    WHEN 'SELLER' THEN 'Barista'
+                    ELSE 'Cliente'
+                END
+                """.trimIndent()
+            )
+        }
     }
 
     // Crea la tabla de usuarios
@@ -46,6 +78,10 @@ class CoffeeTechDatabase private constructor(
                 ${UserDao.COLUMN_EMAIL} TEXT NOT NULL COLLATE NOCASE UNIQUE,
                 ${UserDao.COLUMN_PHONE} TEXT NOT NULL DEFAULT '',
                 ${UserDao.COLUMN_DOCUMENT} TEXT NOT NULL DEFAULT '',
+                ${UserDao.COLUMN_DOCUMENT_TYPE} TEXT NOT NULL DEFAULT 'CC (Cédula)',
+                ${UserDao.COLUMN_JOB_TITLE} TEXT NOT NULL DEFAULT 'Cliente',
+                ${UserDao.COLUMN_BRANCH} TEXT NOT NULL DEFAULT '',
+                ${UserDao.COLUMN_CONTRACT_TYPE} TEXT NOT NULL DEFAULT '',
                 ${UserDao.COLUMN_ROLE} TEXT NOT NULL DEFAULT 'BUYER'
                     CHECK (${UserDao.COLUMN_ROLE} IN ('ADMIN', 'SELLER', 'BUYER')),
                 ${UserDao.COLUMN_PASSWORD_HASH} TEXT NOT NULL,
@@ -78,6 +114,10 @@ class CoffeeTechDatabase private constructor(
             email = "admin@coffeetech.com",
             password = "Admin123*",
             role = UserRole.ADMIN,
+            jobTitle = "Gerente",
+            documentType = "CC (Cédula)",
+            branch = "Bogotá - Usaquén",
+            contractType = "Término indefinido",
             location = "Sede principal",
             createdAt = now
         )
@@ -89,6 +129,10 @@ class CoffeeTechDatabase private constructor(
             email = "vendedor@coffeetech.com",
             password = "Vendedor123*",
             role = UserRole.SELLER,
+            jobTitle = "Barista",
+            documentType = "CC (Cédula)",
+            branch = "Bogotá - Chapinero",
+            contractType = "Término indefinido",
             location = "Sede Chapinero Alto",
             createdAt = now
         )
@@ -100,6 +144,10 @@ class CoffeeTechDatabase private constructor(
             email = "cliente@coffeetech.com",
             password = "Cliente123*",
             role = UserRole.BUYER,
+            jobTitle = "Cliente",
+            documentType = "CC (Cédula)",
+            branch = "",
+            contractType = "",
             location = "Bogotá, Colombia",
             createdAt = now
         )
@@ -112,6 +160,10 @@ class CoffeeTechDatabase private constructor(
         email: String,
         password: String,
         role: UserRole,
+        jobTitle: String,
+        documentType: String,
+        branch: String,
+        contractType: String,
         location: String,
         createdAt: Long
     ) {
@@ -123,6 +175,10 @@ class CoffeeTechDatabase private constructor(
             put(UserDao.COLUMN_EMAIL, email)
             put(UserDao.COLUMN_PHONE, "")
             put(UserDao.COLUMN_DOCUMENT, "")
+            put(UserDao.COLUMN_DOCUMENT_TYPE, documentType)
+            put(UserDao.COLUMN_JOB_TITLE, jobTitle)
+            put(UserDao.COLUMN_BRANCH, branch)
+            put(UserDao.COLUMN_CONTRACT_TYPE, contractType)
             put(UserDao.COLUMN_ROLE, role.name)
             put(UserDao.COLUMN_PASSWORD_HASH, hash)
             put(UserDao.COLUMN_PASSWORD_SALT, salt)
@@ -143,7 +199,7 @@ class CoffeeTechDatabase private constructor(
 
     companion object {
         private const val DATABASE_NAME = "coffeetech.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
 
         @Volatile
         private var instance: CoffeeTechDatabase? = null

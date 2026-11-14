@@ -7,7 +7,7 @@ import com.example.coffeetechmobile.data.model.User
 import com.example.coffeetechmobile.data.model.UserRole
 
 /**
- * Acceso a la tabla `users`.
+ * Acceso a la tabla `users`
  *
  * Esta clase concentra el SQL de usuarios para que el repositorio no dependa
  * de cursores ni de nombres de columnas. Todas las operaciones son síncronas:
@@ -24,6 +24,10 @@ class UserDao(private val database: CoffeeTechDatabase) {
         email: String,
         phone: String,
         document: String,
+        documentType: String,
+        jobTitle: String,
+        branch: String,
+        contractType: String,
         role: UserRole,
         passwordHash: String,
         passwordSalt: String,
@@ -36,6 +40,10 @@ class UserDao(private val database: CoffeeTechDatabase) {
             put(COLUMN_EMAIL, email)
             put(COLUMN_PHONE, phone)
             put(COLUMN_DOCUMENT, document)
+            put(COLUMN_DOCUMENT_TYPE, documentType)
+            put(COLUMN_JOB_TITLE, jobTitle)
+            put(COLUMN_BRANCH, branch)
+            put(COLUMN_CONTRACT_TYPE, contractType)
             put(COLUMN_ROLE, role.name)
             put(COLUMN_PASSWORD_HASH, passwordHash)
             put(COLUMN_PASSWORD_SALT, passwordSalt)
@@ -72,6 +80,78 @@ class UserDao(private val database: CoffeeTechDatabase) {
     // Indica si ya existe una cuenta con el correo indicado
     fun existsByEmail(email: String): Boolean {
         return findByEmail(email) != null
+    }
+
+    /**
+     * Devuelve todas las cuentas ordenadas de la más reciente a la más antigua.
+     * Se usa en el CRUD del administrador.
+     */
+    fun findAll(): List<User> {
+        val users = mutableListOf<User>()
+
+        database.readableDatabase.query(
+            TABLE_USERS,
+            ALL_COLUMNS,
+            null,
+            null,
+            null,
+            null,
+            "$COLUMN_ID DESC"
+        ).use { cursor ->
+            while (cursor.moveToNext()) {
+                users.add(cursor.toUser())
+            }
+        }
+
+        return users
+    }
+
+    /**
+     * Actualiza los datos editables desde el CRUD del administrador.
+     * No modifica el hash ni la sal de la contraseña.
+     */
+    fun updateUser(
+        userId: Long,
+        fullName: String,
+        email: String,
+        phone: String,
+        document: String,
+        documentType: String,
+        jobTitle: String,
+        branch: String,
+        contractType: String,
+        role: UserRole,
+        location: String
+    ): Int {
+        val values = ContentValues().apply {
+            put(COLUMN_FULL_NAME, fullName)
+            put(COLUMN_EMAIL, email)
+            put(COLUMN_PHONE, phone)
+            put(COLUMN_DOCUMENT, document)
+            put(COLUMN_DOCUMENT_TYPE, documentType)
+            put(COLUMN_JOB_TITLE, jobTitle)
+            put(COLUMN_BRANCH, branch)
+            put(COLUMN_CONTRACT_TYPE, contractType)
+            put(COLUMN_ROLE, role.name)
+            put(COLUMN_LOCATION, location)
+            put(COLUMN_UPDATED_AT, System.currentTimeMillis())
+        }
+
+        return database.writableDatabase.update(
+            TABLE_USERS,
+            values,
+            "$COLUMN_ID = ?",
+            arrayOf(userId.toString())
+        )
+    }
+
+    // Elimina una cuenta por id. Devuelve el número de filas afectadas
+    fun deleteById(userId: Long): Int {
+        return database.writableDatabase.delete(
+            TABLE_USERS,
+            "$COLUMN_ID = ?",
+            arrayOf(userId.toString())
+        )
     }
 
     // Actualiza únicamente el hash y la sal de la contraseña
@@ -142,13 +222,23 @@ class UserDao(private val database: CoffeeTechDatabase) {
     }
 
     // Convierte la fila actual del cursor en el modelo de dominio
-    private fun Cursor.toStoredUser(): StoredUser {
-        val user = User(
+    private fun Cursor.toUser(): User {
+        return User(
             id = getLong(getColumnIndexOrThrow(COLUMN_ID)),
             fullName = getString(getColumnIndexOrThrow(COLUMN_FULL_NAME)),
             email = getString(getColumnIndexOrThrow(COLUMN_EMAIL)),
             phone = getString(getColumnIndexOrThrow(COLUMN_PHONE)).orEmpty(),
             document = getString(getColumnIndexOrThrow(COLUMN_DOCUMENT)).orEmpty(),
+            documentType = getString(
+                getColumnIndexOrThrow(COLUMN_DOCUMENT_TYPE)
+            ).orEmpty(),
+            jobTitle = getString(
+                getColumnIndexOrThrow(COLUMN_JOB_TITLE)
+            ).orEmpty(),
+            branch = getString(getColumnIndexOrThrow(COLUMN_BRANCH)).orEmpty(),
+            contractType = getString(
+                getColumnIndexOrThrow(COLUMN_CONTRACT_TYPE)
+            ).orEmpty(),
             role = UserRole.fromStorage(
                 getString(getColumnIndexOrThrow(COLUMN_ROLE))
             ),
@@ -158,9 +248,12 @@ class UserDao(private val database: CoffeeTechDatabase) {
                 getInt(getColumnIndexOrThrow(COLUMN_BIOMETRIC_ENABLED)) == 1,
             createdAt = getLong(getColumnIndexOrThrow(COLUMN_CREATED_AT))
         )
+    }
 
+    // Convierte la fila en el modelo con credenciales para el login
+    private fun Cursor.toStoredUser(): StoredUser {
         return StoredUser(
-            user = user,
+            user = toUser(),
             passwordHash = getString(
                 getColumnIndexOrThrow(COLUMN_PASSWORD_HASH)
             ),
@@ -178,6 +271,10 @@ class UserDao(private val database: CoffeeTechDatabase) {
         const val COLUMN_EMAIL = "email"
         const val COLUMN_PHONE = "phone"
         const val COLUMN_DOCUMENT = "document_number"
+        const val COLUMN_DOCUMENT_TYPE = "document_type"
+        const val COLUMN_JOB_TITLE = "job_title"
+        const val COLUMN_BRANCH = "branch"
+        const val COLUMN_CONTRACT_TYPE = "contract_type"
         const val COLUMN_ROLE = "role"
         const val COLUMN_PASSWORD_HASH = "password_hash"
         const val COLUMN_PASSWORD_SALT = "password_salt"
@@ -193,6 +290,10 @@ class UserDao(private val database: CoffeeTechDatabase) {
             COLUMN_EMAIL,
             COLUMN_PHONE,
             COLUMN_DOCUMENT,
+            COLUMN_DOCUMENT_TYPE,
+            COLUMN_JOB_TITLE,
+            COLUMN_BRANCH,
+            COLUMN_CONTRACT_TYPE,
             COLUMN_ROLE,
             COLUMN_PASSWORD_HASH,
             COLUMN_PASSWORD_SALT,
