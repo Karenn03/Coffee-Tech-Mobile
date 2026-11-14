@@ -1,5 +1,7 @@
 package com.example.coffeetechmobile.ui.manager.products
 
+import android.content.Context
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,8 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.data.model.Product
+import java.io.File
 import java.io.Serializable
 import java.text.NumberFormat
 import java.util.Locale
@@ -16,6 +20,7 @@ import java.util.UUID
 
 data class ProductItem(
     val id: String = UUID.randomUUID().toString(),
+    val productId: Long = 0L,
     val name: String,
     val category: String,
     val description: String,
@@ -25,8 +30,47 @@ data class ProductItem(
     val initialStock: Int,
     val minimumStock: Int,
     val imageRes: Int? = null,
-    val imageUri: String? = null
-) : Serializable
+    val imageResName: String? = null,
+    val imagePath: String? = null
+) : Serializable {
+
+    companion object {
+
+        /**
+         * Convierte un producto de SQLite al modelo de la tarjeta del panel
+         *
+         * Los productos semilla usan un drawable; los creados desde
+         * el formulario usan una ruta interna de imagen
+         */
+        fun fromProduct(context: Context, product: Product): ProductItem {
+            val imageRes = if (product.imageResName.isNotBlank()) {
+                context.resources.getIdentifier(
+                    product.imageResName,
+                    "drawable",
+                    context.packageName
+                ).takeIf { it != 0 }
+            } else {
+                null
+            }
+
+            return ProductItem(
+                id = product.id.toString(),
+                productId = product.id,
+                name = product.name,
+                category = product.category,
+                description = product.description,
+                salePrice = product.salePrice,
+                preparationCost = product.preparationCost,
+                taxRate = product.taxRate,
+                initialStock = product.stock,
+                minimumStock = product.minimumStock,
+                imageRes = imageRes,
+                imageResName = product.imageResName.ifBlank { null },
+                imagePath = product.imagePath.ifBlank { null }
+            )
+        }
+    }
+}
 
 class ProductAdapter(
     private val products: MutableList<ProductItem>,
@@ -86,6 +130,15 @@ class ProductAdapter(
         notifyDataSetChanged()
     }
 
+    // Reemplaza la lista visible con el resultado de SQLite o de un filtro
+    fun submitList(newProducts: List<ProductItem>) {
+        allProducts.clear()
+        allProducts.addAll(newProducts)
+        products.clear()
+        products.addAll(newProducts)
+        notifyDataSetChanged()
+    }
+
     class ProductViewHolder(
         itemView: View,
         private val onEdit: (ProductItem) -> Unit,
@@ -94,12 +147,20 @@ class ProductAdapter(
 
         fun bind(product: ProductItem) {
             val image = itemView.findViewById<ImageView>(R.id.admin_product_image)
-            if (product.imageUri != null) {
-                image.setImageURI(android.net.Uri.parse(product.imageUri))
-            } else if (product.imageRes != null) {
-                image.setImageResource(product.imageRes)
-            } else {
-                image.setImageResource(R.drawable.ic_coffee)
+            when {
+                !product.imagePath.isNullOrBlank() -> {
+                    image.setImageURI(
+                        Uri.fromFile(File(product.imagePath))
+                    )
+                }
+
+                product.imageRes != null -> {
+                    image.setImageResource(product.imageRes)
+                }
+
+                else -> {
+                    image.setImageResource(R.drawable.ic_coffee)
+                }
             }
             image.contentDescription = product.name
 

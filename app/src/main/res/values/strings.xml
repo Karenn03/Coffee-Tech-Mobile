@@ -183,7 +183,7 @@
         <item>Selecciona la categoría</item>
         <item>Bebidas calientes</item>
         <item>Bebidas frías</item>
-        <item>Pastelería</item>
+        <item>Panadería y pastelería</item>
         <item>Desayunos y brunch</item>
     </string-array>
 
@@ -371,5 +371,12 @@
     <string name="buyer_phone_label">Celular</string>
     <string name="buyer_email_hint">ejemplo@correo.com</string>
     <string name="buyer_phone_hint">+57 300 000 0000</string>
+
+    <!-- Selección de imagen para productos -->
+    <string name="product_image_source_title">Seleccionar imagen</string>
+    <string name="product_image_source_gallery">Galería</string>
+    <string name="product_image_source_camera">Cámara</string>
+    <string name="product_image_load_error">No se pudo cargar la imagen.</string>
+    <string name="product_image_camera_error">No se pudo abrir la cámara.</string>
 
 </resources>

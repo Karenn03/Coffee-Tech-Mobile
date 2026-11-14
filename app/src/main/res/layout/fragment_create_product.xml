@@ -701,6 +701,7 @@
                     app:tint="@color/coffee_primary"/>
 
                 <TextView
+                    android:id="@+id/cancel_product_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/cancel_registration"
