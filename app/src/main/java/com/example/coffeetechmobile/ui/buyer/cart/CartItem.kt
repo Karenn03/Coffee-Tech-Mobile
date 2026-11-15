@@ -6,5 +6,6 @@ data class CartItem(
     val description: String,
     val price: Int,
     val imageRes: Int,
+    val imagePath: String? = null,
     val quantity: Int = 1
 )

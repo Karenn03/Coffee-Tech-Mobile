@@ -55,6 +55,12 @@ class ProductRepository(context: Context) {
             productDao.findAll()
         }
 
+    // Devuelve un producto por id para el detalle del comprador
+    suspend fun getProduct(productId: Long): Product? =
+        withContext(Dispatchers.IO) {
+            productDao.findById(productId)
+        }
+
     // Crea un producto nuevo
     suspend fun createProduct(input: ProductInput): ProductResult =
         withContext(Dispatchers.IO) {

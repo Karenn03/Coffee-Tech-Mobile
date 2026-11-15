@@ -211,26 +211,28 @@
                         android:id="@+id/category_all"
                         android:layout_width="wrap_content"
                         android:layout_height="44dp"
-                        android:background="@drawable/bg_category_selected"
+                        android:background="@drawable/bg_filter_selected"
+                        android:clickable="true"
+                        android:focusable="true"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingHorizontal="16dp">
 
                         <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_layout_dashboard"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_filter_all"
                             android:contentDescription="@null"
                             app:tint="#FFFFFF" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="8dp"
                             android:text="@string/all_products"
                             android:textColor="#FFFFFF"
                             android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:fontFamily="sans-serif-medium" />
 
                     </LinearLayout>
 
@@ -238,28 +240,29 @@
                         android:id="@+id/category_hot"
                         android:layout_width="wrap_content"
                         android:layout_height="44dp"
-                        android:layout_marginStart="10dp"
-                        android:background="@drawable/bg_category_unselected"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_filter_unselected"
+                        android:clickable="true"
+                        android:focusable="true"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingHorizontal="16dp">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:background="@drawable/bg_category_icon_hot"
-                            android:padding="4dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:src="@drawable/ic_coffee"
                             android:contentDescription="@null"
-                            app:tint="#A65320" />
+                            app:tint="@color/coffee_secondary" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="8dp"
                             android:text="@string/category_hot"
-                            android:textColor="@color/text_dark"
-                            android:textSize="14sp" />
+                            android:textColor="@color/coffee_primary"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-medium" />
 
                     </LinearLayout>
 
@@ -267,28 +270,89 @@
                         android:id="@+id/category_cold"
                         android:layout_width="wrap_content"
                         android:layout_height="44dp"
-                        android:layout_marginStart="10dp"
-                        android:background="@drawable/bg_category_unselected"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_filter_unselected"
+                        android:clickable="true"
+                        android:focusable="true"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingHorizontal="16dp">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:background="@drawable/bg_category_icon_cold"
-                            android:padding="4dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:src="@drawable/ic_snowflake"
                             android:contentDescription="@null"
-                            app:tint="#2585AD" />
+                            app:tint="@color/coffee_secondary" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="8dp"
                             android:text="@string/category_cold"
-                            android:textColor="@color/text_dark"
-                            android:textSize="14sp" />
+                            android:textColor="@color/coffee_primary"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/category_bakery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_filter_unselected"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_croissant"
+                            android:contentDescription="@null"
+                            app:tint="@color/coffee_secondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/category_bakery"
+                            android:textColor="@color/coffee_primary"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/category_breakfast"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_filter_unselected"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_sandwich"
+                            android:contentDescription="@null"
+                            app:tint="@color/coffee_secondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/category_breakfast"
+                            android:textColor="@color/coffee_primary"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-medium" />
 
                     </LinearLayout>
 
@@ -296,64 +360,53 @@
 
             </HorizontalScrollView>
 
-            <LinearLayout
-                android:id="@+id/products_grid"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/home_products_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:orientation="vertical">
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="320dp"
-                    android:orientation="horizontal"
-                    android:padding="4dp">
+            <LinearLayout
+                android:id="@+id/home_pagination"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                    <include
-                        android:id="@+id/product_iced_caramel"
-                        layout="@layout/item_product"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                <ImageButton
+                    android:id="@+id/home_previous_page_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_pagination_button"
+                    android:contentDescription="@string/previous_page"
+                    android:padding="13dp"
+                    android:src="@drawable/ic_chevron_left"
+                    app:tint="#A3948D"
+                    app:elevation="3dp"/>
 
-                    <View
-                        android:layout_width="12dp"
-                        android:layout_height="1dp" />
+                <TextView
+                    android:id="@+id/home_current_page_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Página 1 de 1"
+                    android:textColor="#A3948D"
+                    android:textSize="14sp"/>
 
-                    <include
-                        android:id="@+id/product_frappe_oreo"
-                        layout="@layout/item_product"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="320dp"
-                    android:orientation="horizontal"
-                    android:padding="4dp">
-
-                    <include
-                        android:id="@+id/product_muffin_red_velvet"
-                        layout="@layout/item_product"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <View
-                        android:layout_width="12dp"
-                        android:layout_height="1dp" />
-
-                    <include
-                        android:id="@+id/product_iced_macchiato"
-                        layout="@layout/item_product"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                </LinearLayout>
+                <ImageButton
+                    android:id="@+id/home_next_page_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_pagination_button"
+                    android:contentDescription="@string/next_page"
+                    android:padding="13dp"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="#A3948D"
+                    app:elevation="3dp"/>
 
             </LinearLayout>
 

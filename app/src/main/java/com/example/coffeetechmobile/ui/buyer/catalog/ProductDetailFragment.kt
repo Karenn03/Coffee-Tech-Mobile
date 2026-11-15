@@ -1,6 +1,6 @@
 package com.example.coffeetechmobile.ui.buyer.catalog
 
-import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -9,18 +9,28 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.ui.buyer.cart.CartItem
 import com.example.coffeetechmobile.ui.buyer.cart.CartViewModel
 import com.google.android.material.checkbox.MaterialCheckBox
+import java.io.File
 import java.text.NumberFormat
 import java.util.Locale
 
+/**
+ * Detalle de un producto del menú
+ *
+ * Carga el producto desde SQLite, conserva las opciones de personalización
+ * y agrega al carrito usando la imagen real del producto
+ */
 class ProductDetailFragment :
     Fragment(R.layout.fragment_product_detail) {
 
     private val cartViewModel: CartViewModel by activityViewModels()
+
+    private val detailViewModel: ProductDetailViewModel by viewModels()
 
     private val formatter = NumberFormat.getIntegerInstance(
         Locale("es", "CO")
@@ -39,20 +49,6 @@ class ProductDetailFragment :
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        val productId = requireArguments().getInt("product_id")
-        val product = MenuCatalog.findById(productId)
-
-        if (product == null) {
-            Toast.makeText(
-                requireContext(),
-                R.string.product_detail_not_found,
-                Toast.LENGTH_SHORT
-            ).show()
-
-            findNavController().navigateUp()
-            return
-        }
-
         view.findViewById<View>(
             R.id.detail_back_button
         ).setOnClickListener {
@@ -65,11 +61,47 @@ class ProductDetailFragment :
             findNavController().navigate(R.id.cartFragment)
         }
 
-        bindProduct(view, product)
-        setupOptions(view, product)
-        setupQuantity(view, product)
+        val productId = requireArguments().getLong("product_id")
 
-        view.findViewById<View>(
+        detailViewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                ProductDetailState.Loading -> Unit
+
+                ProductDetailState.NotFound -> {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.product_detail_not_found,
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    findNavController().navigateUp()
+                }
+
+                is ProductDetailState.Loaded -> {
+                    renderProduct(
+                        view,
+                        MenuProduct.fromProduct(
+                            requireContext(),
+                            state.product
+                        )
+                    )
+                }
+            }
+        }
+
+        detailViewModel.load(productId)
+    }
+
+    // Pinta el producto y activa sus opciones una vez llega desde SQLite
+    private fun renderProduct(
+        root: View,
+        product: MenuProduct
+    ) {
+        bindProduct(root, product)
+        setupOptions(root, product)
+        setupQuantity(root, product)
+
+        root.findViewById<View>(
             R.id.detail_add_button
         ).setOnClickListener {
             addToCart(product)
@@ -83,7 +115,7 @@ class ProductDetailFragment :
             findNavController().navigateUp()
         }
 
-        updatePrice(view, product)
+        updatePrice(root, product)
     }
 
     private fun bindProduct(
@@ -93,7 +125,14 @@ class ProductDetailFragment :
         root.findViewById<ImageView>(
             R.id.detail_product_image
         ).apply {
-            setImageResource(product.imageRes)
+            if (!product.imagePath.isNullOrBlank()) {
+                setImageURI(
+                    Uri.fromFile(File(product.imagePath))
+                )
+            } else {
+                setImageResource(product.imageRes)
+            }
+
             contentDescription = product.name
         }
 
@@ -389,6 +428,7 @@ class ProductDetailFragment :
                 description = finalDescription,
                 price = getUnitPrice(product),
                 imageRes = product.imageRes,
+                imagePath = product.imagePath,
                 quantity = quantity
             )
         )

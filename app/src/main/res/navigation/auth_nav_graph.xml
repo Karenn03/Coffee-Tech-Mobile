@@ -88,7 +88,7 @@
 
         <argument
             android:name="product_id"
-            app:argType="integer" />
+            app:argType="long" />
 
     </fragment>
 

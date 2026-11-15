@@ -43,6 +43,8 @@
     <string name="all_products">Todos</string>
     <string name="category_hot">Bebidas calientes</string>
     <string name="category_cold">Bebidas frías</string>
+    <string name="category_bakery">Panadería y pastelería</string>
+    <string name="category_breakfast">Desayunos y brunch</string>
     <string name="product_image">Imagen del producto</string>
     <string name="add_to_favorites">Agregar a favoritos</string>
     <string name="add_to_cart">Agregar al carrito</string>

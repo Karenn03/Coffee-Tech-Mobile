@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.net.Uri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
+import java.io.File
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -55,7 +57,12 @@ class CartAdapter(
 
         fun bind(item: CartItem) {
 
-            image.setImageResource(item.imageRes)
+            if (!item.imagePath.isNullOrBlank()) {
+                image.setImageURI(Uri.fromFile(File(item.imagePath)))
+            } else {
+                image.setImageResource(item.imageRes)
+            }
+
             image.contentDescription = item.name
 
             name.text = item.name

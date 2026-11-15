@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+        IDs de los productos de demostración que usan el dashboard del gerente
+        y los pedidos simulados del vendedor. El home del comprador ya no los
+        usa: ahora se alimenta desde SQLite
+    -->
+    <item name="product_iced_caramel" type="id" />
+    <item name="product_frappe_oreo" type="id" />
+    <item name="product_muffin_red_velvet" type="id" />
+    <item name="product_iced_macchiato" type="id" />
+
+</resources>
