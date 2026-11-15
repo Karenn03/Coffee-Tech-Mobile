@@ -1,4 +1,4 @@
-package com.example.coffeetechmobile.ui.home
+package com.example.coffeetechmobile.ui.buyer.home
 
 import android.content.res.ColorStateList
 import android.os.Bundle
@@ -32,7 +32,7 @@ import com.example.coffeetechmobile.ui.profile.ProfileFragment
  * Carga el menú real de SQLite, lo pagina de 6 productos por página
  * y permite abrir el detalle o agregar directamente al carrito
  */
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class BuyerHomeFragment : Fragment(R.layout.fragment_home) {
 
     private val cartViewModel: CartViewModel by activityViewModels()
     private val menuViewModel: BuyerMenuViewModel by viewModels()
