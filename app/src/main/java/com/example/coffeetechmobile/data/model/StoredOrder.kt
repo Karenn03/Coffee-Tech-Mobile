@@ -13,6 +13,8 @@ data class StoredOrder(
     val userId: Long?,
     val customerName: String,
     val deliveryAddress: String,
+    val deliveryLatitude: Double?,
+    val deliveryLongitude: Double?,
     val deliveryType: String,
     val paymentMethod: String,
     val subtotal: Int,

@@ -24,6 +24,8 @@ class OrderDao(private val database: CoffeeTechDatabase) {
         userId: Long,
         customerName: String,
         deliveryAddress: String,
+        deliveryLatitude: Double?,
+        deliveryLongitude: Double?,
         deliveryType: String,
         paymentMethod: String,
         subtotal: Int,
@@ -49,6 +51,21 @@ class OrderDao(private val database: CoffeeTechDatabase) {
                 put(COLUMN_USER_ID, userId)
                 put(COLUMN_CUSTOMER_NAME, customerName)
                 put(COLUMN_DELIVERY_ADDRESS, deliveryAddress)
+
+                if (
+                    deliveryLatitude != null &&
+                    deliveryLongitude != null
+                ) {
+                    put(
+                        COLUMN_DELIVERY_LATITUDE,
+                        deliveryLatitude
+                    )
+                    put(
+                        COLUMN_DELIVERY_LONGITUDE,
+                        deliveryLongitude
+                    )
+                }
+
                 put(COLUMN_DELIVERY_TYPE, deliveryType)
                 put(COLUMN_PAYMENT_METHOD, paymentMethod)
                 put(COLUMN_SUBTOTAL, subtotal)
@@ -176,6 +193,12 @@ class OrderDao(private val database: CoffeeTechDatabase) {
         val id = getLong(getColumnIndexOrThrow(COLUMN_ID))
 
         val userIdIndex = getColumnIndexOrThrow(COLUMN_USER_ID)
+        val latitudeIndex = getColumnIndexOrThrow(
+            COLUMN_DELIVERY_LATITUDE
+        )
+        val longitudeIndex = getColumnIndexOrThrow(
+            COLUMN_DELIVERY_LONGITUDE
+        )
 
         return StoredOrder(
             id = id,
@@ -193,6 +216,16 @@ class OrderDao(private val database: CoffeeTechDatabase) {
             deliveryAddress = getString(
                 getColumnIndexOrThrow(COLUMN_DELIVERY_ADDRESS)
             ).orEmpty(),
+            deliveryLatitude = if (isNull(latitudeIndex)) {
+                null
+            } else {
+                getDouble(latitudeIndex)
+            },
+            deliveryLongitude = if (isNull(longitudeIndex)) {
+                null
+            } else {
+                getDouble(longitudeIndex)
+            },
             deliveryType = getString(
                 getColumnIndexOrThrow(COLUMN_DELIVERY_TYPE)
             ).orEmpty(),
@@ -251,6 +284,8 @@ class OrderDao(private val database: CoffeeTechDatabase) {
         const val COLUMN_USER_ID = "user_id"
         const val COLUMN_CUSTOMER_NAME = "customer_name"
         const val COLUMN_DELIVERY_ADDRESS = "delivery_address"
+        const val COLUMN_DELIVERY_LATITUDE = "delivery_latitude"
+        const val COLUMN_DELIVERY_LONGITUDE = "delivery_longitude"
         const val COLUMN_DELIVERY_TYPE = "delivery_type"
         const val COLUMN_PAYMENT_METHOD = "payment_method"
         const val COLUMN_SUBTOTAL = "subtotal"
@@ -280,6 +315,8 @@ class OrderDao(private val database: CoffeeTechDatabase) {
             COLUMN_USER_ID,
             COLUMN_CUSTOMER_NAME,
             COLUMN_DELIVERY_ADDRESS,
+            COLUMN_DELIVERY_LATITUDE,
+            COLUMN_DELIVERY_LONGITUDE,
             COLUMN_DELIVERY_TYPE,
             COLUMN_PAYMENT_METHOD,
             COLUMN_SUBTOTAL,

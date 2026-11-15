@@ -28,6 +28,7 @@ class CoffeeTechDatabase private constructor(
         seedProducts(database)
         createCartTable(database)
         createOrdersTables(database)
+        createAddressesTable(database)
     }
 
     override fun onUpgrade(
@@ -100,6 +101,41 @@ class CoffeeTechDatabase private constructor(
             createCartTable(database)
             createOrdersTables(database)
         }
+
+        if (oldVersion < 6) {
+            // Coordenadas de la ubicación de entrega capturada con GPS.
+            // La tabla `orders` se crea con estas columnas en el paso < 5;
+            // solo se agregan cuando la base ya existía en la versión 5
+            database.execSQL(
+                "ALTER TABLE ${UserDao.TABLE_USERS} " +
+                    "ADD COLUMN ${UserDao.COLUMN_LATITUDE} REAL"
+            )
+            database.execSQL(
+                "ALTER TABLE ${UserDao.TABLE_USERS} " +
+                    "ADD COLUMN ${UserDao.COLUMN_LONGITUDE} REAL"
+            )
+
+            if (oldVersion >= 5) {
+                database.execSQL(
+                    "ALTER TABLE ${OrderDao.TABLE_ORDERS} " +
+                        "ADD COLUMN ${OrderDao.COLUMN_DELIVERY_LATITUDE} REAL"
+                )
+                database.execSQL(
+                    "ALTER TABLE ${OrderDao.TABLE_ORDERS} " +
+                        "ADD COLUMN ${OrderDao.COLUMN_DELIVERY_LONGITUDE} REAL"
+                )
+            }
+        }
+
+        if (oldVersion < 7) {
+            // Libreta de direcciones del comprador
+            database.execSQL(
+                "ALTER TABLE ${UserDao.TABLE_USERS} " +
+                    "ADD COLUMN ${UserDao.COLUMN_SELECTED_ADDRESS_ID} INTEGER"
+            )
+
+            createAddressesTable(database)
+        }
     }
 
     // Crea la tabla de usuarios
@@ -122,6 +158,9 @@ class CoffeeTechDatabase private constructor(
                 ${UserDao.COLUMN_PASSWORD_HASH} TEXT NOT NULL,
                 ${UserDao.COLUMN_PASSWORD_SALT} TEXT NOT NULL,
                 ${UserDao.COLUMN_LOCATION} TEXT NOT NULL DEFAULT '',
+                ${UserDao.COLUMN_LATITUDE} REAL,
+                ${UserDao.COLUMN_LONGITUDE} REAL,
+                ${UserDao.COLUMN_SELECTED_ADDRESS_ID} INTEGER,
                 ${UserDao.COLUMN_ACTIVE} INTEGER NOT NULL DEFAULT 1,
                 ${UserDao.COLUMN_BIOMETRIC_ENABLED} INTEGER NOT NULL DEFAULT 0,
                 ${UserDao.COLUMN_CREATED_AT} INTEGER NOT NULL,
@@ -299,6 +338,8 @@ class CoffeeTechDatabase private constructor(
                     ON DELETE SET NULL,
                 ${OrderDao.COLUMN_CUSTOMER_NAME} TEXT NOT NULL,
                 ${OrderDao.COLUMN_DELIVERY_ADDRESS} TEXT NOT NULL DEFAULT '',
+                ${OrderDao.COLUMN_DELIVERY_LATITUDE} REAL,
+                ${OrderDao.COLUMN_DELIVERY_LONGITUDE} REAL,
                 ${OrderDao.COLUMN_DELIVERY_TYPE} TEXT NOT NULL DEFAULT 'Domicilio',
                 ${OrderDao.COLUMN_PAYMENT_METHOD} TEXT NOT NULL,
                 ${OrderDao.COLUMN_SUBTOTAL} INTEGER NOT NULL,
@@ -329,6 +370,26 @@ class CoffeeTechDatabase private constructor(
                 ${OrderDao.COLUMN_QUANTITY} INTEGER NOT NULL,
                 ${OrderDao.COLUMN_IMAGE_RES_NAME} TEXT NOT NULL DEFAULT '',
                 ${OrderDao.COLUMN_IMAGE_PATH} TEXT NOT NULL DEFAULT ''
+            )
+            """.trimIndent()
+        )
+    }
+
+    // Crea la tabla de direcciones favoritas del comprador
+    private fun createAddressesTable(database: SQLiteDatabase) {
+        database.execSQL(
+            """
+            CREATE TABLE ${AddressDao.TABLE_ADDRESSES} (
+                ${AddressDao.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+                ${AddressDao.COLUMN_USER_ID} INTEGER NOT NULL
+                    REFERENCES ${UserDao.TABLE_USERS}(${UserDao.COLUMN_ID})
+                    ON DELETE CASCADE,
+                ${AddressDao.COLUMN_LABEL} TEXT NOT NULL,
+                ${AddressDao.COLUMN_ADDRESS} TEXT NOT NULL,
+                ${AddressDao.COLUMN_LATITUDE} REAL NOT NULL,
+                ${AddressDao.COLUMN_LONGITUDE} REAL NOT NULL,
+                ${AddressDao.COLUMN_CREATED_AT} INTEGER NOT NULL,
+                ${AddressDao.COLUMN_UPDATED_AT} INTEGER NOT NULL
             )
             """.trimIndent()
         )
@@ -635,7 +696,7 @@ class CoffeeTechDatabase private constructor(
 
     companion object {
         private const val DATABASE_NAME = "coffeetech.db"
-        private const val DATABASE_VERSION = 5
+        private const val DATABASE_VERSION = 7
 
         @Volatile
         private var instance: CoffeeTechDatabase? = null

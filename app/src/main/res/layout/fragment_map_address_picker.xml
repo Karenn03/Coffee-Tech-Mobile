@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/address_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_margin="14dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="5dp"
+        app:strokeColor="#EAD9CA"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="4dp">
+
+            <ImageButton
+                android:id="@+id/map_back_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/address_map_back"
+                android:padding="9dp"
+                android:src="@drawable/ic_chevron_left"
+                app:tint="@color/coffee_primary" />
+
+            <EditText
+                android:id="@+id/map_search_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="@string/address_map_search_hint"
+                android:imeOptions="actionSearch"
+                android:inputType="textCapSentences"
+                android:maxLines="1"
+                android:paddingVertical="10dp"
+                android:textColor="@color/text_dark"
+                android:textColorHint="@color/coffee_secondary"
+                android:textSize="14sp" />
+
+            <ImageButton
+                android:id="@+id/map_search_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/address_map_search"
+                android:padding="10dp"
+                android:src="@drawable/ic_search"
+                app:tint="@color/coffee_primary" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <ImageView
+        android:id="@+id/map_center_pin"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_gravity="center"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_location_pin"
+        android:translationY="-23dp"
+        app:tint="@color/coffee_primary" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="6dp"
+        app:strokeColor="#EAD9CA"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ProgressBar
+                android:id="@+id/map_progress"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="end"
+                android:indeterminateTint="@color/coffee_primary"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/map_selected_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_dark"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/address_map_hint"
+                android:textColor="@color/coffee_secondary"
+                android:textSize="12sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/map_confirm_button"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="12dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/address_map_confirm"
+                android:textAllCaps="false"
+                android:textColor="@color/text_light"
+                android:textSize="14sp"
+                app:backgroundTint="@color/coffee_primary"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/ic_map_pin"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@color/text_light" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/map_use_current_button"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/address_map_use_current"
+                android:textAllCaps="false"
+                android:textColor="@color/coffee_primary"
+                android:textSize="14sp"
+                app:backgroundTint="@color/biometric_button_background"
+                app:cornerRadius="16dp"
+                app:elevation="0dp"
+                app:icon="@drawable/ic_my_location"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@color/coffee_primary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/address_map_attribution"
+                android:textColor="@color/coffee_secondary"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</FrameLayout>

@@ -145,10 +145,102 @@ class UserDao(private val database: CoffeeTechDatabase) {
         )
     }
 
+    /**
+     * Marca una dirección como activa y sincroniza la ubicación del usuario.
+     *
+     * Se usa al crear, seleccionar o eliminar direcciones del comprador.
+     */
+    fun selectDeliveryAddress(
+        userId: Long,
+        addressId: Long?,
+        address: String?,
+        latitude: Double?,
+        longitude: Double?
+    ): Int {
+        val values = ContentValues().apply {
+            if (addressId != null) {
+                put(COLUMN_SELECTED_ADDRESS_ID, addressId)
+            } else {
+                putNull(COLUMN_SELECTED_ADDRESS_ID)
+            }
+
+            put(COLUMN_LOCATION, address.orEmpty())
+
+            if (latitude != null && longitude != null) {
+                put(COLUMN_LATITUDE, latitude)
+                put(COLUMN_LONGITUDE, longitude)
+            } else {
+                putNull(COLUMN_LATITUDE)
+                putNull(COLUMN_LONGITUDE)
+            }
+
+            put(COLUMN_UPDATED_AT, System.currentTimeMillis())
+        }
+
+        return database.writableDatabase.update(
+            TABLE_USERS,
+            values,
+            "$COLUMN_ID = ?",
+            arrayOf(userId.toString())
+        )
+    }
+
+    // Limpia las coordenadas de un usuario al cambiar de rol o de sede
+    fun clearSelectedAddress(userId: Long): Int {
+        val values = ContentValues().apply {
+            putNull(COLUMN_SELECTED_ADDRESS_ID)
+            putNull(COLUMN_LATITUDE)
+            putNull(COLUMN_LONGITUDE)
+            put(COLUMN_UPDATED_AT, System.currentTimeMillis())
+        }
+
+        return database.writableDatabase.update(
+            TABLE_USERS,
+            values,
+            "$COLUMN_ID = ?",
+            arrayOf(userId.toString())
+        )
+    }
+
     // Elimina una cuenta por id. Devuelve el número de filas afectadas
     fun deleteById(userId: Long): Int {
         return database.writableDatabase.delete(
             TABLE_USERS,
+            "$COLUMN_ID = ?",
+            arrayOf(userId.toString())
+        )
+    }
+
+    /**
+     * Guarda la ubicación de entrega capturada con GPS.
+     *
+     * [address] es la dirección legible que se muestra en la tienda y se
+     * copia a cada orden; [latitude] y [longitude] permiten conservar el
+     * punto exacto aunque la dirección cambie de texto
+     */
+    fun updateDeliveryLocation(
+        userId: Long,
+        address: String,
+        latitude: Double?,
+        longitude: Double?
+    ): Int {
+        val values = ContentValues().apply {
+            put(COLUMN_LOCATION, address)
+
+            if (latitude != null && longitude != null) {
+                put(COLUMN_LATITUDE, latitude)
+                put(COLUMN_LONGITUDE, longitude)
+            } else {
+                putNull(COLUMN_LATITUDE)
+                putNull(COLUMN_LONGITUDE)
+            }
+
+            put(COLUMN_UPDATED_AT, System.currentTimeMillis())
+        }
+
+        return database.writableDatabase.update(
+            TABLE_USERS,
+            values,
             "$COLUMN_ID = ?",
             arrayOf(userId.toString())
         )
@@ -223,6 +315,12 @@ class UserDao(private val database: CoffeeTechDatabase) {
 
     // Convierte la fila actual del cursor en el modelo de dominio
     private fun Cursor.toUser(): User {
+        val latitudeIndex = getColumnIndexOrThrow(COLUMN_LATITUDE)
+        val longitudeIndex = getColumnIndexOrThrow(COLUMN_LONGITUDE)
+        val selectedAddressIndex = getColumnIndexOrThrow(
+            COLUMN_SELECTED_ADDRESS_ID
+        )
+
         return User(
             id = getLong(getColumnIndexOrThrow(COLUMN_ID)),
             fullName = getString(getColumnIndexOrThrow(COLUMN_FULL_NAME)),
@@ -243,6 +341,21 @@ class UserDao(private val database: CoffeeTechDatabase) {
                 getString(getColumnIndexOrThrow(COLUMN_ROLE))
             ),
             location = getString(getColumnIndexOrThrow(COLUMN_LOCATION)).orEmpty(),
+            latitude = if (isNull(latitudeIndex)) {
+                null
+            } else {
+                getDouble(latitudeIndex)
+            },
+            longitude = if (isNull(longitudeIndex)) {
+                null
+            } else {
+                getDouble(longitudeIndex)
+            },
+            selectedAddressId = if (isNull(selectedAddressIndex)) {
+                null
+            } else {
+                getLong(selectedAddressIndex)
+            },
             active = getInt(getColumnIndexOrThrow(COLUMN_ACTIVE)) == 1,
             biometricEnabled =
                 getInt(getColumnIndexOrThrow(COLUMN_BIOMETRIC_ENABLED)) == 1,
@@ -279,6 +392,9 @@ class UserDao(private val database: CoffeeTechDatabase) {
         const val COLUMN_PASSWORD_HASH = "password_hash"
         const val COLUMN_PASSWORD_SALT = "password_salt"
         const val COLUMN_LOCATION = "location"
+        const val COLUMN_LATITUDE = "latitude"
+        const val COLUMN_LONGITUDE = "longitude"
+        const val COLUMN_SELECTED_ADDRESS_ID = "selected_address_id"
         const val COLUMN_ACTIVE = "active"
         const val COLUMN_BIOMETRIC_ENABLED = "biometric_enabled"
         const val COLUMN_CREATED_AT = "created_at"
@@ -298,6 +414,9 @@ class UserDao(private val database: CoffeeTechDatabase) {
             COLUMN_PASSWORD_HASH,
             COLUMN_PASSWORD_SALT,
             COLUMN_LOCATION,
+            COLUMN_LATITUDE,
+            COLUMN_LONGITUDE,
+            COLUMN_SELECTED_ADDRESS_ID,
             COLUMN_ACTIVE,
             COLUMN_BIOMETRIC_ENABLED,
             COLUMN_CREATED_AT

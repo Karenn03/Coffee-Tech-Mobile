@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.data.model.UserRole
 import com.example.coffeetechmobile.data.session.SessionManager
+import com.example.coffeetechmobile.ui.buyer.address.AddressBookViewModel
+import com.example.coffeetechmobile.ui.buyer.address.DeliveryAddressBottomSheet
 import com.example.coffeetechmobile.ui.buyer.cart.CartItem
 import com.example.coffeetechmobile.ui.buyer.cart.CartViewModel
 import com.example.coffeetechmobile.ui.buyer.catalog.BuyerMenuViewModel
@@ -37,6 +39,7 @@ class BuyerHomeFragment : Fragment(R.layout.fragment_home) {
 
     private val cartViewModel: CartViewModel by activityViewModels()
     private val menuViewModel: BuyerMenuViewModel by viewModels()
+    private val addressBookViewModel: AddressBookViewModel by activityViewModels()
 
     private lateinit var productAdapter: BuyerProductAdapter
     private var allProducts: List<MenuProduct> = emptyList()
@@ -71,6 +74,8 @@ class BuyerHomeFragment : Fragment(R.layout.fragment_home) {
                 ProfileFragment.createArguments(UserRole.BUYER)
             )
         }
+
+        setupDeliveryLocation(view)
 
         productAdapter = BuyerProductAdapter(
             onProductClick = { product ->
@@ -107,8 +112,46 @@ class BuyerHomeFragment : Fragment(R.layout.fragment_home) {
     override fun onResume() {
         super.onResume()
 
-        // Recarga el menú al volver desde el detalle o el carrito
+        // Recarga el menú y la dirección al volver de otra pantalla
         menuViewModel.loadProducts()
+        addressBookViewModel.loadAddresses()
+    }
+
+    /**
+     * Muestra la dirección activa y abre la libreta de
+     * direcciones al tocar la tarjeta o la flecha
+     */
+    private fun setupDeliveryLocation(root: View) {
+        val addressText = root.findViewById<TextView>(
+            R.id.delivery_address
+        )
+
+        addressText.setText(R.string.delivery_address_empty)
+
+        val openAddressBook = View.OnClickListener {
+            showDeliveryAddressSheet()
+        }
+
+        root.findViewById<View>(R.id.change_location_button)
+            .setOnClickListener(openAddressBook)
+
+        root.findViewById<View>(R.id.delivery_location_card)
+            .setOnClickListener(openAddressBook)
+
+        addressBookViewModel.displayAddress.observe(
+            viewLifecycleOwner
+        ) { address ->
+            addressText.text = address
+                ?.takeIf { it.isNotBlank() }
+                ?: getString(R.string.delivery_address_empty)
+        }
+    }
+
+    private fun showDeliveryAddressSheet() {
+        DeliveryAddressBottomSheet().show(
+            childFragmentManager,
+            DeliveryAddressBottomSheet.TAG
+        )
     }
 
     private fun setupPagination(root: View) {

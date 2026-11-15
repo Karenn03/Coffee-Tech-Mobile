@@ -3,13 +3,15 @@ package com.example.coffeetechmobile.ui.buyer.cart
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.data.session.SessionManager
+import com.example.coffeetechmobile.ui.buyer.address.AddressBookViewModel
+import com.example.coffeetechmobile.ui.buyer.address.DeliveryAddressBottomSheet
 import com.example.coffeetechmobile.ui.buyer.navigation.BuyerTab
 import com.example.coffeetechmobile.ui.buyer.navigation.setupBuyerBottomNavigation
 import java.text.NumberFormat
@@ -18,6 +20,8 @@ import java.util.Locale
 class CartFragment : Fragment(R.layout.fragment_cart) {
 
     private val cartViewModel: CartViewModel by activityViewModels()
+
+    private val addressBookViewModel: AddressBookViewModel by activityViewModels()
 
     private lateinit var cartAdapter: CartAdapter
 
@@ -37,6 +41,14 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
             navController = findNavController(),
             selectedTab = BuyerTab.CART
         )
+
+        // Nombre real de la cuenta con sesión activa
+        val session = SessionManager(requireContext()).current()
+
+        view.findViewById<TextView>(R.id.cart_customer_name).text =
+            session?.fullName ?: "Coffee Tech"
+
+        setupDeliveryAddress(view)
 
         // Adaptador
         cartAdapter = CartAdapter(
@@ -179,8 +191,42 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
     override fun onResume() {
         super.onResume()
 
-        // Refresca el carrito guardado en SQLite al volver a la pantalla
+        // Refresca el carrito y la dirección guardados en SQLite
         cartViewModel.refresh()
+        addressBookViewModel.loadAddresses()
+    }
+
+    /**
+     * Muestra la dirección de entrega activa en el carrito y permite
+     * cambiarla con el mismo selector del inicio del comprador
+     */
+    private fun setupDeliveryAddress(root: View) {
+        val addressText = root.findViewById<TextView>(
+            R.id.cart_delivery_address
+        )
+
+        addressText.setText(R.string.delivery_address_empty)
+
+        val openAddressBook = View.OnClickListener {
+            DeliveryAddressBottomSheet().show(
+                childFragmentManager,
+                DeliveryAddressBottomSheet.TAG
+            )
+        }
+
+        root.findViewById<View>(R.id.cart_change_location_button)
+            .setOnClickListener(openAddressBook)
+
+        root.findViewById<View>(R.id.cart_delivery_card)
+            .setOnClickListener(openAddressBook)
+
+        addressBookViewModel.displayAddress.observe(
+            viewLifecycleOwner
+        ) { address ->
+            addressText.text = address
+                ?.takeIf { it.isNotBlank() }
+                ?: getString(R.string.delivery_address_empty)
+        }
     }
 
     private fun formatPrice(value: Int): String {

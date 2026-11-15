@@ -110,6 +110,12 @@
         android:name="com.example.coffeetechmobile.ui.buyer.payment.PaymentFragment"
         android:label="Proceso de pago" />
 
+    <!-- Selector de dirección sobre el mapa -->
+    <fragment
+        android:id="@+id/mapAddressPickerFragment"
+        android:name="com.example.coffeetechmobile.ui.buyer.address.MapAddressPickerFragment"
+        android:label="Elegir dirección" />
+
 
     <!-- ................................................................................. -->
 

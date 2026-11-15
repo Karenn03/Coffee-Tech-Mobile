@@ -61,6 +61,8 @@ class OrderRepository(context: Context) {
                     userId = session.id,
                     customerName = user?.fullName ?: session.fullName,
                     deliveryAddress = deliveryAddress,
+                    deliveryLatitude = user?.latitude,
+                    deliveryLongitude = user?.longitude,
                     deliveryType = DELIVERY_TYPE_HOME,
                     paymentMethod = paymentMethod,
                     subtotal = CartPricing.subtotal(items),

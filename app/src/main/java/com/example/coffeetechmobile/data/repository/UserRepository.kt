@@ -145,9 +145,11 @@ class UserRepository(context: Context) {
             )
         }
 
+        val isBuyer = input.role == UserRole.BUYER
+
         // En compradores se conserva la dirección de entrega; en empleados
         // la sede seleccionada pasa a ser la ubicación del perfil.
-        val location = if (input.role == UserRole.BUYER) {
+        val location = if (isBuyer) {
             current.user.location
         } else {
             input.branch
@@ -179,6 +181,10 @@ class UserRepository(context: Context) {
             )
         }
 
+        if (!isBuyer) {
+            userDao.clearSelectedAddress(userId)
+        }
+
         UserResult.Success(
             current.user.copy(
                 fullName = input.fullName.trim(),
@@ -190,14 +196,40 @@ class UserRepository(context: Context) {
                 branch = input.branch,
                 contractType = input.contractType,
                 role = input.role,
-                location = location
+                location = location,
+                latitude = if (isBuyer) current.user.latitude else null,
+                longitude = if (isBuyer) current.user.longitude else null,
+                selectedAddressId = if (isBuyer) {
+                    current.user.selectedAddressId
+                } else {
+                    null
+                }
             )
         )
     }
 
-    /**
-     * Elimina una cuenta. Devuelve true si la fila existía.
-     */
+    // Devuelve una cuenta por id (para la dirección de entrega del comprador)
+    suspend fun getUser(userId: Long): User? =
+        withContext(Dispatchers.IO) {
+            userDao.findById(userId)?.user
+        }
+
+    // Guarda la dirección y las coordenadas capturadas con GPS
+    suspend fun updateDeliveryLocation(
+        userId: Long,
+        address: String,
+        latitude: Double,
+        longitude: Double
+    ): Boolean = withContext(Dispatchers.IO) {
+        userDao.updateDeliveryLocation(
+            userId = userId,
+            address = address,
+            latitude = latitude,
+            longitude = longitude
+        ) > 0
+    }
+
+    // Elimina una cuenta. Devuelve true si la fila existía
     suspend fun deleteUser(userId: Long): Boolean =
         withContext(Dispatchers.IO) {
             userDao.deleteById(userId) > 0
@@ -208,7 +240,7 @@ class UserRepository(context: Context) {
     }
 
     companion object {
-        /** Contraseña inicial para las cuentas creadas por el administrador. */
+        // Contraseña inicial para las cuentas creadas por el administrador
         const val TEMPORARY_PASSWORD = "Coffee123*"
     }
 }

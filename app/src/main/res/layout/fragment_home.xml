@@ -129,7 +129,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="ENTREGAR EN"
+                            android:text="@string/delivery_deliver_to"
                             android:textColor="@color/coffee_secondary"
                             android:textSize="10sp"
                             android:textStyle="bold" />
@@ -138,6 +138,7 @@
                             android:id="@+id/delivery_address"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
                             android:maxLines="1"
                             android:text="Cl. 138 #11b-16, Bogotá"
                             android:textColor="@color/text_dark"

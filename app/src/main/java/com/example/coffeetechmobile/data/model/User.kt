@@ -18,6 +18,9 @@ data class User(
     val contractType: String = "",
     val role: UserRole = UserRole.BUYER,
     val location: String = "",
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val selectedAddressId: Long? = null,
     val active: Boolean = true,
     val biometricEnabled: Boolean = false,
     val createdAt: Long = 0L

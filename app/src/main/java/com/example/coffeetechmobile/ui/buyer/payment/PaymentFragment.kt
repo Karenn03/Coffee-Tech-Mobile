@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.ui.buyer.address.AddressBookViewModel
 import com.example.coffeetechmobile.ui.buyer.cart.CartViewModel
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -26,6 +27,8 @@ class PaymentFragment : Fragment(R.layout.fragment_payment) {
     private val cartViewModel: CartViewModel by activityViewModels()
 
     private val checkoutViewModel: CheckoutViewModel by viewModels()
+
+    private val addressBookViewModel: AddressBookViewModel by activityViewModels()
 
     private val priceFormatter = NumberFormat.getIntegerInstance(
         Locale("es", "CO")
@@ -48,8 +51,26 @@ class PaymentFragment : Fragment(R.layout.fragment_payment) {
 
         setupPaymentMethods(view)
         setupOrderSummary(view)
+        setupDeliveryAddress(view)
         setupPaymentConfirmation(view)
         observeCheckout(view)
+    }
+
+    // Muestra la dirección capturada desde el inicio del comprador
+    private fun setupDeliveryAddress(root: View) {
+        val addressText = root.findViewById<TextView>(
+            R.id.payment_delivery_address
+        )
+
+        addressBookViewModel.displayAddress.observe(
+            viewLifecycleOwner
+        ) { address ->
+            addressText.text = address
+                ?.takeIf { it.isNotBlank() }
+                ?: getString(R.string.payment_delivery_pending)
+        }
+
+        addressBookViewModel.loadAddresses()
     }
 
     private fun setupPaymentMethods(root: View) {
