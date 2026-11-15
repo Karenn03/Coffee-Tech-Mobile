@@ -19,8 +19,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.data.model.Product
+import com.example.coffeetechmobile.data.model.UserRole
+import com.example.coffeetechmobile.data.session.SessionManager
 import com.example.coffeetechmobile.ui.manager.navigation.ManagerTab
 import com.example.coffeetechmobile.ui.manager.navigation.setupManagerBottomNavigation
+import com.example.coffeetechmobile.ui.profile.ProfileFragment
+import com.example.coffeetechmobile.ui.seller.navigation.SellerTab
+import com.example.coffeetechmobile.ui.seller.navigation.setupSellerBottomNavigation
 
 /**
  * Gestión de productos del administrador
@@ -47,13 +52,56 @@ class ProductManagementFragment :
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupManagerBottomNavigation(
-            root = view.findViewById(
-                R.id.product_bottom_navigation
-            ),
-            navController = findNavController(),
-            selectedTab = ManagerTab.PRODUCTS
+        val session = SessionManager(requireContext()).current()
+        val isSeller = session?.role == UserRole.SELLER
+
+        val managerNavigation = view.findViewById<View>(
+            R.id.product_bottom_navigation
         )
+
+        val sellerNavigation = view.findViewById<View>(
+            R.id.seller_product_bottom_navigation
+        )
+
+        if (isSeller) {
+            managerNavigation.visibility = View.GONE
+            sellerNavigation.visibility = View.VISIBLE
+
+            setupSellerBottomNavigation(
+                root = sellerNavigation,
+                navController = findNavController(),
+                selectedTab = SellerTab.PRODUCTS
+            )
+        } else {
+            managerNavigation.visibility = View.VISIBLE
+            sellerNavigation.visibility = View.GONE
+
+            setupManagerBottomNavigation(
+                root = managerNavigation,
+                navController = findNavController(),
+                selectedTab = ManagerTab.PRODUCTS
+            )
+        }
+
+        view.findViewById<TextView>(R.id.product_header_name).text =
+            session?.fullName ?: "Coffee Tech"
+
+        view.findViewById<TextView>(R.id.product_header_role).text =
+            if (isSeller) "Vendedor" else "Gerente"
+
+        view.findViewById<View>(R.id.product_profile_button)
+            .setOnClickListener {
+                findNavController().navigate(
+                    R.id.profileFragment,
+                    ProfileFragment.createArguments(
+                        if (isSeller) {
+                            UserRole.SELLER
+                        } else {
+                            UserRole.ADMIN
+                        }
+                    )
+                )
+            }
 
         // Se muestran ceros mientras llega la primera consulta a SQLite.
         renderStats(emptyList())

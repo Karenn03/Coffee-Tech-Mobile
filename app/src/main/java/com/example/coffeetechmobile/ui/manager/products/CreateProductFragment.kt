@@ -22,10 +22,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.data.model.UserRole
 import com.example.coffeetechmobile.data.repository.ProductInput
+import com.example.coffeetechmobile.data.session.SessionManager
 import com.example.coffeetechmobile.data.storage.ProductImageStorage
 import com.example.coffeetechmobile.ui.manager.navigation.ManagerTab
 import com.example.coffeetechmobile.ui.manager.navigation.setupManagerBottomNavigation
+import com.example.coffeetechmobile.ui.seller.navigation.SellerTab
+import com.example.coffeetechmobile.ui.seller.navigation.setupSellerBottomNavigation
 import java.io.File
 
 /**
@@ -86,14 +90,42 @@ class CreateProductFragment : Fragment(R.layout.fragment_create_product) {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        // El menú inferior ya existe en el diseño; se activa también aquí
-        setupManagerBottomNavigation(
-            root = view.findViewById(
-                R.id.product_form_bottom_navigation
-            ),
-            navController = findNavController(),
-            selectedTab = ManagerTab.PRODUCTS
+        val session = SessionManager(requireContext()).current()
+        val isSeller = session?.role == UserRole.SELLER
+
+        val managerNavigation = view.findViewById<View>(
+            R.id.product_form_bottom_navigation
         )
+
+        val sellerNavigation = view.findViewById<View>(
+            R.id.seller_product_form_bottom_navigation
+        )
+
+        if (isSeller) {
+            managerNavigation.visibility = View.GONE
+            sellerNavigation.visibility = View.VISIBLE
+
+            setupSellerBottomNavigation(
+                root = sellerNavigation,
+                navController = findNavController(),
+                selectedTab = SellerTab.PRODUCTS
+            )
+        } else {
+            managerNavigation.visibility = View.VISIBLE
+            sellerNavigation.visibility = View.GONE
+
+            setupManagerBottomNavigation(
+                root = managerNavigation,
+                navController = findNavController(),
+                selectedTab = ManagerTab.PRODUCTS
+            )
+        }
+
+        view.findViewById<TextView>(R.id.product_header_name).text =
+            session?.fullName ?: "Coffee Tech"
+
+        view.findViewById<TextView>(R.id.product_header_role).text =
+            if (isSeller) "Vendedor" else "Gerente"
 
         styleTaxOption(
             view,

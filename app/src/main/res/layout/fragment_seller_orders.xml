@@ -19,20 +19,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageButton
-            android:id="@+id/seller_orders_back_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_header_icon"
-            android:padding="10dp"
-            android:src="@drawable/ic_arrow_left"
-            android:contentDescription="@string/seller_orders_back"
-            app:tint="@color/background_app" />
-
         <ImageView
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginStart="10dp"
             android:background="@drawable/bg_logo_circle"
             android:padding="4dp"
             android:src="@drawable/logo"
@@ -47,6 +36,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/seller_orders_header_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Coffee Tech"
@@ -55,6 +45,7 @@
                 android:fontFamily="sans-serif-medium" />
 
             <TextView
+                android:id="@+id/seller_orders_header_role"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Vendedor"
@@ -92,7 +83,7 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/seller_orders_header"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/seller_bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -495,5 +486,14 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/seller_bottom_navigation"
+        layout="@layout/view_seller_bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="78dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

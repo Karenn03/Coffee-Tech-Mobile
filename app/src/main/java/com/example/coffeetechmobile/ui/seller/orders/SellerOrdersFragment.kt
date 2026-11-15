@@ -13,7 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.data.model.UserRole
+import com.example.coffeetechmobile.data.session.SessionManager
 import com.example.coffeetechmobile.ui.profile.ProfileFragment
+import com.example.coffeetechmobile.ui.seller.navigation.SellerTab
+import com.example.coffeetechmobile.ui.seller.navigation.setupSellerBottomNavigation
 
 class SellerOrdersFragment :
     Fragment(R.layout.fragment_seller_orders) {
@@ -28,11 +31,19 @@ class SellerOrdersFragment :
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<View>(
-            R.id.seller_orders_back_button
-        ).setOnClickListener {
-            findNavController().navigateUp()
-        }
+        setupSellerBottomNavigation(
+            root = view.findViewById(R.id.seller_bottom_navigation),
+            navController = findNavController(),
+            selectedTab = SellerTab.ORDERS
+        )
+
+        val session = SessionManager(requireContext()).current()
+
+        view.findViewById<TextView>(R.id.seller_orders_header_name).text =
+            session?.fullName ?: "Coffee Tech"
+
+        view.findViewById<TextView>(R.id.seller_orders_header_role).text =
+            "Vendedor"
 
         // Perfil compartido del vendedor, desde donde puede cerrar sesión.
         view.findViewById<View>(R.id.profile_button)

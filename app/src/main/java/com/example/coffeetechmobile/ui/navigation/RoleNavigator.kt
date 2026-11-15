@@ -17,7 +17,7 @@ object RoleNavigator {
     fun destinationFor(role: UserRole): Int {
         return when (role) {
             UserRole.ADMIN -> R.id.adminDashboardFragment
-            UserRole.SELLER -> R.id.sellerOrdersFragment
+            UserRole.SELLER -> R.id.sellerHomeFragment
             UserRole.BUYER -> R.id.homeFragment
         }
     }

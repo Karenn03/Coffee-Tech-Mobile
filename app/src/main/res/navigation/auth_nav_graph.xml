@@ -167,7 +167,13 @@
     <fragment
         android:id="@+id/sellerOrdersFragment"
         android:name="com.example.coffeetechmobile.ui.seller.orders.SellerOrdersFragment"
-        android:label="Pedidos recibidos" />
+        android:label="Historial de pedidos" />
+
+    <!-- Inicio del vendedor -->
+    <fragment
+        android:id="@+id/sellerHomeFragment"
+        android:name="com.example.coffeetechmobile.ui.seller.home.SellerHomeFragment"
+        android:label="Inicio vendedor" />
 
 
 

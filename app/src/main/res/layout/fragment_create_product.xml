@@ -37,6 +37,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/product_header_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Karen Sophia Molina Díaz"
@@ -45,6 +46,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/product_header_role"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Gerente"
@@ -78,7 +80,7 @@
         android:fillViewport="true"
         android:clipChildren="false"
         android:clipToPadding="false"
-        app:layout_constraintBottom_toTopOf="@id/product_form_bottom_navigation"
+        app:layout_constraintBottom_toTopOf="@id/product_form_bottom_navigation_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/product_form_header">
@@ -715,13 +717,27 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <include
-        android:id="@+id/product_form_bottom_navigation"
-        layout="@layout/view_manager_bottom_navigation"
+    <FrameLayout
+        android:id="@+id/product_form_bottom_navigation_container"
         android:layout_width="0dp"
         android:layout_height="82dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <include
+            android:id="@+id/product_form_bottom_navigation"
+            layout="@layout/view_manager_bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            android:id="@+id/seller_product_form_bottom_navigation"
+            layout="@layout/view_seller_bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

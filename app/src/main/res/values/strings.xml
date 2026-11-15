@@ -379,4 +379,21 @@
     <string name="product_image_load_error">No se pudo cargar la imagen.</string>
     <string name="product_image_camera_error">No se pudo abrir la cámara.</string>
 
+    <!-- Navegación del vendedor -->
+    <string name="seller_nav_home">Inicio</string>
+    <string name="seller_nav_orders">Historial de pedidos</string>
+    <string name="seller_nav_products">Productos</string>
+
+    <!-- Inicio del vendedor -->
+    <string name="seller_home_title">Panel del vendedor</string>
+    <string name="seller_home_subtitle">Resumen de tu actividad en Coffee Tech</string>
+    <string name="seller_home_active_orders">Pedidos activos</string>
+    <string name="seller_home_delivered_orders">Pedidos entregados</string>
+    <string name="seller_home_products">Productos en el menú</string>
+    <string name="seller_home_quick_actions">Accesos rápidos</string>
+    <string name="seller_home_manage_products">Gestionar productos</string>
+    <string name="seller_home_manage_products_description">Crea, edita y elimina productos</string>
+    <string name="seller_home_order_history">Historial de pedidos</string>
+    <string name="seller_home_order_history_description">Consulta los pedidos recibidos</string>
+
 </resources>
