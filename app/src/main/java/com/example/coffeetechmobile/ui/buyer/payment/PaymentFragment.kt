@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.ui.buyer.cart.CartViewModel
@@ -23,6 +24,8 @@ import java.util.Locale
 class PaymentFragment : Fragment(R.layout.fragment_payment) {
 
     private val cartViewModel: CartViewModel by activityViewModels()
+
+    private val checkoutViewModel: CheckoutViewModel by viewModels()
 
     private val priceFormatter = NumberFormat.getIntegerInstance(
         Locale("es", "CO")
@@ -46,6 +49,7 @@ class PaymentFragment : Fragment(R.layout.fragment_payment) {
         setupPaymentMethods(view)
         setupOrderSummary(view)
         setupPaymentConfirmation(view)
+        observeCheckout(view)
     }
 
     private fun setupPaymentMethods(root: View) {
@@ -270,23 +274,11 @@ class PaymentFragment : Fragment(R.layout.fragment_payment) {
                 return@setOnClickListener
             }
 
-            val methodName = when (selectedMethod) {
-                PaymentMethodType.PSE ->
-                    getString(R.string.payment_pse_name)
-
-                PaymentMethodType.DIGITAL_WALLET ->
-                    getString(R.string.payment_wallet_name)
-
-                PaymentMethodType.CARD ->
-                    getString(R.string.payment_card_name)
-
-                PaymentMethodType.CASH_ON_DELIVERY ->
-                    getString(R.string.payment_cash_name)
-            }
+            val methodLabel = selectedMethodLabel()
 
             val message = getString(
                 R.string.payment_confirmation_message,
-                methodName,
+                methodLabel,
                 formatPrice(cartViewModel.getTotal())
             )
 
@@ -298,15 +290,89 @@ class PaymentFragment : Fragment(R.layout.fragment_payment) {
                     null
                 )
                 .setPositiveButton(
-                    R.string.payment_confirm_simulation
+                    R.string.payment_confirm_order
                 ) { _, _ ->
-                    Toast.makeText(
-                        requireContext(),
-                        R.string.payment_simulation_success,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    checkoutViewModel.confirmOrder(methodLabel)
                 }
                 .show()
+        }
+    }
+
+    // Crea la orden en SQLite y muestra el número asignado al comprador
+    private fun observeCheckout(root: View) {
+        val confirmButton = root.findViewById<View>(
+            R.id.payment_confirm_button
+        )
+
+        checkoutViewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                CheckoutState.Idle -> Unit
+
+                CheckoutState.Processing -> {
+                    confirmButton.isEnabled = false
+                    confirmButton.alpha = 0.5f
+                }
+
+                is CheckoutState.Success -> {
+                    cartViewModel.refresh()
+                    showOrderSuccess(state.orderNumber)
+                    checkoutViewModel.consumeResult()
+                }
+
+                is CheckoutState.Error -> {
+                    confirmButton.isEnabled = true
+                    confirmButton.alpha = 1f
+
+                    Toast.makeText(
+                        requireContext(),
+                        state.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    checkoutViewModel.consumeResult()
+                }
+            }
+        }
+    }
+
+    private fun showOrderSuccess(orderNumber: String) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.payment_order_created_title)
+            .setMessage(
+                getString(
+                    R.string.payment_order_created_message,
+                    orderNumber
+                )
+            )
+            .setCancelable(false)
+            .setPositiveButton(
+                R.string.payment_back_home
+            ) { _, _ ->
+                val navController = findNavController()
+
+                if (
+                    !navController.popBackStack(
+                        R.id.homeFragment,
+                        false
+                    )
+                ) {
+                    navController.navigate(R.id.homeFragment)
+                }
+            }
+            .show()
+    }
+
+    // Nombre corto que se guarda en la orden y se ve en el historial
+    private fun selectedMethodLabel(): String {
+        return when (selectedMethod) {
+            PaymentMethodType.PSE -> "PSE"
+
+            PaymentMethodType.DIGITAL_WALLET ->
+                "Nequi / Daviplata"
+
+            PaymentMethodType.CARD -> "Tarjeta"
+
+            PaymentMethodType.CASH_ON_DELIVERY -> "Efectivo"
         }
     }
 

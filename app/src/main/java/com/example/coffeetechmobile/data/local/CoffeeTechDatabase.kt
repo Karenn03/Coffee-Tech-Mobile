@@ -26,6 +26,8 @@ class CoffeeTechDatabase private constructor(
         seedDemoUsers(database)
         createProductsTable(database)
         seedProducts(database)
+        createCartTable(database)
+        createOrdersTables(database)
     }
 
     override fun onUpgrade(
@@ -91,6 +93,12 @@ class CoffeeTechDatabase private constructor(
                 WHERE ${ProductDao.COLUMN_CATEGORY} = 'Desayunos y Brunch'
                 """.trimIndent()
             )
+        }
+
+        if (oldVersion < 5) {
+            // Carrito persistente y órdenes del comprador
+            createCartTable(database)
+            createOrdersTables(database)
         }
     }
 
@@ -243,6 +251,84 @@ class CoffeeTechDatabase private constructor(
                 ${ProductDao.COLUMN_ACTIVE} INTEGER NOT NULL DEFAULT 1,
                 ${ProductDao.COLUMN_CREATED_AT} INTEGER NOT NULL,
                 ${ProductDao.COLUMN_UPDATED_AT} INTEGER NOT NULL
+            )
+            """.trimIndent()
+        )
+    }
+
+    // Crea la tabla del carrito persistente del comprador
+    private fun createCartTable(database: SQLiteDatabase) {
+        database.execSQL(
+            """
+            CREATE TABLE ${CartDao.TABLE_CART_ITEMS} (
+                ${CartDao.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+                ${CartDao.COLUMN_USER_ID} INTEGER NOT NULL
+                    REFERENCES ${UserDao.TABLE_USERS}(${UserDao.COLUMN_ID})
+                    ON DELETE CASCADE,
+                ${CartDao.COLUMN_PRODUCT_ID} INTEGER NOT NULL
+                    REFERENCES ${ProductDao.TABLE_PRODUCTS}(${ProductDao.COLUMN_ID})
+                    ON DELETE CASCADE,
+                ${CartDao.COLUMN_VARIANT_KEY} TEXT NOT NULL DEFAULT '',
+                ${CartDao.COLUMN_NAME} TEXT NOT NULL,
+                ${CartDao.COLUMN_DESCRIPTION} TEXT NOT NULL DEFAULT '',
+                ${CartDao.COLUMN_UNIT_PRICE} INTEGER NOT NULL,
+                ${CartDao.COLUMN_IMAGE_RES_NAME} TEXT NOT NULL DEFAULT '',
+                ${CartDao.COLUMN_IMAGE_PATH} TEXT NOT NULL DEFAULT '',
+                ${CartDao.COLUMN_QUANTITY} INTEGER NOT NULL DEFAULT 1,
+                ${CartDao.COLUMN_CREATED_AT} INTEGER NOT NULL,
+                ${CartDao.COLUMN_UPDATED_AT} INTEGER NOT NULL,
+                UNIQUE (
+                    ${CartDao.COLUMN_USER_ID},
+                    ${CartDao.COLUMN_PRODUCT_ID},
+                    ${CartDao.COLUMN_VARIANT_KEY}
+                )
+            )
+            """.trimIndent()
+        )
+    }
+
+    // Crea las tablas de órdenes y de sus productos
+    private fun createOrdersTables(database: SQLiteDatabase) {
+        database.execSQL(
+            """
+            CREATE TABLE ${OrderDao.TABLE_ORDERS} (
+                ${OrderDao.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+                ${OrderDao.COLUMN_ORDER_NUMBER} TEXT NOT NULL UNIQUE,
+                ${OrderDao.COLUMN_USER_ID} INTEGER
+                    REFERENCES ${UserDao.TABLE_USERS}(${UserDao.COLUMN_ID})
+                    ON DELETE SET NULL,
+                ${OrderDao.COLUMN_CUSTOMER_NAME} TEXT NOT NULL,
+                ${OrderDao.COLUMN_DELIVERY_ADDRESS} TEXT NOT NULL DEFAULT '',
+                ${OrderDao.COLUMN_DELIVERY_TYPE} TEXT NOT NULL DEFAULT 'Domicilio',
+                ${OrderDao.COLUMN_PAYMENT_METHOD} TEXT NOT NULL,
+                ${OrderDao.COLUMN_SUBTOTAL} INTEGER NOT NULL,
+                ${OrderDao.COLUMN_DISCOUNT} INTEGER NOT NULL DEFAULT 0,
+                ${OrderDao.COLUMN_SHIPPING} INTEGER NOT NULL DEFAULT 0,
+                ${OrderDao.COLUMN_TOTAL} INTEGER NOT NULL,
+                ${OrderDao.COLUMN_STATUS} TEXT NOT NULL DEFAULT 'RECEIVED'
+                    CHECK (${OrderDao.COLUMN_STATUS} IN (
+                        'RECEIVED', 'PREPARING', 'READY', 'DELIVERED'
+                    )),
+                ${OrderDao.COLUMN_CUSTOMER_NOTE} TEXT NOT NULL DEFAULT '',
+                ${OrderDao.COLUMN_CREATED_AT} INTEGER NOT NULL
+            )
+            """.trimIndent()
+        )
+
+        database.execSQL(
+            """
+            CREATE TABLE ${OrderDao.TABLE_ORDER_ITEMS} (
+                ${OrderDao.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+                ${OrderDao.COLUMN_ORDER_ID} INTEGER NOT NULL
+                    REFERENCES ${OrderDao.TABLE_ORDERS}(${OrderDao.COLUMN_ID})
+                    ON DELETE CASCADE,
+                ${OrderDao.COLUMN_ORDER_PRODUCT_ID} INTEGER,
+                ${OrderDao.COLUMN_PRODUCT_NAME} TEXT NOT NULL,
+                ${OrderDao.COLUMN_PRODUCT_DESCRIPTION} TEXT NOT NULL DEFAULT '',
+                ${OrderDao.COLUMN_UNIT_PRICE} INTEGER NOT NULL,
+                ${OrderDao.COLUMN_QUANTITY} INTEGER NOT NULL,
+                ${OrderDao.COLUMN_IMAGE_RES_NAME} TEXT NOT NULL DEFAULT '',
+                ${OrderDao.COLUMN_IMAGE_PATH} TEXT NOT NULL DEFAULT ''
             )
             """.trimIndent()
         )
@@ -549,7 +635,7 @@ class CoffeeTechDatabase private constructor(
 
     companion object {
         private const val DATABASE_NAME = "coffeetech.db"
-        private const val DATABASE_VERSION = 4
+        private const val DATABASE_VERSION = 5
 
         @Volatile
         private var instance: CoffeeTechDatabase? = null

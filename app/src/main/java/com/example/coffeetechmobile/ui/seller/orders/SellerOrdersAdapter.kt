@@ -6,17 +6,20 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.net.Uri
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
-import com.example.coffeetechmobile.ui.buyer.catalog.MenuCatalog
 import com.google.android.material.card.MaterialCardView
+import java.io.File
 import java.text.NumberFormat
 import java.util.Locale
 
-class SellerOrdersAdapter :
+class SellerOrdersAdapter(
+    private val onOrderClick: (SellerOrder) -> Unit
+) :
     ListAdapter<SellerOrder, SellerOrdersAdapter.OrderViewHolder>(
         DIFF_CALLBACK
     ) {
@@ -86,6 +89,11 @@ class SellerOrdersAdapter :
                 card.findViewById(R.id.seller_order_status),
                 order.status
             )
+
+            // Tocar la tarjeta permite avanzar el estado del pedido
+            card.setOnClickListener {
+                onOrderClick(order)
+            }
         }
 
         private fun bindProducts(order: SellerOrder) {
@@ -98,10 +106,6 @@ class SellerOrdersAdapter :
             val inflater = LayoutInflater.from(card.context)
 
             order.products.forEach { orderProduct ->
-                val product = MenuCatalog.findById(
-                    orderProduct.productId
-                )
-
                 val itemView = inflater.inflate(
                     R.layout.item_seller_order_product,
                     container,
@@ -120,17 +124,17 @@ class SellerOrdersAdapter :
                     R.id.order_product_quantity
                 )
 
-                if (product != null) {
-                    image.setImageResource(product.imageRes)
-                    image.contentDescription = product.name
-                    image.visibility = View.VISIBLE
-                    name.text = product.name
-                } else {
-                    image.visibility = View.GONE
-                    name.setText(
-                        R.string.seller_order_missing_product
+                if (!orderProduct.imagePath.isNullOrBlank()) {
+                    image.setImageURI(
+                        Uri.fromFile(File(orderProduct.imagePath))
                     )
+                } else {
+                    image.setImageResource(orderProduct.imageRes)
                 }
+
+                image.contentDescription = orderProduct.name
+                image.visibility = View.VISIBLE
+                name.text = orderProduct.name
 
                 quantity.text = if (orderProduct.quantity == 1) {
                     card.context.getString(

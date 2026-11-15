@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.data.model.UserRole
+import com.example.coffeetechmobile.data.session.SessionManager
 import com.example.coffeetechmobile.ui.buyer.cart.CartItem
 import com.example.coffeetechmobile.ui.buyer.cart.CartViewModel
 import com.example.coffeetechmobile.ui.buyer.catalog.BuyerMenuViewModel
@@ -55,6 +56,12 @@ class BuyerHomeFragment : Fragment(R.layout.fragment_home) {
             navController = findNavController(),
             selectedTab = BuyerTab.HOME
         )
+
+        // Nombre real de la cuenta que tiene la sesión activa
+        val session = SessionManager(requireContext()).current()
+
+        view.findViewById<TextView>(R.id.customer_name).text =
+            session?.fullName ?: "Coffee Tech"
 
         view.findViewById<View>(
             R.id.profile_button
@@ -319,7 +326,7 @@ class BuyerHomeFragment : Fragment(R.layout.fragment_home) {
     private fun addToCart(product: MenuProduct) {
         cartViewModel.addProduct(
             CartItem(
-                id = product.id,
+                productId = product.productId,
                 name = product.name,
                 description = product.description,
                 price = product.price,

@@ -176,6 +176,13 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        // Refresca el carrito guardado en SQLite al volver a la pantalla
+        cartViewModel.refresh()
+    }
+
     private fun formatPrice(value: Int): String {
         return getString(
             R.string.cart_price_format,

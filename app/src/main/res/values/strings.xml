@@ -250,11 +250,13 @@
     <!-- Validaciones y confirmación -->
     <string name="payment_empty_cart">Agrega productos antes de continuar con el pago.</string>
     <string name="payment_accept_terms">Debes aceptar los términos y condiciones para continuar.</string>
-    <string name="payment_confirmation_title">Confirmar pedido de prueba</string>
-    <string name="payment_confirmation_message">Método seleccionado: %1$s\nTotal: %2$s\n\nEsto es una simulación. No se realizará ningún cobro ni se generará un pedido real.</string>
+    <string name="payment_confirmation_title">Confirmar pedido</string>
+    <string name="payment_confirmation_message">Método de pago: %1$s\nTotal: %2$s\n\nAl confirmar, el pedido se guardará y el vendedor podrá verlo en su historial.</string>
     <string name="payment_cancel">Cancelar</string>
-    <string name="payment_confirm_simulation">Confirmar simulación</string>
-    <string name="payment_simulation_success">Simulación completada. No se realizó ningún cobro.</string>
+    <string name="payment_confirm_order">Confirmar pedido</string>
+    <string name="payment_order_created_title">Pedido confirmado</string>
+    <string name="payment_order_created_message">Tu pedido %1$s fue creado con éxito. El vendedor ya puede verlo en el historial.</string>
+    <string name="payment_back_home">Volver al inicio</string>
 
     <!-- Detalle de producto -->
     <string name="product_detail_header">Detalle del producto</string>
@@ -337,7 +339,7 @@
 
     // Strings for order history
     <string name="seller_orders_title">Pedidos recibidos</string>
-    <string name="seller_orders_subtitle">Consulta y seguimiento de pedidos de Coffee Tech</string>
+    <string name="seller_orders_subtitle">Toca un pedido para actualizar su estado</string>
     <string name="seller_orders_active">Activos</string>
     <string name="seller_orders_delivered">Entregados</string>
     <string name="seller_orders_all">Todos</string>
@@ -355,6 +357,12 @@
     <string name="seller_order_product_quantity">%1$d unidades</string>
     <string name="seller_order_single_unit">1 unidad</string>
     <string name="seller_order_missing_product">Producto no disponible</string>
+    <string name="seller_order_update_title">Actualizar pedido</string>
+    <string name="seller_order_update_message">¿Marcar el pedido %1$s como \"%2$s\"?</string>
+    <string name="seller_order_update_cancel">Cancelar</string>
+    <string name="seller_order_update_confirm">Actualizar</string>
+    <string name="seller_order_updated">Pedido actualizado.</string>
+    <string name="seller_order_already_delivered">Este pedido ya fue entregado.</string>
 
     <!-- Recuperación de contraseña: paso de nueva contraseña -->
     <string name="reset_password_title">Crea una nueva contraseña</string>

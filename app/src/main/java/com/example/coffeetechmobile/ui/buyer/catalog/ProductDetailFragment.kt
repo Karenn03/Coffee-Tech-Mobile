@@ -384,19 +384,16 @@ class ProductDetailFragment :
                         !extraShot
                 )
 
-        val variantKey = listOf(
-            product.id,
-            size,
-            milk,
-            sweetness,
-            ice,
-            extraShot
-        ).joinToString("|")
-
-        val cartId = if (isDefaultSelection) {
-            product.id
+        val variantKey = if (isDefaultSelection) {
+            ""
         } else {
-            variantKey.hashCode()
+            listOf(
+                size,
+                milk,
+                sweetness,
+                ice,
+                extraShot
+            ).joinToString("|")
         }
 
         val finalDescription = if (
@@ -423,7 +420,8 @@ class ProductDetailFragment :
 
         cartViewModel.addProduct(
             CartItem(
-                id = cartId,
+                productId = product.productId,
+                variantKey = variantKey,
                 name = product.name,
                 description = finalDescription,
                 price = getUnitPrice(product),

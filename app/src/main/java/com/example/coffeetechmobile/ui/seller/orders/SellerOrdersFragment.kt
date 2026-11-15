@@ -3,6 +3,7 @@ package com.example.coffeetechmobile.ui.seller.orders
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import android.content.res.ColorStateList
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
@@ -17,6 +18,7 @@ import com.example.coffeetechmobile.data.session.SessionManager
 import com.example.coffeetechmobile.ui.profile.ProfileFragment
 import com.example.coffeetechmobile.ui.seller.navigation.SellerTab
 import com.example.coffeetechmobile.ui.seller.navigation.setupSellerBottomNavigation
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class SellerOrdersFragment :
     Fragment(R.layout.fragment_seller_orders) {
@@ -54,7 +56,9 @@ class SellerOrdersFragment :
                 )
             }
 
-        ordersAdapter = SellerOrdersAdapter()
+        ordersAdapter = SellerOrdersAdapter { order ->
+            confirmStatusUpdate(order)
+        }
 
         val recyclerView = view.findViewById<RecyclerView>(
             R.id.seller_orders_recycler_view
@@ -66,34 +70,15 @@ class SellerOrdersFragment :
         recyclerView.adapter = ordersAdapter
         recyclerView.isNestedScrollingEnabled = false
 
-        view.findViewById<TextView>(
-            R.id.seller_orders_active_count
-        ).text = ordersViewModel.activeCount.toString()
-
-        view.findViewById<TextView>(
-            R.id.seller_orders_delivered_count
-        ).text = ordersViewModel.deliveredCount.toString()
-
-        view.findViewById<TextView>(
-            R.id.seller_stat_received
-        ).text = ordersViewModel.countByStatus(
-            SellerOrderStatus.RECEIVED
-        ).toString()
-
-        view.findViewById<TextView>(
-            R.id.seller_stat_preparing
-        ).text = ordersViewModel.countByStatus(
-            SellerOrderStatus.PREPARING
-        ).toString()
-
-        view.findViewById<TextView>(
-            R.id.seller_stat_ready
-        ).text = ordersViewModel.countByStatus(
-            SellerOrderStatus.READY
-        ).toString()
-
         setupFilters(view)
         observeOrders(view, recyclerView)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Un pedido nuevo del comprador aparece al volver a esta pantalla
+        ordersViewModel.refresh()
     }
 
     private fun setupFilters(root: View) {
@@ -114,6 +99,48 @@ class SellerOrdersFragment :
         ).setOnClickListener {
             ordersViewModel.setFilter(SellerOrderFilter.DELIVERED)
         }
+    }
+
+    // Pregunta antes de avanzar el estado y explica cuál será el nuevo estado
+    private fun confirmStatusUpdate(order: SellerOrder) {
+        val nextStatus = order.status.next()
+
+        if (nextStatus == null) {
+            Toast.makeText(
+                requireContext(),
+                R.string.seller_order_already_delivered,
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        val nextStatusLabel = getString(nextStatus.labelRes)
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.seller_order_update_title)
+            .setMessage(
+                getString(
+                    R.string.seller_order_update_message,
+                    order.id,
+                    nextStatusLabel
+                )
+            )
+            .setNegativeButton(
+                R.string.seller_order_update_cancel,
+                null
+            )
+            .setPositiveButton(
+                R.string.seller_order_update_confirm
+            ) { _, _ ->
+                ordersViewModel.advanceStatus(order.orderId)
+
+                Toast.makeText(
+                    requireContext(),
+                    R.string.seller_order_updated,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            .show()
     }
 
     private fun observeOrders(
@@ -156,6 +183,28 @@ class SellerOrdersFragment :
             viewLifecycleOwner
         ) { filter ->
             updateFilters(root, filter)
+        }
+
+        ordersViewModel.counts.observe(viewLifecycleOwner) { counts ->
+            root.findViewById<TextView>(
+                R.id.seller_orders_active_count
+            ).text = counts.active.toString()
+
+            root.findViewById<TextView>(
+                R.id.seller_orders_delivered_count
+            ).text = counts.delivered.toString()
+
+            root.findViewById<TextView>(
+                R.id.seller_stat_received
+            ).text = counts.received.toString()
+
+            root.findViewById<TextView>(
+                R.id.seller_stat_preparing
+            ).text = counts.preparing.toString()
+
+            root.findViewById<TextView>(
+                R.id.seller_stat_ready
+            ).text = counts.ready.toString()
         }
     }
 

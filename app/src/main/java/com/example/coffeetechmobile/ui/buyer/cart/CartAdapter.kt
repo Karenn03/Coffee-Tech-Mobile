@@ -16,9 +16,9 @@ import java.text.NumberFormat
 import java.util.Locale
 
 class CartAdapter(
-    private val onIncrease: (Int) -> Unit,
-    private val onDecrease: (Int) -> Unit,
-    private val onDelete: (Int) -> Unit
+    private val onIncrease: (Long) -> Unit,
+    private val onDecrease: (Long) -> Unit,
+    private val onDelete: (Long) -> Unit
 ) : ListAdapter<CartItem, CartAdapter.CartViewHolder>(CartDiffCallback()) {
 
     private val priceFormatter =

@@ -1,115 +1,39 @@
 package com.example.coffeetechmobile.ui.seller.orders
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.data.model.StoredOrder
+import com.example.coffeetechmobile.data.model.StoredOrderItem
+import com.example.coffeetechmobile.data.repository.OrderRepository
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-class SellerOrdersViewModel : ViewModel() {
+/**
+ * Historial de pedidos del vendedor, leído desde SQLite
+ *
+ * Los filtros y los contadores se calculan sobre las órdenes guardadas,
+ * de modo que un pedido confirmado por el comprador aparece aquí
+ * automáticamente al volver a la pantalla
+ */
+class SellerOrdersViewModel(
+    application: Application
+) : AndroidViewModel(application) {
 
-    private val allOrders = listOf(
-        SellerOrder(
-            id = "CT-105",
-            date = "08/11/2026 · 11:35",
-            customer = "Cliente de prueba 01",
-            products = listOf(
-                SellerOrderProduct(
-                    R.id.product_iced_caramel, 1
-                ),
-                SellerOrderProduct(
-                    R.id.product_muffin_red_velvet, 2
-                )
-            ),
-            totalUnits = 3,
-            deliveryType = "Para llevar",
-            paymentMethod = "PSE",
-            total = 17000,
-            status = SellerOrderStatus.PREPARING,
-            customerNote = "Con poco hielo y los muffins tibios, por favor."
-        ),
-        SellerOrder(
-            id = "CT-104",
-            date = "08/11/2026 · 11:18",
-            customer = "Cliente de prueba 02",
-            products = listOf(
-                SellerOrderProduct(
-                    R.id.product_frappe_oreo, 2
-                )
-            ),
-            totalUnits = 2,
-            deliveryType = "Domicilio",
-            paymentMethod = "Nequi",
-            total = 16000,
-            status = SellerOrderStatus.RECEIVED
-        ),
-        SellerOrder(
-            id = "CT-103",
-            date = "08/11/2026 · 10:52",
-            customer = "Cliente de prueba 03",
-            products = listOf(
-                SellerOrderProduct(
-                    R.id.product_iced_macchiato, 1
-                ),
-                SellerOrderProduct(
-                    R.id.product_muffin_red_velvet, 1
-                )
-            ),
-            totalUnits = 2,
-            deliveryType = "Recoger en tienda",
-            paymentMethod = "Tarjeta",
-            total = 11500,
-            status = SellerOrderStatus.READY
-        ),
-        SellerOrder(
-            id = "CT-102",
-            date = "08/11/2026 · 10:40",
-            customer = "Cliente de prueba 04",
-            products = listOf(
-                SellerOrderProduct(
-                    R.id.product_iced_caramel, 1
-                )
-            ),
-            totalUnits = 1,
-            deliveryType = "Para llevar",
-            paymentMethod = "Efectivo",
-            total = 7000,
-            status = SellerOrderStatus.DELIVERED
-        ),
-        SellerOrder(
-            id = "CT-101",
-            date = "08/11/2026 · 10:15",
-            customer = "Cliente de prueba 05",
-            products = listOf(
-                SellerOrderProduct(
-                    R.id.product_frappe_oreo, 1
-                ),
-                SellerOrderProduct(
-                    R.id.product_muffin_red_velvet, 1
-                )
-            ),
-            totalUnits = 2,
-            deliveryType = "Domicilio",
-            paymentMethod = "Daviplata",
-            total = 13000,
-            status = SellerOrderStatus.PREPARING,
-            customerNote = "Entregar las bebidas bien frías."
-        ),
-        SellerOrder(
-            id = "CT-100",
-            date = "08/11/2026 · 09:42",
-            customer = "Cliente de prueba 06",
-            products = listOf(
-                SellerOrderProduct(
-                    R.id.product_iced_macchiato, 2
-                )
-            ),
-            totalUnits = 2,
-            deliveryType = "Para llevar",
-            paymentMethod = "PSE",
-            total = 13000,
-            status = SellerOrderStatus.DELIVERED
-        )
+    private val repository = OrderRepository(application)
+    private val appContext = getApplication<Application>()
+
+    private val dateFormat = SimpleDateFormat(
+        "dd/MM/yyyy · HH:mm",
+        Locale("es", "CO")
     )
+
+    private var allOrders: List<SellerOrder> = emptyList()
 
     private val _selectedFilter =
         MutableLiveData(SellerOrderFilter.ALL)
@@ -118,28 +42,73 @@ class SellerOrdersViewModel : ViewModel() {
         _selectedFilter
 
     private val _visibleOrders =
-        MutableLiveData(allOrders)
+        MutableLiveData<List<SellerOrder>>(emptyList())
 
     val visibleOrders: LiveData<List<SellerOrder>> =
         _visibleOrders
 
-    val activeCount: Int
-        get() = allOrders.count {
-            it.status != SellerOrderStatus.DELIVERED
-        }
+    private val _counts = MutableLiveData(
+        SellerOrderCounts(0, 0, 0, 0, 0)
+    )
 
-    val deliveredCount: Int
-        get() = countByStatus(SellerOrderStatus.DELIVERED)
+    val counts: LiveData<SellerOrderCounts> = _counts
 
-    fun countByStatus(status: SellerOrderStatus): Int {
-        return allOrders.count {
-            it.status == status
+    init {
+        refresh()
+    }
+
+    // Vuelve a leer las órdenes guardadas en SQLite
+    fun refresh() {
+        viewModelScope.launch {
+            allOrders = try {
+                repository.getOrders().map { it.toSellerOrder() }
+            } catch (exception: Exception) {
+                emptyList()
+            }
+
+            applyFilter(_selectedFilter.value ?: SellerOrderFilter.ALL)
+
+            _counts.value = SellerOrderCounts(
+                active = allOrders.count {
+                    it.status != SellerOrderStatus.DELIVERED
+                },
+                delivered = countByStatus(
+                    SellerOrderStatus.DELIVERED
+                ),
+                received = countByStatus(
+                    SellerOrderStatus.RECEIVED
+                ),
+                preparing = countByStatus(
+                    SellerOrderStatus.PREPARING
+                ),
+                ready = countByStatus(SellerOrderStatus.READY)
+            )
         }
     }
 
     fun setFilter(filter: SellerOrderFilter) {
         _selectedFilter.value = filter
+        applyFilter(filter)
+    }
 
+    /**
+     * Avanza el pedido al siguiente estado:
+     * Recibido → Preparando → Listo → Entregado.
+     */
+    fun advanceStatus(orderId: Long) {
+        val order = allOrders.find { it.orderId == orderId } ?: return
+        val nextStatus = order.status.next() ?: return
+
+        viewModelScope.launch {
+            try {
+                repository.updateStatus(orderId, nextStatus.name)
+            } finally {
+                refresh()
+            }
+        }
+    }
+
+    private fun applyFilter(filter: SellerOrderFilter) {
         _visibleOrders.value = when (filter) {
             SellerOrderFilter.ALL -> allOrders
 
@@ -153,5 +122,54 @@ class SellerOrdersViewModel : ViewModel() {
                     it.status == SellerOrderStatus.DELIVERED
                 }
         }
+    }
+
+    private fun countByStatus(status: SellerOrderStatus): Int {
+        return allOrders.count { it.status == status }
+    }
+
+    private fun StoredOrder.toSellerOrder(): SellerOrder {
+        return SellerOrder(
+            id = orderNumber,
+            orderId = id,
+            date = dateFormat.format(Date(createdAt)),
+            customer = customerName,
+            products = items.map { it.toSellerOrderProduct() },
+            totalUnits = items.sumOf { it.quantity },
+            deliveryType = deliveryType,
+            paymentMethod = paymentMethod,
+            total = total,
+            status = toSellerStatus(),
+            customerNote = customerNote.ifBlank { null }
+        )
+    }
+
+    private fun StoredOrder.toSellerStatus(): SellerOrderStatus {
+        return runCatching {
+            SellerOrderStatus.valueOf(status)
+        }.getOrDefault(SellerOrderStatus.RECEIVED)
+    }
+
+    private fun StoredOrderItem.toSellerOrderProduct(): SellerOrderProduct {
+        val drawableId = if (imageResName.isNotBlank()) {
+            appContext.resources.getIdentifier(
+                imageResName,
+                "drawable",
+                appContext.packageName
+            )
+        } else {
+            0
+        }
+
+        return SellerOrderProduct(
+            name = name,
+            quantity = quantity,
+            imageRes = if (drawableId != 0) {
+                drawableId
+            } else {
+                R.drawable.ic_coffee
+            },
+            imagePath = imagePath.ifBlank { null }
+        )
     }
 }

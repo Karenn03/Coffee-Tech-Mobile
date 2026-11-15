@@ -46,11 +46,15 @@ class SellerHomeFragment : Fragment(R.layout.fragment_seller_home) {
         view.findViewById<TextView>(R.id.seller_home_header_role).text =
             "Vendedor"
 
-        view.findViewById<TextView>(R.id.seller_home_active_count).text =
-            ordersViewModel.activeCount.toString()
+        ordersViewModel.counts.observe(viewLifecycleOwner) { counts ->
+            view.findViewById<TextView>(
+                R.id.seller_home_active_count
+            ).text = counts.active.toString()
 
-        view.findViewById<TextView>(R.id.seller_home_delivered_count).text =
-            ordersViewModel.deliveredCount.toString()
+            view.findViewById<TextView>(
+                R.id.seller_home_delivered_count
+            ).text = counts.delivered.toString()
+        }
 
         view.findViewById<TextView>(R.id.seller_home_product_count).text =
             "0"
@@ -87,5 +91,6 @@ class SellerHomeFragment : Fragment(R.layout.fragment_seller_home) {
         super.onResume()
 
         productsViewModel.loadProducts()
+        ordersViewModel.refresh()
     }
 }
