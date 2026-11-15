@@ -16,7 +16,13 @@ sealed interface CheckoutState {
 
     data object Processing : CheckoutState
 
-    data class Success(val orderNumber: String) : CheckoutState
+    data class Success(
+        val orderNumber: String,
+        val confirmationCode: String,
+        val paymentStatus: String,
+        val paymentMethod: String,
+        val total: Int
+    ) : CheckoutState
 
     data class Error(val message: String) : CheckoutState
 }
@@ -50,7 +56,13 @@ class CheckoutViewModel(
                 val result = repository.checkout(paymentMethod)
             ) {
                 is CheckoutResult.Success ->
-                    CheckoutState.Success(result.orderNumber)
+                    CheckoutState.Success(
+                        orderNumber = result.orderNumber,
+                        confirmationCode = result.confirmationCode,
+                        paymentStatus = result.paymentStatus,
+                        paymentMethod = result.paymentMethod,
+                        total = result.total
+                    )
 
                 is CheckoutResult.Error ->
                     CheckoutState.Error(result.message)

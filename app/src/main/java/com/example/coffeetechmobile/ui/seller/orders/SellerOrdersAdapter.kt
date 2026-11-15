@@ -69,7 +69,23 @@ class SellerOrdersAdapter(
 
             card.findViewById<TextView>(
                 R.id.seller_order_payment
-            ).text = order.paymentMethod
+            ).text = buildString {
+                append(order.paymentMethod)
+
+                if (order.paymentMethod.isNotBlank()) {
+                    append(" · ")
+                }
+
+                append(
+                    context.getString(
+                        if (order.paymentStatus == "PAID") {
+                            R.string.seller_order_payment_paid
+                        } else {
+                            R.string.seller_order_payment_pending
+                        }
+                    )
+                )
+            }
 
             val formattedAmount = NumberFormat
                 .getIntegerInstance(Locale("es", "CO"))

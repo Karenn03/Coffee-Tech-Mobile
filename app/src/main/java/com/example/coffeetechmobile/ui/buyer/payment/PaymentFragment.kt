@@ -3,6 +3,7 @@ package com.example.coffeetechmobile.ui.buyer.payment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -16,6 +17,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.ui.buyer.address.AddressBookViewModel
+import com.example.coffeetechmobile.ui.buyer.address.DeliveryAddressBottomSheet
 import com.example.coffeetechmobile.ui.buyer.cart.CartViewModel
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -62,12 +64,42 @@ class PaymentFragment : Fragment(R.layout.fragment_payment) {
             R.id.payment_delivery_address
         )
 
+        val hintText = root.findViewById<TextView>(
+            R.id.payment_delivery_hint
+        )
+
+        val openAddressBook = View.OnClickListener {
+            DeliveryAddressBottomSheet().show(
+                childFragmentManager,
+                DeliveryAddressBottomSheet.TAG
+            )
+        }
+
+        root.findViewById<View>(R.id.payment_delivery_card)
+            .setOnClickListener(openAddressBook)
+
+        root.findViewById<View>(R.id.payment_change_location_button)
+            .setOnClickListener(openAddressBook)
+
         addressBookViewModel.displayAddress.observe(
             viewLifecycleOwner
         ) { address ->
             addressText.text = address
                 ?.takeIf { it.isNotBlank() }
                 ?: getString(R.string.payment_delivery_pending)
+        }
+
+        addressBookViewModel.displayAddressLabel.observe(
+            viewLifecycleOwner
+        ) { label ->
+            hintText.text = if (!label.isNullOrBlank()) {
+                getString(
+                    R.string.payment_delivery_label_format,
+                    label.replaceFirstChar { it.uppercaseChar() }
+                )
+            } else {
+                getString(R.string.payment_delivery_change_hint)
+            }
         }
 
         addressBookViewModel.loadAddresses()
@@ -336,7 +368,7 @@ class PaymentFragment : Fragment(R.layout.fragment_payment) {
 
                 is CheckoutState.Success -> {
                     cartViewModel.refresh()
-                    showOrderSuccess(state.orderNumber)
+                    showOrderSuccess(state)
                     checkoutViewModel.consumeResult()
                 }
 
@@ -356,31 +388,59 @@ class PaymentFragment : Fragment(R.layout.fragment_payment) {
         }
     }
 
-    private fun showOrderSuccess(orderNumber: String) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.payment_order_created_title)
-            .setMessage(
-                getString(
-                    R.string.payment_order_created_message,
-                    orderNumber
-                )
-            )
-            .setCancelable(false)
-            .setPositiveButton(
-                R.string.payment_back_home
-            ) { _, _ ->
-                val navController = findNavController()
+    private fun showOrderSuccess(state: CheckoutState.Success) {
+        val receipt = layoutInflater.inflate(
+            R.layout.dialog_payment_receipt,
+            null,
+            false
+        )
 
-                if (
-                    !navController.popBackStack(
-                        R.id.homeFragment,
-                        false
-                    )
-                ) {
-                    navController.navigate(R.id.homeFragment)
-                }
+        receipt.findViewById<TextView>(
+            R.id.receipt_order
+        ).text = state.orderNumber
+
+        receipt.findViewById<TextView>(
+            R.id.receipt_code
+        ).text = state.confirmationCode
+
+        receipt.findViewById<TextView>(
+            R.id.receipt_method
+        ).text = state.paymentMethod
+
+        receipt.findViewById<TextView>(
+            R.id.receipt_total
+        ).text = formatPrice(state.total)
+
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(receipt)
+            .setCancelable(false)
+            .create()
+
+        receipt.findViewById<View>(
+            R.id.receipt_back_home_button
+        ).setOnClickListener {
+            dialog.dismiss()
+
+            val navController = findNavController()
+
+            if (
+                !navController.popBackStack(
+                    R.id.homeFragment,
+                    false
+                )
+            ) {
+                navController.navigate(R.id.homeFragment)
             }
-            .show()
+        }
+
+        dialog.setOnShowListener {
+            dialog.window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9f).toInt(),
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        dialog.show()
     }
 
     // Nombre corto que se guarda en la orden y se ve en el historial

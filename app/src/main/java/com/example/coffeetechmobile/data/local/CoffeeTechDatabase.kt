@@ -136,6 +136,33 @@ class CoffeeTechDatabase private constructor(
 
             createAddressesTable(database)
         }
+
+        if (oldVersion < 8) {
+            // Estado de pago y código de confirmación de la orden.
+            // Si la tabla se acaba de crear en el paso < 5, ya
+            // incluye estas columnas
+            if (oldVersion >= 5) {
+                database.execSQL(
+                    "ALTER TABLE ${OrderDao.TABLE_ORDERS} " +
+                        "ADD COLUMN ${OrderDao.COLUMN_PAYMENT_STATUS} TEXT NOT NULL DEFAULT 'PENDING'"
+                )
+                database.execSQL(
+                    "ALTER TABLE ${OrderDao.TABLE_ORDERS} " +
+                        "ADD COLUMN ${OrderDao.COLUMN_CONFIRMATION_CODE} TEXT NOT NULL DEFAULT ''"
+                )
+
+                // Las órdenes anteriores se crearon con el pago simulado
+                database.execSQL(
+                    """
+                    UPDATE ${OrderDao.TABLE_ORDERS}
+                    SET ${OrderDao.COLUMN_PAYMENT_STATUS} = 'PAID',
+                        ${OrderDao.COLUMN_CONFIRMATION_CODE} =
+                            'TX-' || REPLACE(${OrderDao.COLUMN_ORDER_NUMBER}, 'CT-', '')
+                    WHERE ${OrderDao.COLUMN_CONFIRMATION_CODE} = ''
+                    """.trimIndent()
+                )
+            }
+        }
     }
 
     // Crea la tabla de usuarios
@@ -342,6 +369,8 @@ class CoffeeTechDatabase private constructor(
                 ${OrderDao.COLUMN_DELIVERY_LONGITUDE} REAL,
                 ${OrderDao.COLUMN_DELIVERY_TYPE} TEXT NOT NULL DEFAULT 'Domicilio',
                 ${OrderDao.COLUMN_PAYMENT_METHOD} TEXT NOT NULL,
+                ${OrderDao.COLUMN_PAYMENT_STATUS} TEXT NOT NULL DEFAULT 'PENDING',
+                ${OrderDao.COLUMN_CONFIRMATION_CODE} TEXT NOT NULL DEFAULT '',
                 ${OrderDao.COLUMN_SUBTOTAL} INTEGER NOT NULL,
                 ${OrderDao.COLUMN_DISCOUNT} INTEGER NOT NULL DEFAULT 0,
                 ${OrderDao.COLUMN_SHIPPING} INTEGER NOT NULL DEFAULT 0,
@@ -696,7 +725,7 @@ class CoffeeTechDatabase private constructor(
 
     companion object {
         private const val DATABASE_NAME = "coffeetech.db"
-        private const val DATABASE_VERSION = 7
+        private const val DATABASE_VERSION = 8
 
         @Volatile
         private var instance: CoffeeTechDatabase? = null

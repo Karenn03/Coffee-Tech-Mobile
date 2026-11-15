@@ -9,10 +9,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
-import com.example.coffeetechmobile.ui.buyer.address.AddressBookViewModel
-import com.example.coffeetechmobile.ui.buyer.address.DeliveryAddressBottomSheet
 import com.example.coffeetechmobile.ui.buyer.navigation.BuyerTab
 import com.example.coffeetechmobile.ui.buyer.navigation.setupBuyerBottomNavigation
+import com.example.coffeetechmobile.ui.common.bindHeaderProfileButton
 import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import java.text.NumberFormat
 import java.util.Locale
@@ -20,8 +19,6 @@ import java.util.Locale
 class CartFragment : Fragment(R.layout.fragment_cart) {
 
     private val cartViewModel: CartViewModel by activityViewModels()
-
-    private val addressBookViewModel: AddressBookViewModel by activityViewModels()
 
     private lateinit var cartAdapter: CartAdapter
 
@@ -41,8 +38,6 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
             navController = findNavController(),
             selectedTab = BuyerTab.CART
         )
-
-        setupDeliveryAddress(view)
 
         // Adaptador
         cartAdapter = CartAdapter(
@@ -185,43 +180,10 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
     override fun onResume() {
         super.onResume()
 
-        // Refresca el carrito y la dirección guardados en SQLite
+        // Refresca el carrito guardado en SQLite
         cartViewModel.refresh()
-        addressBookViewModel.loadAddresses()
         bindSessionHeader(requireView())
-    }
-
-    /**
-     * Muestra la dirección de entrega activa en el carrito y permite
-     * cambiarla con el mismo selector del inicio del comprador
-     */
-    private fun setupDeliveryAddress(root: View) {
-        val addressText = root.findViewById<TextView>(
-            R.id.cart_delivery_address
-        )
-
-        addressText.setText(R.string.delivery_address_empty)
-
-        val openAddressBook = View.OnClickListener {
-            DeliveryAddressBottomSheet().show(
-                childFragmentManager,
-                DeliveryAddressBottomSheet.TAG
-            )
-        }
-
-        root.findViewById<View>(R.id.cart_change_location_button)
-            .setOnClickListener(openAddressBook)
-
-        root.findViewById<View>(R.id.cart_delivery_card)
-            .setOnClickListener(openAddressBook)
-
-        addressBookViewModel.displayAddress.observe(
-            viewLifecycleOwner
-        ) { address ->
-            addressText.text = address
-                ?.takeIf { it.isNotBlank() }
-                ?: getString(R.string.delivery_address_empty)
-        }
+        bindHeaderProfileButton(requireView(), findNavController())
     }
 
     private fun formatPrice(value: Int): String {

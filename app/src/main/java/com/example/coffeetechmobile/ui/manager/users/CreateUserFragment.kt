@@ -16,6 +16,7 @@ import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.data.model.User
 import com.example.coffeetechmobile.data.model.UserRole
 import com.example.coffeetechmobile.data.repository.UserInput
+import com.example.coffeetechmobile.ui.common.bindHeaderProfileButton
 import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import com.example.coffeetechmobile.ui.manager.navigation.ManagerTab
 import com.example.coffeetechmobile.ui.manager.navigation.setupManagerBottomNavigation
@@ -501,6 +502,7 @@ class CreateUserFragment : Fragment(R.layout.fragment_create_user) {
     override fun onResume() {
         super.onResume()
         bindSessionHeader(requireView())
+        bindHeaderProfileButton(requireView(), findNavController())
     }
 
     private fun showMessage(message: String) {

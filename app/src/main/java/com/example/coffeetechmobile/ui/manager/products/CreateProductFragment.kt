@@ -26,6 +26,7 @@ import com.example.coffeetechmobile.data.model.UserRole
 import com.example.coffeetechmobile.data.repository.ProductInput
 import com.example.coffeetechmobile.data.session.SessionManager
 import com.example.coffeetechmobile.data.storage.ProductImageStorage
+import com.example.coffeetechmobile.ui.common.bindHeaderProfileButton
 import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import com.example.coffeetechmobile.ui.manager.navigation.ManagerTab
 import com.example.coffeetechmobile.ui.manager.navigation.setupManagerBottomNavigation
@@ -467,6 +468,7 @@ class CreateProductFragment : Fragment(R.layout.fragment_create_product) {
     override fun onResume() {
         super.onResume()
         bindSessionHeader(requireView())
+        bindHeaderProfileButton(requireView(), findNavController())
     }
 
     private fun styleTaxOption(

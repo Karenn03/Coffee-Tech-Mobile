@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.data.model.StoredOrder
 import com.example.coffeetechmobile.data.model.UserRole
+import com.example.coffeetechmobile.ui.common.bindHeaderProfileButton
 import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import com.example.coffeetechmobile.ui.manager.navigation.ManagerTab
 import com.example.coffeetechmobile.ui.manager.navigation.setupManagerBottomNavigation
@@ -114,6 +115,7 @@ class AdminDashboardFragment :
         super.onResume()
         dashboardViewModel.refresh()
         bindSessionHeader(requireView())
+        bindHeaderProfileButton(requireView(), findNavController())
     }
 
     private fun setupPeriodFilters(root: View) {

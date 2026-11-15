@@ -255,7 +255,8 @@
 
     <string name="payment_delivery_title">Información de entrega</string>
     <string name="payment_delivery_pending">Dirección pendiente de confirmar</string>
-    <string name="payment_delivery_time">Entrega estimada: 30 - 45 min</string>
+    <string name="payment_delivery_change_hint">Toca para cambiar la dirección</string>
+    <string name="payment_delivery_label_format">Entrega a %1$s</string>
 
     <string name="payment_methods_title">Método de pago</string>
     <string name="payment_methods_subtitle">Selecciona cómo deseas pagar</string>
@@ -294,6 +295,14 @@
     <string name="payment_order_created_title">Pedido confirmado</string>
     <string name="payment_order_created_message">Tu pedido %1$s fue creado con éxito. El vendedor ya puede verlo en el historial.</string>
     <string name="payment_back_home">Volver al inicio</string>
+    <string name="payment_receipt_success_title">Pedido confirmado</string>
+    <string name="payment_receipt_success_subtitle">Tu pedido fue registrado correctamente.</string>
+    <string name="payment_receipt_order_label">Pedido</string>
+    <string name="payment_receipt_code_label">Código de confirmación</string>
+    <string name="payment_receipt_method_label">Método de pago</string>
+    <string name="payment_receipt_total_label">Total</string>
+    <string name="payment_status_paid">Pagado</string>
+    <string name="payment_status_pending">Pago pendiente</string>
 
     <!-- Detalle de producto -->
     <string name="product_detail_header">Detalle del producto</string>
@@ -354,11 +363,11 @@
     <string name="report_subtitle">Consulta y seguimiento de transacciones</string>
     <string name="report_period">Noviembre 2026</string>
     <string name="report_filter_all">Todas</string>
-    <string name="report_filter_completed">Completadas</string>
+    <string name="report_filter_completed">Pagadas</string>
     <string name="report_filter_pending">Pendientes</string>
 
     <string name="report_confirmed_revenue">INGRESOS CONFIRMADOS</string>
-    <string name="report_completed">Completadas</string>
+    <string name="report_completed">Pagadas</string>
     <string name="report_pending">Pendientes</string>
     <string name="report_transactions">Transacciones</string>
     <string name="report_results_format">%1$d registros</string>
@@ -367,8 +376,8 @@
     <string name="report_export_pending">La exportación es demostrativa. Todavía no se genera un archivo.</string>
 
     <string name="report_revenue_caption">Ventas registradas</string>
-    <string name="report_completed_caption">Ingresos confirmados</string>
-    <string name="report_pending_caption">En seguimiento</string>
+    <string name="report_completed_caption">Pagos confirmados</string>
+    <string name="report_pending_caption">Pagos pendientes</string>
 
     <string name="report_payment_label">Método de pago</string>
     <string name="report_amount_label">Importe</string>
@@ -399,6 +408,8 @@
     <string name="seller_order_update_confirm">Actualizar</string>
     <string name="seller_order_updated">Pedido actualizado.</string>
     <string name="seller_order_already_delivered">Este pedido ya fue entregado.</string>
+    <string name="seller_order_payment_paid">Pagado</string>
+    <string name="seller_order_payment_pending">Pago pendiente</string>
 
     <!-- Recuperación de contraseña: paso de nueva contraseña -->
     <string name="reset_password_title">Crea una nueva contraseña</string>

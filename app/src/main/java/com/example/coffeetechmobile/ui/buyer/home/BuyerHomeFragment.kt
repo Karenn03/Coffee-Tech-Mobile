@@ -26,6 +26,7 @@ import com.example.coffeetechmobile.ui.buyer.catalog.BuyerProductAdapter
 import com.example.coffeetechmobile.ui.buyer.catalog.MenuProduct
 import com.example.coffeetechmobile.ui.buyer.navigation.BuyerTab
 import com.example.coffeetechmobile.ui.buyer.navigation.setupBuyerBottomNavigation
+import com.example.coffeetechmobile.ui.common.bindHeaderProfileButton
 import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import com.example.coffeetechmobile.ui.profile.ProfileFragment
 
@@ -110,6 +111,7 @@ class BuyerHomeFragment : Fragment(R.layout.fragment_home) {
         menuViewModel.loadProducts()
         addressBookViewModel.loadAddresses()
         bindSessionHeader(requireView())
+        bindHeaderProfileButton(requireView(), findNavController())
     }
 
     /**

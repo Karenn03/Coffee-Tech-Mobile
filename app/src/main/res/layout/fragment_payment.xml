@@ -272,6 +272,15 @@
                             android:textSize="17sp"
                             android:fontFamily="sans-serif-medium" />
 
+                        <ImageButton
+                            android:id="@+id/payment_change_location_button"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/bg_location_button"
+                            android:contentDescription="@string/change_location"
+                            android:src="@drawable/ic_chevron_down"
+                            app:tint="@color/coffee_secondary" />
+
                     </LinearLayout>
 
                     <TextView
@@ -284,10 +293,11 @@
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/payment_delivery_hint"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="@string/payment_delivery_time"
+                        android:text="@string/payment_delivery_change_hint"
                         android:textColor="@color/coffee_secondary"
                         android:textSize="13sp" />
 

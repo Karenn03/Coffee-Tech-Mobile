@@ -17,6 +17,8 @@ data class StoredOrder(
     val deliveryLongitude: Double?,
     val deliveryType: String,
     val paymentMethod: String,
+    val paymentStatus: String,
+    val confirmationCode: String,
     val subtotal: Int,
     val discount: Int,
     val shipping: Int,

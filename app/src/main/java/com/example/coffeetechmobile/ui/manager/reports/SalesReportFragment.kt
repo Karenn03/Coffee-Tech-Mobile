@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.ui.common.bindHeaderProfileButton
 import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import com.example.coffeetechmobile.ui.manager.navigation.ManagerTab
 import com.example.coffeetechmobile.ui.manager.navigation.setupManagerBottomNavigation
@@ -59,6 +60,7 @@ class SalesReportFragment :
         super.onResume()
         reportViewModel.refresh()
         bindSessionHeader(requireView())
+        bindHeaderProfileButton(requireView(), findNavController())
     }
 
     private fun updatePeriodLabel(root: View) {

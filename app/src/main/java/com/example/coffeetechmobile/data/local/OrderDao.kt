@@ -28,6 +28,8 @@ class OrderDao(private val database: CoffeeTechDatabase) {
         deliveryLongitude: Double?,
         deliveryType: String,
         paymentMethod: String,
+        paymentStatus: String,
+        confirmationCode: String,
         subtotal: Int,
         discount: Int,
         shipping: Int,
@@ -68,6 +70,8 @@ class OrderDao(private val database: CoffeeTechDatabase) {
 
                 put(COLUMN_DELIVERY_TYPE, deliveryType)
                 put(COLUMN_PAYMENT_METHOD, paymentMethod)
+                put(COLUMN_PAYMENT_STATUS, paymentStatus)
+                put(COLUMN_CONFIRMATION_CODE, confirmationCode)
                 put(COLUMN_SUBTOTAL, subtotal)
                 put(COLUMN_DISCOUNT, discount)
                 put(COLUMN_SHIPPING, shipping)
@@ -232,6 +236,12 @@ class OrderDao(private val database: CoffeeTechDatabase) {
             paymentMethod = getString(
                 getColumnIndexOrThrow(COLUMN_PAYMENT_METHOD)
             ).orEmpty(),
+            paymentStatus = getString(
+                getColumnIndexOrThrow(COLUMN_PAYMENT_STATUS)
+            ).orEmpty(),
+            confirmationCode = getString(
+                getColumnIndexOrThrow(COLUMN_CONFIRMATION_CODE)
+            ).orEmpty(),
             subtotal = getInt(getColumnIndexOrThrow(COLUMN_SUBTOTAL)),
             discount = getInt(getColumnIndexOrThrow(COLUMN_DISCOUNT)),
             shipping = getInt(getColumnIndexOrThrow(COLUMN_SHIPPING)),
@@ -288,6 +298,8 @@ class OrderDao(private val database: CoffeeTechDatabase) {
         const val COLUMN_DELIVERY_LONGITUDE = "delivery_longitude"
         const val COLUMN_DELIVERY_TYPE = "delivery_type"
         const val COLUMN_PAYMENT_METHOD = "payment_method"
+        const val COLUMN_PAYMENT_STATUS = "payment_status"
+        const val COLUMN_CONFIRMATION_CODE = "confirmation_code"
         const val COLUMN_SUBTOTAL = "subtotal"
         const val COLUMN_DISCOUNT = "discount"
         const val COLUMN_SHIPPING = "shipping"
@@ -319,6 +331,8 @@ class OrderDao(private val database: CoffeeTechDatabase) {
             COLUMN_DELIVERY_LONGITUDE,
             COLUMN_DELIVERY_TYPE,
             COLUMN_PAYMENT_METHOD,
+            COLUMN_PAYMENT_STATUS,
+            COLUMN_CONFIRMATION_CODE,
             COLUMN_SUBTOTAL,
             COLUMN_DISCOUNT,
             COLUMN_SHIPPING,

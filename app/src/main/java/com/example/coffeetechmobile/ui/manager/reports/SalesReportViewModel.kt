@@ -114,7 +114,7 @@ class SalesReportViewModel(
             },
             paymentMethod = paymentMethod,
             amount = total,
-            status = if (status == "DELIVERED") {
+            status = if (paymentStatus == "PAID") {
                 SaleStatus.COMPLETED
             } else {
                 SaleStatus.PENDING

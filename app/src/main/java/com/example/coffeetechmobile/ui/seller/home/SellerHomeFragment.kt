@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.data.model.UserRole
+import com.example.coffeetechmobile.ui.common.bindHeaderProfileButton
 import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import com.example.coffeetechmobile.ui.manager.products.ProductManagementViewModel
 import com.example.coffeetechmobile.ui.profile.ProfileFragment
@@ -85,5 +86,6 @@ class SellerHomeFragment : Fragment(R.layout.fragment_seller_home) {
         productsViewModel.loadProducts()
         ordersViewModel.refresh()
         bindSessionHeader(requireView())
+        bindHeaderProfileButton(requireView(), findNavController())
     }
 }

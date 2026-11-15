@@ -138,6 +138,7 @@ class SellerOrdersViewModel(
             totalUnits = items.sumOf { it.quantity },
             deliveryType = deliveryType,
             paymentMethod = paymentMethod,
+            paymentStatus = paymentStatus,
             total = total,
             status = toSellerStatus(),
             customerNote = customerNote.ifBlank { null }

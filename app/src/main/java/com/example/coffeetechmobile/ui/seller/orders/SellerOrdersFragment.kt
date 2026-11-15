@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.data.model.UserRole
+import com.example.coffeetechmobile.ui.common.bindHeaderProfileButton
 import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import com.example.coffeetechmobile.ui.profile.ProfileFragment
 import com.example.coffeetechmobile.ui.seller.navigation.SellerTab
@@ -72,6 +73,7 @@ class SellerOrdersFragment :
         // Un pedido nuevo del comprador aparece al volver a esta pantalla
         ordersViewModel.refresh()
         bindSessionHeader(requireView())
+        bindHeaderProfileButton(requireView(), findNavController())
     }
 
     private fun setupFilters(root: View) {

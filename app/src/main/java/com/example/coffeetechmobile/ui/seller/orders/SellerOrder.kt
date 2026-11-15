@@ -34,6 +34,7 @@ data class SellerOrder(
     val totalUnits: Int,
     val deliveryType: String,
     val paymentMethod: String,
+    val paymentStatus: String,
     val total: Int,
     val status: SellerOrderStatus,
     val customerNote: String? = null

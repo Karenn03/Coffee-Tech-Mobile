@@ -64,6 +64,11 @@ class AddressBookViewModel(
 
     val displayAddress: LiveData<String?> = _displayAddress
 
+    // Nombre de la dirección activa (Casa, Trabajo, etc.)
+    private val _displayAddressLabel = MutableLiveData<String?>()
+
+    val displayAddressLabel: LiveData<String?> = _displayAddressLabel
+
     private val _state = MutableLiveData<AddressBookState>(
         AddressBookState.Idle
     )
@@ -95,6 +100,10 @@ class AddressBookViewModel(
                 it.id == selectedId
             }?.address
 
+            _displayAddressLabel.value = loaded.firstOrNull {
+                it.id == selectedId
+            }?.label
+
             _displayAddress.value = selectedAddress ?: try {
                 userRepository
                     .getUser(userId)
@@ -119,9 +128,12 @@ class AddressBookViewModel(
 
             _state.value = if (selected) {
                 _selectedAddressId.value = addressId
-                _displayAddress.value = _addresses.value
+
+                val selectedAddress = _addresses.value
                     ?.firstOrNull { it.id == addressId }
-                    ?.address
+
+                _displayAddress.value = selectedAddress?.address
+                _displayAddressLabel.value = selectedAddress?.label
 
                 AddressBookState.Saved
             } else {
@@ -166,6 +178,7 @@ class AddressBookViewModel(
 
             _selectedAddressId.value = saved.id
             _displayAddress.value = saved.address
+            _displayAddressLabel.value = saved.label
 
             _addresses.value = try {
                 repository.getAddresses(userId)

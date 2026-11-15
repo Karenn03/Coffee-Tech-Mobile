@@ -10,11 +10,19 @@ import com.example.coffeetechmobile.data.model.StoredOrder
 import com.example.coffeetechmobile.data.session.SessionManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.Locale
+import java.util.UUID
 
 // Resultado de confirmar una compra
 sealed interface CheckoutResult {
 
-    data class Success(val orderNumber: String) : CheckoutResult
+    data class Success(
+        val orderNumber: String,
+        val confirmationCode: String,
+        val paymentStatus: String,
+        val paymentMethod: String,
+        val total: Int
+    ) : CheckoutResult
 
     data class Error(val message: String) : CheckoutResult
 }
@@ -57,6 +65,20 @@ class OrderRepository(context: Context) {
                     ?.takeIf { it.isNotBlank() }
                     ?: DEFAULT_DELIVERY_ADDRESS
 
+                val total = CartPricing.total(items)
+                val paymentStatus = if (
+                    paymentMethod.equals(
+                        "Efectivo",
+                        ignoreCase = true
+                    )
+                ) {
+                    PAYMENT_STATUS_PENDING
+                } else {
+                    PAYMENT_STATUS_PAID
+                }
+
+                val confirmationCode = generateConfirmationCode()
+
                 val orderNumber = orderDao.createOrder(
                     userId = session.id,
                     customerName = user?.fullName ?: session.fullName,
@@ -65,16 +87,24 @@ class OrderRepository(context: Context) {
                     deliveryLongitude = user?.longitude,
                     deliveryType = DELIVERY_TYPE_HOME,
                     paymentMethod = paymentMethod,
+                    paymentStatus = paymentStatus,
+                    confirmationCode = confirmationCode,
                     subtotal = CartPricing.subtotal(items),
                     discount = CartPricing.DISCOUNT,
                     shipping = CartPricing.SHIPPING_COST,
-                    total = CartPricing.total(items),
+                    total = total,
                     customerNote = "",
                     items = items,
                     createdAt = System.currentTimeMillis()
                 )
 
-                CheckoutResult.Success(orderNumber)
+                CheckoutResult.Success(
+                    orderNumber = orderNumber,
+                    confirmationCode = confirmationCode,
+                    paymentStatus = paymentStatus,
+                    paymentMethod = paymentMethod,
+                    total = total
+                )
             } catch (exception: Exception) {
                 CheckoutResult.Error(
                     "No se pudo crear el pedido. Intenta de nuevo."
@@ -99,5 +129,15 @@ class OrderRepository(context: Context) {
     private companion object {
         const val DEFAULT_DELIVERY_ADDRESS = "Bogotá, Colombia"
         const val DELIVERY_TYPE_HOME = "Domicilio"
+        const val PAYMENT_STATUS_PAID = "PAID"
+        const val PAYMENT_STATUS_PENDING = "PENDING"
+
+        fun generateConfirmationCode(): String {
+            return "TX-" + UUID.randomUUID()
+                .toString()
+                .replace("-", "")
+                .take(8)
+                .uppercase(Locale.US)
+        }
     }
 }
