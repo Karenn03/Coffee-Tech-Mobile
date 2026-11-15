@@ -340,11 +340,11 @@
     <string name="dashboard_audit_subtitle">Seguimiento de procesos administrativos</string>
     <string name="dashboard_audit_invoices_detail">Control de documentos y facturas</string>
     <string name="dashboard_audit_access_detail">Seguimiento de actividad del sistema</string>
-    <string name="dashboard_audit_demo">Demo</string>
+    <string name="dashboard_audit_demo">Informativo</string>
 
     <string name="dashboard_export">Exportar reporte de ventas</string>
     <string name="dashboard_export_pending">La exportación de reportes estará disponible próximamente.</string>
-    <string name="dashboard_demo_note">Indicadores de demostración, sin conexión a ventas reales.</string>
+    <string name="dashboard_demo_note">Información calculada con las órdenes registradas.</string>
 
     <string name="dashboard_ticket_caption">COP por venta</string>
     <string name="dashboard_transactions_caption">Registradas</string>
@@ -353,7 +353,6 @@
     <string name="report_title">Reporte de ventas</string>
     <string name="report_subtitle">Consulta y seguimiento de transacciones</string>
     <string name="report_period">Noviembre 2026</string>
-
     <string name="report_filter_all">Todas</string>
     <string name="report_filter_completed">Completadas</string>
     <string name="report_filter_pending">Pendientes</string>
@@ -367,7 +366,7 @@
     <string name="report_export">Exportar reporte de ventas</string>
     <string name="report_export_pending">La exportación es demostrativa. Todavía no se genera un archivo.</string>
 
-    <string name="report_revenue_caption">Ventas registradas · Datos de demostración</string>
+    <string name="report_revenue_caption">Ventas registradas</string>
     <string name="report_completed_caption">Ingresos confirmados</string>
     <string name="report_pending_caption">En seguimiento</string>
 

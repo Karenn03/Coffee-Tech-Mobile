@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.data.model.UserRole
-import com.example.coffeetechmobile.data.session.SessionManager
+import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import com.example.coffeetechmobile.ui.profile.ProfileFragment
 import com.example.coffeetechmobile.ui.seller.navigation.SellerTab
 import com.example.coffeetechmobile.ui.seller.navigation.setupSellerBottomNavigation
@@ -38,14 +38,6 @@ class SellerOrdersFragment :
             navController = findNavController(),
             selectedTab = SellerTab.ORDERS
         )
-
-        val session = SessionManager(requireContext()).current()
-
-        view.findViewById<TextView>(R.id.seller_orders_header_name).text =
-            session?.fullName ?: "Coffee Tech"
-
-        view.findViewById<TextView>(R.id.seller_orders_header_role).text =
-            "Vendedor"
 
         // Perfil compartido del vendedor, desde donde puede cerrar sesión.
         view.findViewById<View>(R.id.profile_button)
@@ -79,6 +71,7 @@ class SellerOrdersFragment :
 
         // Un pedido nuevo del comprador aparece al volver a esta pantalla
         ordersViewModel.refresh()
+        bindSessionHeader(requireView())
     }
 
     private fun setupFilters(root: View) {

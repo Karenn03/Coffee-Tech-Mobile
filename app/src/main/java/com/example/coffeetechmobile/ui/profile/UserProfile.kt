@@ -20,7 +20,7 @@ data class UserProfile(
         get() = when (role) {
             UserRole.BUYER -> "Cliente"
             UserRole.SELLER -> "Vendedor"
-            UserRole.ADMIN -> "Administrador"
+            UserRole.ADMIN -> "Gerente"
         }
 
     val initials: String

@@ -9,11 +9,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeetechmobile.R
-import com.example.coffeetechmobile.data.session.SessionManager
 import com.example.coffeetechmobile.ui.buyer.address.AddressBookViewModel
 import com.example.coffeetechmobile.ui.buyer.address.DeliveryAddressBottomSheet
 import com.example.coffeetechmobile.ui.buyer.navigation.BuyerTab
 import com.example.coffeetechmobile.ui.buyer.navigation.setupBuyerBottomNavigation
+import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -41,12 +41,6 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
             navController = findNavController(),
             selectedTab = BuyerTab.CART
         )
-
-        // Nombre real de la cuenta con sesión activa
-        val session = SessionManager(requireContext()).current()
-
-        view.findViewById<TextView>(R.id.cart_customer_name).text =
-            session?.fullName ?: "Coffee Tech"
 
         setupDeliveryAddress(view)
 
@@ -194,6 +188,7 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
         // Refresca el carrito y la dirección guardados en SQLite
         cartViewModel.refresh()
         addressBookViewModel.loadAddresses()
+        bindSessionHeader(requireView())
     }
 
     /**

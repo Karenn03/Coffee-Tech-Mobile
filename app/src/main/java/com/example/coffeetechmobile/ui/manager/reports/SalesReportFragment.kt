@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import com.example.coffeetechmobile.ui.manager.navigation.ManagerTab
 import com.example.coffeetechmobile.ui.manager.navigation.setupManagerBottomNavigation
 import java.text.NumberFormat
@@ -41,6 +42,7 @@ class SalesReportFragment :
 
         setupFilters(view)
         observeReport(view)
+        updatePeriodLabel(view)
 
         view.findViewById<View>(
             R.id.report_export_button
@@ -51,6 +53,29 @@ class SalesReportFragment :
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        reportViewModel.refresh()
+        bindSessionHeader(requireView())
+    }
+
+    private fun updatePeriodLabel(root: View) {
+        val formatter = java.text.SimpleDateFormat(
+            "MMMM yyyy",
+            Locale("es", "CO")
+        )
+
+        val month = formatter.format(java.util.Date())
+        val label = month.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(Locale("es", "CO"))
+            else it.toString()
+        }
+
+        root.findViewById<TextView>(
+            R.id.report_period_label
+        ).text = label
     }
 
     private fun setupFilters(root: View) {

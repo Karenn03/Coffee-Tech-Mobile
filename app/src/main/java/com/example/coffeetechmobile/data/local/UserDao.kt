@@ -146,6 +146,33 @@ class UserDao(private val database: CoffeeTechDatabase) {
     }
 
     /**
+     * Actualiza los datos personales editables desde el perfil
+     *
+     * No toca el rol, la ubicación de entrega, las coordenadas
+     * ni la contraseña
+     */
+    fun updateProfile(
+        userId: Long,
+        fullName: String,
+        email: String,
+        phone: String
+    ): Int {
+        val values = ContentValues().apply {
+            put(COLUMN_FULL_NAME, fullName)
+            put(COLUMN_EMAIL, email)
+            put(COLUMN_PHONE, phone)
+            put(COLUMN_UPDATED_AT, System.currentTimeMillis())
+        }
+
+        return database.writableDatabase.update(
+            TABLE_USERS,
+            values,
+            "$COLUMN_ID = ?",
+            arrayOf(userId.toString())
+        )
+    }
+
+    /**
      * Marca una dirección como activa y sincroniza la ubicación del usuario.
      *
      * Se usa al crear, seleccionar o eliminar direcciones del comprador.

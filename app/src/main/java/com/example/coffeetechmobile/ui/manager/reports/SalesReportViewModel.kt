@@ -1,67 +1,31 @@
 package com.example.coffeetechmobile.ui.manager.reports
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.coffeetechmobile.data.model.StoredOrder
+import com.example.coffeetechmobile.data.repository.OrderRepository
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
-class SalesReportViewModel : ViewModel() {
+// Reporte de ventas del administrador, calculado con las órdenes de SQLite
+class SalesReportViewModel(
+    application: Application
+) : AndroidViewModel(application) {
 
-    private val sales = listOf(
-        SalesReport(
-            id = "CT-001",
-            date = "08/11/2026 · 10:32",
-            customer = "Cliente de prueba 01",
-            products = "2 productos",
-            paymentMethod = "PSE",
-            amount = 22000,
-            status = SaleStatus.COMPLETED
-        ),
-        SalesReport(
-            id = "CT-002",
-            date = "08/11/2026 · 09:45",
-            customer = "Cliente de prueba 02",
-            products = "3 productos",
-            paymentMethod = "Nequi",
-            amount = 31500,
-            status = SaleStatus.COMPLETED
-        ),
-        SalesReport(
-            id = "CT-003",
-            date = "07/11/2026 · 16:20",
-            customer = "Cliente de prueba 03",
-            products = "1 producto",
-            paymentMethod = "Contra entrega",
-            amount = 11500,
-            status = SaleStatus.PENDING
-        ),
-        SalesReport(
-            id = "CT-004",
-            date = "07/11/2026 · 14:15",
-            customer = "Cliente de prueba 04",
-            products = "4 productos",
-            paymentMethod = "Tarjeta",
-            amount = 46000,
-            status = SaleStatus.COMPLETED
-        ),
-        SalesReport(
-            id = "CT-005",
-            date = "06/11/2026 · 11:05",
-            customer = "Cliente de prueba 05",
-            products = "2 productos",
-            paymentMethod = "PSE",
-            amount = 18000,
-            status = SaleStatus.PENDING
-        ),
-        SalesReport(
-            id = "CT-006",
-            date = "06/11/2026 · 08:40",
-            customer = "Cliente de prueba 06",
-            products = "2 productos",
-            paymentMethod = "Daviplata",
-            amount = 24500,
-            status = SaleStatus.COMPLETED
-        )
+    private val repository = OrderRepository(application)
+
+    private val dateFormat = SimpleDateFormat(
+        "dd/MM/yyyy · HH:mm",
+        Locale("es", "CO")
     )
+
+    private var allSales: List<SalesReport> = emptyList()
 
     private val _selectedFilter =
         MutableLiveData(SaleFilter.ALL)
@@ -69,26 +33,56 @@ class SalesReportViewModel : ViewModel() {
     val selectedFilter: LiveData<SaleFilter> = _selectedFilter
 
     private val _visibleSales =
-        MutableLiveData(sales)
+        MutableLiveData<List<SalesReport>>(emptyList())
 
     val visibleSales: LiveData<List<SalesReport>> = _visibleSales
 
+    init {
+        refresh()
+    }
+
+    // Vuelve a leer las órdenes del mes actual desde SQLite
+    fun refresh() {
+        viewModelScope.launch {
+            val monthStart = Calendar.getInstance().apply {
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }.timeInMillis
+
+            allSales = try {
+                repository.getOrders()
+                    .filter { it.createdAt >= monthStart }
+                    .map { it.toSalesReport() }
+            } catch (exception: Exception) {
+                emptyList()
+            }
+
+            applyFilter(_selectedFilter.value ?: SaleFilter.ALL)
+        }
+    }
+
     fun setFilter(filter: SaleFilter) {
         _selectedFilter.value = filter
+        applyFilter(filter)
+    }
 
+    private fun applyFilter(filter: SaleFilter) {
         _visibleSales.value = when (filter) {
-            SaleFilter.ALL -> sales
+            SaleFilter.ALL -> allSales
 
             SaleFilter.COMPLETED ->
-                sales.filter { it.status == SaleStatus.COMPLETED }
+                allSales.filter { it.status == SaleStatus.COMPLETED }
 
             SaleFilter.PENDING ->
-                sales.filter { it.status == SaleStatus.PENDING }
+                allSales.filter { it.status == SaleStatus.PENDING }
         }
     }
 
     fun getTotalAmount(): Int {
-        // Solo las ventas completadas representan ingresos.
+        // Solo las ventas completadas representan ingresos confirmados.
         return _visibleSales.value.orEmpty()
             .filter { it.status == SaleStatus.COMPLETED }
             .sumOf { it.amount }
@@ -104,5 +98,27 @@ class SalesReportViewModel : ViewModel() {
         return _visibleSales.value.orEmpty().count {
             it.status == SaleStatus.PENDING
         }
+    }
+
+    private fun StoredOrder.toSalesReport(): SalesReport {
+        val units = items.sumOf { it.quantity }
+
+        return SalesReport(
+            id = orderNumber,
+            date = dateFormat.format(Date(createdAt)),
+            customer = customerName,
+            products = if (units == 1) {
+                "1 producto"
+            } else {
+                "$units productos"
+            },
+            paymentMethod = paymentMethod,
+            amount = total,
+            status = if (status == "DELIVERED") {
+                SaleStatus.COMPLETED
+            } else {
+                SaleStatus.PENDING
+            }
+        )
     }
 }

@@ -1,72 +1,114 @@
 package com.example.coffeetechmobile.ui.profile
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.coffeetechmobile.data.model.UserRole
+import androidx.lifecycle.viewModelScope
+import com.example.coffeetechmobile.data.model.User
+import com.example.coffeetechmobile.data.repository.UserRepository
+import com.example.coffeetechmobile.data.repository.UserResult
+import com.example.coffeetechmobile.data.session.SessionManager
+import kotlinx.coroutines.launch
 
-class ProfileViewModel : ViewModel() {
+// Estado de la edición del perfil
+sealed interface ProfileUpdateState {
 
-    private val profiles = mutableMapOf(
-        UserRole.BUYER to UserProfile(
-            name = "Karen Sophia Molina Díaz",
-            email = "cliente@coffeetech.com",
-            phone = "300 123 4567",
-            role = UserRole.BUYER,
-            document = "1020304050",
-            location = "Bogotá, Colombia"
-        ),
-        UserRole.SELLER to UserProfile(
-            name = "Karen Sophia Molina Díaz",
-            email = "vendedor@coffeetech.com",
-            phone = "310 987 6543",
-            role = UserRole.SELLER,
-            document = "1098765432",
-            location = "Sede Chapinero Alto"
-        ),
-        UserRole.ADMIN to UserProfile(
-            name = "Administrador Coffee Tech",
-            email = "admin@coffeetech.com",
-            phone = "300 000 0000",
-            role = UserRole.ADMIN,
-            document = "1000000000",
-            location = "Sede principal"
-        )
+    data object Idle : ProfileUpdateState
+
+    data object Saving : ProfileUpdateState
+
+    data object Success : ProfileUpdateState
+
+    data class Error(val message: String) : ProfileUpdateState
+}
+
+/**
+ * Perfil del usuario con sesión activa, leído y guardado en SQLite.
+ */
+class ProfileViewModel(
+    application: Application
+) : AndroidViewModel(application) {
+
+    private val userRepository = UserRepository(application)
+    private val sessionManager = SessionManager(application)
+
+    private val _profile = MutableLiveData<UserProfile?>()
+
+    val profile: LiveData<UserProfile?> = _profile
+
+    private val _updateState = MutableLiveData<ProfileUpdateState>(
+        ProfileUpdateState.Idle
     )
 
-    private val _profile = MutableLiveData<UserProfile>()
-    val profile: LiveData<UserProfile> = _profile
+    val updateState: LiveData<ProfileUpdateState> = _updateState
 
-    fun loadProfile(role: UserRole) {
-        // Si llega un rol sin datos de demostración, se usa el comprador
-        // para evitar que la pantalla se cierre por una excepción
-        _profile.value = profiles[role] ?: profiles.getValue(UserRole.BUYER)
+    fun loadProfile() {
+        val userId = sessionManager.current()?.id ?: return
+
+        viewModelScope.launch {
+            val user = try {
+                userRepository.getUser(userId)
+            } catch (exception: Exception) {
+                null
+            }
+
+            _profile.value = user?.toUserProfile()
+        }
     }
 
     fun updateProfile(
         name: String,
         email: String,
         phone: String
-    ): Boolean {
-        val current = _profile.value ?: return false
+    ) {
+        val userId = sessionManager.current()?.id ?: return
 
-        if (
-            name.isBlank() ||
-            email.isBlank() ||
-            phone.isBlank()
-        ) {
-            return false
+        if (_updateState.value == ProfileUpdateState.Saving) {
+            return
         }
 
-        val updated = current.copy(
-            name = name.trim(),
-            email = email.trim(),
-            phone = phone.trim()
+        _updateState.value = ProfileUpdateState.Saving
+
+        viewModelScope.launch {
+            when (
+                val result = userRepository.updateProfile(
+                    userId = userId,
+                    fullName = name,
+                    email = email,
+                    phone = phone
+                )
+            ) {
+                is UserResult.Success -> {
+                    sessionManager.save(result.user)
+
+                    _profile.value = result.user.toUserProfile()
+                    _updateState.value = ProfileUpdateState.Success
+                }
+
+                is UserResult.Error -> {
+                    _updateState.value = ProfileUpdateState.Error(
+                        result.message
+                    )
+                }
+            }
+        }
+    }
+
+    fun consumeUpdateState() {
+        if (_updateState.value != ProfileUpdateState.Saving) {
+            _updateState.value = ProfileUpdateState.Idle
+        }
+    }
+
+    private fun User.toUserProfile(): UserProfile {
+        return UserProfile(
+            name = fullName,
+            email = email,
+            phone = phone,
+            role = role,
+            document = document,
+            location = location
         )
-
-        profiles[current.role] = updated
-        _profile.value = updated
-
-        return true
     }
 }

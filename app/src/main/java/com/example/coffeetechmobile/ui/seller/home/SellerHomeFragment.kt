@@ -8,7 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.data.model.UserRole
-import com.example.coffeetechmobile.data.session.SessionManager
+import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import com.example.coffeetechmobile.ui.manager.products.ProductManagementViewModel
 import com.example.coffeetechmobile.ui.profile.ProfileFragment
 import com.example.coffeetechmobile.ui.seller.navigation.SellerTab
@@ -37,14 +37,6 @@ class SellerHomeFragment : Fragment(R.layout.fragment_seller_home) {
             navController = findNavController(),
             selectedTab = SellerTab.HOME
         )
-
-        val session = SessionManager(requireContext()).current()
-
-        view.findViewById<TextView>(R.id.seller_home_header_name).text =
-            session?.fullName ?: "Coffee Tech"
-
-        view.findViewById<TextView>(R.id.seller_home_header_role).text =
-            "Vendedor"
 
         ordersViewModel.counts.observe(viewLifecycleOwner) { counts ->
             view.findViewById<TextView>(
@@ -92,5 +84,6 @@ class SellerHomeFragment : Fragment(R.layout.fragment_seller_home) {
 
         productsViewModel.loadProducts()
         ordersViewModel.refresh()
+        bindSessionHeader(requireView())
     }
 }

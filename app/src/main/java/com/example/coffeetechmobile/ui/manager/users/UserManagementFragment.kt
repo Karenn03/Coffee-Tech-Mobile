@@ -22,6 +22,7 @@ import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.data.model.User
 import com.example.coffeetechmobile.data.model.UserRole
 import com.example.coffeetechmobile.data.session.SessionManager
+import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import com.example.coffeetechmobile.ui.manager.navigation.ManagerTab
 import com.example.coffeetechmobile.ui.manager.navigation.setupManagerBottomNavigation
 import java.time.Instant
@@ -116,6 +117,7 @@ class UserManagementFragment :
 
         // Al volver del formulario se recarga la lista desde SQLite
         viewModel.loadUsers()
+        bindSessionHeader(requireView())
     }
 
     private fun observeUsers() {

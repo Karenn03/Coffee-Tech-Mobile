@@ -21,6 +21,7 @@ import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.data.model.Product
 import com.example.coffeetechmobile.data.model.UserRole
 import com.example.coffeetechmobile.data.session.SessionManager
+import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import com.example.coffeetechmobile.ui.manager.navigation.ManagerTab
 import com.example.coffeetechmobile.ui.manager.navigation.setupManagerBottomNavigation
 import com.example.coffeetechmobile.ui.profile.ProfileFragment
@@ -139,6 +140,7 @@ class ProductManagementFragment :
 
         // Al volver del formulario se recarga el menú desde SQLite.
         viewModel.loadProducts()
+        bindSessionHeader(requireView())
     }
 
     private fun observeProducts() {

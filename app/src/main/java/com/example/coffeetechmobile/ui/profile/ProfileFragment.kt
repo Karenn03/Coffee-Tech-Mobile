@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
 import com.example.coffeetechmobile.data.model.UserRole
 import com.example.coffeetechmobile.data.session.SessionManager
+import com.example.coffeetechmobile.ui.common.bindSessionHeader
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
@@ -35,20 +36,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     // Controla si el perfil está en modo edición
     private var isEditing = false
 
-    private val userRole: UserRole
-        get() {
-            val value = arguments?.getString(ARG_ROLE)
-
-            return UserRole.entries.firstOrNull {
-                it.name == value
-            } ?: UserRole.BUYER
-        }
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
+
+        bindSessionHeader(view)
 
         view.findViewById<View>(
             R.id.profile_back_button
@@ -79,10 +73,68 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         viewModel.profile.observe(viewLifecycleOwner) { profile ->
-            bindProfile(view, profile)
+            profile?.let {
+                bindProfile(view, it)
+            }
         }
 
-        viewModel.loadProfile(userRole)
+        viewModel.updateState.observe(viewLifecycleOwner) { state ->
+            handleUpdateState(view, state)
+        }
+
+        viewModel.loadProfile()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        bindSessionHeader(requireView())
+    }
+
+    private fun handleUpdateState(
+        root: View,
+        state: ProfileUpdateState
+    ) {
+        val saveButton = root.findViewById<View>(
+            R.id.profile_save_button
+        )
+
+        when (state) {
+            ProfileUpdateState.Idle -> {
+                saveButton.isEnabled = true
+                saveButton.alpha = 1f
+            }
+
+            ProfileUpdateState.Saving -> {
+                saveButton.isEnabled = false
+                saveButton.alpha = 0.6f
+            }
+
+            ProfileUpdateState.Success -> {
+                setEditingMode(root, false)
+                hideKeyboard(root)
+
+                Toast.makeText(
+                    requireContext(),
+                    "Perfil actualizado correctamente",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                viewModel.consumeUpdateState()
+            }
+
+            is ProfileUpdateState.Error -> {
+                saveButton.isEnabled = true
+                saveButton.alpha = 1f
+
+                Toast.makeText(
+                    requireContext(),
+                    state.message,
+                    Toast.LENGTH_LONG
+                ).show()
+
+                viewModel.consumeUpdateState()
+            }
+        }
     }
 
 
@@ -179,22 +231,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             }
         }
 
-        val updated = viewModel.updateProfile(
+        viewModel.updateProfile(
             name = name,
             email = email,
             phone = phone
         )
-
-        if (updated) {
-            setEditingMode(root, false)
-            hideKeyboard(root)
-
-            Toast.makeText(
-                requireContext(),
-                "Perfil actualizado correctamente",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
     }
 
     private fun hideKeyboard(root: View) {
@@ -214,6 +255,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         root: View,
         profile: UserProfile
     ) {
+        root.findViewById<TextView>(
+            R.id.profile_header_name
+        ).text = profile.name
+
         root.findViewById<TextView>(
             R.id.profile_header_role
         ).text = profile.roleLabel
@@ -240,15 +285,25 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         root.findViewById<TextView>(
             R.id.profile_phone
-        ).text = profile.phone
+        ).text = profile.phone.ifBlank {
+            "No registrado"
+        }
 
         root.findViewById<TextView>(
             R.id.profile_document
-        ).text = profile.document
+        ).text = profile.document.ifBlank {
+            "No registrado"
+        }
 
         root.findViewById<TextView>(
             R.id.profile_location
-        ).text = profile.location
+        ).text = profile.location.ifBlank {
+            if (profile.role == UserRole.BUYER) {
+                "Sin dirección de entrega"
+            } else {
+                "Sin sede asignada"
+            }
+        }
 
         root.findViewById<TextView>(
             R.id.profile_hero_email

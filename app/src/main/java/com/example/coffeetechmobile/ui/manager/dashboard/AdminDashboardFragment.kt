@@ -2,6 +2,7 @@ package com.example.coffeetechmobile.ui.manager.dashboard
 
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -13,14 +14,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.coffeetechmobile.R
+import com.example.coffeetechmobile.data.model.StoredOrder
 import com.example.coffeetechmobile.data.model.UserRole
-import com.example.coffeetechmobile.ui.profile.ProfileFragment
-import com.example.coffeetechmobile.ui.buyer.catalog.MenuCatalog
+import com.example.coffeetechmobile.ui.common.bindSessionHeader
 import com.example.coffeetechmobile.ui.manager.navigation.ManagerTab
 import com.example.coffeetechmobile.ui.manager.navigation.setupManagerBottomNavigation
+import com.example.coffeetechmobile.ui.profile.ProfileFragment
+import java.io.File
 import java.text.NumberFormat
+import java.util.Calendar
 import java.util.Locale
 
 class AdminDashboardFragment :
@@ -30,9 +35,26 @@ class AdminDashboardFragment :
         Locale("es", "CO")
     )
 
+    private val dashboardViewModel: AdminDashboardViewModel by viewModels()
+
+    private var currentPeriod = Period.MONTH
+
     private enum class Period {
         MONTH, TODAY, WEEK
     }
+
+    private data class TopProduct(
+        val name: String,
+        val units: Int,
+        val revenue: Int,
+        val imageRes: Int,
+        val imagePath: String?
+    )
+
+    private data class PaymentShare(
+        val name: String,
+        val amount: Int
+    )
 
     private data class DashboardData(
         val title: String,
@@ -40,34 +62,8 @@ class AdminDashboardFragment :
         val transactions: Int,
         val growth: String,
         val hourlySales: List<Int>,
-        val productUnits: List<Int>
-    )
-
-    private val dataByPeriod = mapOf(
-        Period.MONTH to DashboardData(
-            title = "Este mes · Datos de ejemplo",
-            revenue = 18_450_000,
-            transactions = 354,
-            growth = "+14,2 %",
-            hourlySales = listOf(16, 68, 92, 54, 42, 76, 25),
-            productUnits = listOf(142, 89, 74)
-        ),
-        Period.TODAY to DashboardData(
-            title = "Hoy · Datos de ejemplo",
-            revenue = 675_000,
-            transactions = 13,
-            growth = "+7,1 %",
-            hourlySales = listOf(2, 8, 13, 6, 4, 10, 3),
-            productUnits = listOf(6, 4, 3)
-        ),
-        Period.WEEK to DashboardData(
-            title = "Esta semana · Datos de ejemplo",
-            revenue = 4_560_000,
-            transactions = 88,
-            growth = "+9,8 %",
-            hourlySales = listOf(8, 34, 51, 28, 24, 43, 12),
-            productUnits = listOf(35, 22, 19)
-        )
+        val topProducts: List<TopProduct>,
+        val paymentShares: List<PaymentShare>
     )
 
     override fun onViewCreated(
@@ -106,7 +102,18 @@ class AdminDashboardFragment :
             ).show()
         }
 
-        showDashboard(view, Period.MONTH)
+        dashboardViewModel.orders.observe(viewLifecycleOwner) {
+            showDashboard(view, currentPeriod)
+        }
+
+        showDashboard(view, currentPeriod)
+        dashboardViewModel.refresh()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        dashboardViewModel.refresh()
+        bindSessionHeader(requireView())
     }
 
     private fun setupPeriodFilters(root: View) {
@@ -133,7 +140,10 @@ class AdminDashboardFragment :
         root: View,
         period: Period
     ) {
-        val data = dataByPeriod[period] ?: return
+        currentPeriod = period
+
+        val orders = dashboardViewModel.orders.value.orEmpty()
+        val data = buildDashboardData(orders, period)
 
         updateFilters(root, period)
 
@@ -164,8 +174,205 @@ class AdminDashboardFragment :
         ).text = formatter.format(data.transactions)
 
         renderSalesChart(root, data.hourlySales)
-        renderTopProducts(root, data.productUnits)
-        renderPaymentMethods(root, data.revenue)
+        renderTopProducts(root, data.topProducts)
+        renderPaymentMethods(
+            root,
+            data.paymentShares,
+            data.revenue
+        )
+    }
+
+    private fun buildDashboardData(
+        orders: List<StoredOrder>,
+        period: Period
+    ): DashboardData {
+        val start = periodStart(period)
+        val previousStart = previousPeriodStart(period, start)
+        val now = System.currentTimeMillis()
+
+        val periodOrders = orders.filter {
+            it.createdAt in start..now
+        }
+
+        val previousOrders = orders.filter {
+            it.createdAt >= previousStart && it.createdAt < start
+        }
+
+        val revenue = periodOrders.sumOf { it.total }
+        val previousRevenue = previousOrders.sumOf { it.total }
+
+        val title = when (period) {
+            Period.MONTH -> getString(R.string.dashboard_month)
+            Period.TODAY -> getString(R.string.dashboard_today)
+            Period.WEEK -> getString(R.string.dashboard_week)
+        }
+
+        return DashboardData(
+            title = title,
+            revenue = revenue,
+            transactions = periodOrders.size,
+            growth = calculateGrowth(revenue, previousRevenue),
+            hourlySales = buildHourlySales(periodOrders),
+            topProducts = buildTopProducts(periodOrders),
+            paymentShares = buildPaymentShares(periodOrders)
+        )
+    }
+
+    private fun periodStart(period: Period): Long {
+        val calendar = Calendar.getInstance()
+
+        when (period) {
+            Period.TODAY -> {
+                calendar.set(Calendar.HOUR_OF_DAY, 0)
+                calendar.set(Calendar.MINUTE, 0)
+                calendar.set(Calendar.SECOND, 0)
+                calendar.set(Calendar.MILLISECOND, 0)
+            }
+
+            Period.WEEK -> {
+                calendar.set(Calendar.HOUR_OF_DAY, 0)
+                calendar.set(Calendar.MINUTE, 0)
+                calendar.set(Calendar.SECOND, 0)
+                calendar.set(Calendar.MILLISECOND, 0)
+                calendar.add(Calendar.DAY_OF_YEAR, -6)
+            }
+
+            Period.MONTH -> {
+                calendar.set(Calendar.DAY_OF_MONTH, 1)
+                calendar.set(Calendar.HOUR_OF_DAY, 0)
+                calendar.set(Calendar.MINUTE, 0)
+                calendar.set(Calendar.SECOND, 0)
+                calendar.set(Calendar.MILLISECOND, 0)
+            }
+        }
+
+        return calendar.timeInMillis
+    }
+
+    private fun previousPeriodStart(
+        period: Period,
+        currentStart: Long
+    ): Long {
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = currentStart
+        }
+
+        when (period) {
+            Period.TODAY -> calendar.add(Calendar.DAY_OF_YEAR, -1)
+            Period.WEEK -> calendar.add(Calendar.DAY_OF_YEAR, -7)
+            Period.MONTH -> calendar.add(Calendar.MONTH, -1)
+        }
+
+        return calendar.timeInMillis
+    }
+
+    private fun calculateGrowth(
+        currentRevenue: Int,
+        previousRevenue: Int
+    ): String {
+        if (previousRevenue <= 0) {
+            return "—"
+        }
+
+        val growth = (
+            (currentRevenue - previousRevenue) * 100.0 /
+                previousRevenue
+            )
+
+        return String.format(
+            Locale("es", "CO"),
+            "%+.1f %%",
+            growth
+        )
+    }
+
+    private fun buildHourlySales(
+        orders: List<StoredOrder>
+    ): List<Int> {
+        val buckets = MutableList(7) { 0 }
+        val calendar = Calendar.getInstance()
+
+        orders.forEach { order ->
+            calendar.timeInMillis = order.createdAt
+            val hour = calendar.get(Calendar.HOUR_OF_DAY)
+
+            if (hour in 6..19) {
+                val index = (hour - 6) / 2
+                buckets[index] = buckets[index] + 1
+            }
+        }
+
+        return buckets
+    }
+
+    private fun buildTopProducts(
+        orders: List<StoredOrder>
+    ): List<TopProduct> {
+        data class Accumulator(
+            var units: Int,
+            var revenue: Int,
+            val imageRes: Int,
+            val imagePath: String?
+        )
+
+        val products = mutableMapOf<String, Accumulator>()
+
+        orders.forEach { order ->
+            order.items.forEach { item ->
+                val current = products[item.name]
+
+                if (current == null) {
+                    val drawableId = if (item.imageResName.isNotBlank()) {
+                        resources.getIdentifier(
+                            item.imageResName,
+                            "drawable",
+                            requireContext().packageName
+                        )
+                    } else {
+                        0
+                    }
+
+                    products[item.name] = Accumulator(
+                        units = item.quantity,
+                        revenue = item.unitPrice * item.quantity,
+                        imageRes = if (drawableId != 0) {
+                            drawableId
+                        } else {
+                            R.drawable.ic_coffee
+                        },
+                        imagePath = item.imagePath.ifBlank { null }
+                    )
+                } else {
+                    current.units += item.quantity
+                    current.revenue += item.unitPrice * item.quantity
+                }
+            }
+        }
+
+        return products.map { (name, accumulator) ->
+            TopProduct(
+                name = name,
+                units = accumulator.units,
+                revenue = accumulator.revenue,
+                imageRes = accumulator.imageRes,
+                imagePath = accumulator.imagePath
+            )
+        }.sortedByDescending { it.units }
+            .take(3)
+    }
+
+    private fun buildPaymentShares(
+        orders: List<StoredOrder>
+    ): List<PaymentShare> {
+        return orders
+            .groupBy { it.paymentMethod.ifBlank { "Sin método" } }
+            .map { (name, methodOrders) ->
+                PaymentShare(
+                    name = name,
+                    amount = methodOrders.sumOf { it.total }
+                )
+            }
+            .sortedByDescending { it.amount }
     }
 
     private fun updateFilters(
@@ -320,7 +527,7 @@ class AdminDashboardFragment :
         root.findViewById<TextView>(
             R.id.dashboard_peak_label
         ).text = if (peakIndex >= 0) {
-            "Mayor actividad: ${labels[peakIndex]} h · Datos de ejemplo"
+            "Mayor actividad: ${labels[peakIndex]} h"
         } else {
             "Sin actividad"
         }
@@ -328,7 +535,7 @@ class AdminDashboardFragment :
 
     private fun renderTopProducts(
         root: View,
-        units: List<Int>
+        products: List<TopProduct>
     ) {
         val container = root.findViewById<LinearLayout>(
             R.id.dashboard_top_products_container
@@ -336,21 +543,14 @@ class AdminDashboardFragment :
 
         container.removeAllViews()
 
-        val productIds = listOf(
-            R.id.product_iced_caramel,
-            R.id.product_frappe_oreo,
-            R.id.product_muffin_red_velvet
-        )
+        if (products.isEmpty()) {
+            return
+        }
 
-        val maxUnits = units.maxOrNull()?.coerceAtLeast(1) ?: 1
+        val maxUnits = products.maxOf { it.units }
+            .coerceAtLeast(1)
 
-        productIds.forEachIndexed { index, productId ->
-
-            val product = MenuCatalog.findById(productId)
-                ?: return@forEachIndexed
-
-            val soldUnits = units.getOrElse(index) { 0 }
-
+        products.forEach { product ->
             val item = LayoutInflater.from(requireContext())
                 .inflate(
                     R.layout.item_dashboard_top_product,
@@ -358,9 +558,19 @@ class AdminDashboardFragment :
                     false
                 )
 
-            item.findViewById<ImageView>(
+            val image = item.findViewById<ImageView>(
                 R.id.dashboard_product_image
-            ).setImageResource(product.imageRes)
+            )
+
+            if (!product.imagePath.isNullOrBlank()) {
+                image.setImageURI(
+                    Uri.fromFile(File(product.imagePath))
+                )
+            } else {
+                image.setImageResource(product.imageRes)
+            }
+
+            image.contentDescription = product.name
 
             item.findViewById<TextView>(
                 R.id.dashboard_product_name
@@ -368,21 +578,19 @@ class AdminDashboardFragment :
 
             item.findViewById<TextView>(
                 R.id.dashboard_product_category
-            ).text = product.category
+            ).text = "Más vendido"
 
             item.findViewById<TextView>(
                 R.id.dashboard_product_units
-            ).text = "$soldUnits uds."
+            ).text = "${product.units} uds."
 
             item.findViewById<TextView>(
                 R.id.dashboard_product_revenue
-            ).text = formatMoney(
-                soldUnits * product.price
-            )
+            ).text = formatMoney(product.revenue)
 
             item.findViewById<ProgressBar>(
                 R.id.dashboard_product_progress
-            ).progress = soldUnits * 100 / maxUnits
+            ).progress = product.units * 100 / maxUnits
 
             container.addView(item)
         }
@@ -390,6 +598,7 @@ class AdminDashboardFragment :
 
     private fun renderPaymentMethods(
         root: View,
+        shares: List<PaymentShare>,
         revenue: Int
     ) {
         val distribution = root.findViewById<LinearLayout>(
@@ -403,15 +612,52 @@ class AdminDashboardFragment :
         distribution.removeAllViews()
         rows.removeAllViews()
 
-        val methods = listOf(
-            Triple("PSE / Débito bancario", 45, "#3E2723"),
-            Triple("Nequi / Daviplata", 35, "#79512F"),
-            Triple("Tarjetas", 20, "#F0BC8F")
+        if (shares.isEmpty()) {
+            rows.addView(
+                TextView(requireContext()).apply {
+                    text = "Sin ventas registradas en este período."
+                    textSize = 13f
+                    setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.coffee_secondary
+                        )
+                    )
+                    setPadding(0, dp(12), 0, dp(12))
+                }
+            )
+            return
+        }
+
+        val total = if (revenue > 0) {
+            revenue
+        } else {
+            shares.sumOf { it.amount }
+        }
+
+        val colors = listOf(
+            "#3E2723",
+            "#79512F",
+            "#F0BC8F",
+            "#B08968"
         )
 
-        methods.forEach { (name, percentage, hexColor) ->
+        shares.forEachIndexed { index, share ->
+            if (share.amount <= 0) {
+                return@forEachIndexed
+            }
 
-            val color = Color.parseColor(hexColor)
+            val color = Color.parseColor(
+                colors[index % colors.size]
+            )
+
+            val percentage = if (total > 0) {
+                (
+                    share.amount.toLong() * 100L / total
+                    ).toInt().coerceAtLeast(1)
+            } else {
+                0
+            }
 
             val segment = View(requireContext()).apply {
                 setBackgroundColor(color)
@@ -420,18 +666,16 @@ class AdminDashboardFragment :
             val segmentParams = LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                percentage.toFloat()
+                share.amount.toFloat()
             )
 
             distribution.addView(segment, segmentParams)
 
-            val amount = revenue.toLong() * percentage / 100L
-
             addPaymentRow(
                 container = rows,
-                name = name,
+                name = share.name,
                 percentage = percentage,
-                amount = amount,
+                amount = share.amount.toLong(),
                 color = color
             )
         }

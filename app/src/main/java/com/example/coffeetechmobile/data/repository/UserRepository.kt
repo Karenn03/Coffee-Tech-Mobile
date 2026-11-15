@@ -229,6 +229,55 @@ class UserRepository(context: Context) {
         ) > 0
     }
 
+    // Actualiza nombre, correo y teléfono desde la pantalla de perfil
+    suspend fun updateProfile(
+        userId: Long,
+        fullName: String,
+        email: String,
+        phone: String
+    ): UserResult = withContext(Dispatchers.IO) {
+        val current = userDao.findById(userId)
+            ?: return@withContext UserResult.Error(
+                "El usuario ya no existe."
+            )
+
+        val normalizedEmail = normalizeEmail(email)
+        val existing = userDao.findByEmail(normalizedEmail)
+
+        if (existing != null && existing.user.id != userId) {
+            return@withContext UserResult.Error(
+                "Ya existe otra cuenta con este correo."
+            )
+        }
+
+        val updatedRows = try {
+            userDao.updateProfile(
+                userId = userId,
+                fullName = fullName.trim(),
+                email = normalizedEmail,
+                phone = phone.trim()
+            )
+        } catch (exception: SQLiteConstraintException) {
+            return@withContext UserResult.Error(
+                "Ya existe otra cuenta con este correo."
+            )
+        }
+
+        if (updatedRows <= 0) {
+            return@withContext UserResult.Error(
+                "No se pudo actualizar el perfil."
+            )
+        }
+
+        UserResult.Success(
+            current.user.copy(
+                fullName = fullName.trim(),
+                email = normalizedEmail,
+                phone = phone.trim()
+            )
+        )
+    }
+
     // Elimina una cuenta. Devuelve true si la fila existía
     suspend fun deleteUser(userId: Long): Boolean =
         withContext(Dispatchers.IO) {
