@@ -47,6 +47,10 @@ class SellerHomeFragment : Fragment(R.layout.fragment_seller_home) {
             view.findViewById<TextView>(
                 R.id.seller_home_delivered_count
             ).text = counts.delivered.toString()
+
+            view.findViewById<TextView>(
+                R.id.seller_home_ready_count
+            ).text = counts.ready.toString()
         }
 
         view.findViewById<TextView>(R.id.seller_home_product_count).text =

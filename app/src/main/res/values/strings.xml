@@ -410,6 +410,7 @@
     <string name="seller_order_already_delivered">Este pedido ya fue entregado.</string>
     <string name="seller_order_payment_paid">Pagado</string>
     <string name="seller_order_payment_pending">Pago pendiente</string>
+    <string name="seller_order_tap_hint">Toca para actualizar el estado</string>
 
     <!-- Recuperación de contraseña: paso de nueva contraseña -->
     <string name="reset_password_title">Crea una nueva contraseña</string>
@@ -444,8 +445,10 @@
     <!-- Inicio del vendedor -->
     <string name="seller_home_title">Panel del vendedor</string>
     <string name="seller_home_subtitle">Resumen de tu actividad en Coffee Tech</string>
+    <string name="seller_home_today_summary">Resumen general</string>
     <string name="seller_home_active_orders">Pedidos activos</string>
     <string name="seller_home_delivered_orders">Pedidos entregados</string>
+    <string name="seller_home_ready_orders">Pedidos listos</string>
     <string name="seller_home_products">Productos en el menú</string>
     <string name="seller_home_quick_actions">Accesos rápidos</string>
     <string name="seller_home_manage_products">Gestionar productos</string>
